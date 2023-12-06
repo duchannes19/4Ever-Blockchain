@@ -15,6 +15,7 @@ Make sure you have the following installed:
 - Node.js: [Download and Install Node.js](https://nodejs.org/)
 - npm (Node Package Manager): Installed with Node.js
 - Truffle: [Install Truffle](https://www.trufflesuite.com/truffle)
+- Ganache: [Install Ganache](https://trufflesuite.com/ganache/)
 
 ### Installation
 
