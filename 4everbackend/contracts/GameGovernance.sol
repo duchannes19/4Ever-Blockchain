@@ -1,30 +1,53 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import "@openzeppelin/contracts/access/Ownable.sol";
+contract GameGovernance {
+    address public owner;
+    mapping(address => bool) public administrators;
+    mapping(uint256 => bool) public proposals;
+    uint256 public proposalCount;
 
-contract GameGovernance is Ownable {
-    mapping(address => uint256) private _votingPower;
+    event ProposalCreated(uint256 indexed proposalId, address indexed proposer);
+    event ProposalExecuted(uint256 indexed proposalId);
 
-    event VoteCasted(address indexed voter, uint256 votingPower);
-
-    modifier hasVotingPower() {
-        require(_votingPower[msg.sender] > 0, "No voting power");
+    modifier onlyOwner() {
+        require(msg.sender == owner, "Not the owner");
         _;
     }
 
-    function getVotingPower(address voter) external view returns (uint256) {
-        return _votingPower[voter];
+    modifier onlyAdministrator() {
+        require(administrators[msg.sender], "Not an administrator");
+        _;
     }
 
-    function delegateVotingPower(address delegatee, uint256 votingPower) external onlyOwner {
-        _votingPower[delegatee] = votingPower;
+    constructor() {
+        owner = msg.sender;
+        administrators[msg.sender] = true;
     }
 
-    function castVote() external hasVotingPower {
-        // Perform governance action
-        // For simplicity, this function can be expanded with specific actions based on voting power.
-        
-        emit VoteCasted(msg.sender, _votingPower[msg.sender]);
+    function addAdministrator(address account) external onlyOwner {
+        administrators[account] = true;
+    }
+
+    function removeAdministrator(address account) external onlyOwner {
+        administrators[account] = false;
+    }
+
+    function createProposal() external onlyAdministrator {
+        proposalCount++;
+        proposals[proposalCount] = true;
+
+        emit ProposalCreated(proposalCount, msg.sender);
+    }
+
+    function executeProposal(uint256 proposalId) external onlyAdministrator {
+        require(proposals[proposalId], "Proposal does not exist");
+
+        // Add your proposal execution logic here
+
+        // After executing the proposal, mark it as executed
+        proposals[proposalId] = false;
+
+        emit ProposalExecuted(proposalId);
     }
 }
