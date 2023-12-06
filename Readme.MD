@@ -16,6 +16,7 @@ Make sure you have the following installed:
 - npm (Node Package Manager): Installed with Node.js
 - Truffle: [Install Truffle](https://www.trufflesuite.com/truffle)
 - Ganache: [Install Ganache](https://trufflesuite.com/ganache/)
+- Metamask: [Install Metamask](https://metamask.io/)
 
 ### Installation
 
