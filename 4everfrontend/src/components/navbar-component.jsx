@@ -5,11 +5,12 @@ import Logo from '../assets/logo(small).png';
 
 
 
-const Navbar = ({setIsConnected}) => {
+const Navbar = ({setIsConnected, setStep1}) => {
 
     const handlemetaMask = () => {
         localStorage.clear();
         setIsConnected(false);
+        setStep1(false);
     };
 
     return (

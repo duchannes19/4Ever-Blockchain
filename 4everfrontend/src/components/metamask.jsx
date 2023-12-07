@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import Web3 from 'web3';
 
-const ConnectToMetaMask = ({ setMetaMask, setIsConnected }) => {
+const ConnectToMetaMask = ({ setMetaMask, setIsConnected, setStep1 }) => {
 
     useEffect(() => {
         const connectToMetaMask = async () => {
@@ -13,12 +13,16 @@ const ConnectToMetaMask = ({ setMetaMask, setIsConnected }) => {
                     // Web3 instance now connected to MetaMask
                     const web3 = new Web3(window.ethereum);
                     console.log('Connected to MetaMask:', web3);
+                    const accounts = await window.ethereum.request({
+                        method: 'eth_accounts',
+                      });
 
                     // Put content on localstorage
                     localStorage.setItem('connected', true);
-                    localStorage.setItem('web3', web3);
-                    localStorage.setItem('address', web3.eth.getAccounts());
+                    localStorage.setItem('accounts', accounts[0]);
                     setIsConnected(true);
+                    setStep1(true);
+                    setMetaMask(false);
                 } catch (error) {
                     console.error('Error connecting to MetaMask:', error);
                 }
@@ -36,9 +40,6 @@ const ConnectToMetaMask = ({ setMetaMask, setIsConnected }) => {
             else {
                 alert('Please install MetaMask or use a dapp browser.');
             }
-            setTimeout(() => {
-                setMetaMask(false);
-            }, 1000);
         };
 
         connectToMetaMask();

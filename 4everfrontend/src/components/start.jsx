@@ -5,7 +5,7 @@ import ConnectToMetaMask from "./metamask";
 import { motion } from "framer-motion";
 import { HelpModal } from "./helpmodal";
 
-function Start({ isconnected, setIsConnected }) {
+function Start({ isconnected, setIsConnected, step1, setStep1 }) {
     const [metamask, setMetaMask] = useState(false);
 
     const fadeInVariants = {
@@ -48,7 +48,20 @@ function Start({ isconnected, setIsConnected }) {
                     Connected to MetaMask
                 </motion.div>
             }
-            {metamask && <ConnectToMetaMask setMetaMask={setMetaMask} setIsConnected={setIsConnected} />}
+            {metamask && <ConnectToMetaMask setMetaMask={setMetaMask} setIsConnected={setIsConnected} setStep1={setStep1} />}
+            {step1 && (
+                <>
+                <motion.div
+                initial="hidden"
+                animate="visible"
+                variants={fadeInVariants}
+                transition={{ delay: 0.5, duration: 0.5 }}
+                style={{ color: 'white', fontFamily: 'mephistoregular', fontSize: '3rem' }}>
+                <hr className="separator"></hr>
+                Step 1<br/>Join a Faction
+                </motion.div>
+                </>
+            )}
         </>
     );
 }

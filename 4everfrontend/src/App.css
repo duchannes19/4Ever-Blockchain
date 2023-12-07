@@ -36,6 +36,12 @@
   transform: translateX(-1rem);
 }
 
+.separator {
+  margin: 2rem;
+  font-size: 2em;
+  border: 2px solid white;
+}
+
 .logo:hover {
   filter: drop-shadow(0 0 2em #646cffaa);
 }
