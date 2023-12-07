@@ -1,11 +1,16 @@
 // Navbar.js
 import React from 'react';
-import { Flex, Spacer, Box, Heading, useColorMode } from '@chakra-ui/react';
+import { Flex, Spacer, Box, Heading, useColorMode, Button } from '@chakra-ui/react';
 import Logo from '../assets/logo(small).png';
 
 
 
-const Navbar = () => {
+const Navbar = ({setIsConnected}) => {
+
+    const handlemetaMask = () => {
+        localStorage.clear();
+        setIsConnected(false);
+    };
 
     return (
         <Flex p={4} bg="#191410" align="center" position="absolute" top={0} left={0} right={0} boxShadow="0px 2px 4px rgba(0, 0, 0, 0.25)">
@@ -17,7 +22,7 @@ const Navbar = () => {
             </Box>
             <Spacer />
             <Box>
-                
+                <Button onClick={handlemetaMask} colorScheme="teal" variant="outline" size="sm" mr={4}>Reset</Button>
             </Box>
         </Flex>
     );

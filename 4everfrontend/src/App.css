@@ -32,6 +32,8 @@
   height: 19em;
   margin-top: 10rem;
   margin-bottom: 2em;
+  pointer-events: none;
+  transform: translateX(-1rem);
 }
 
 .logo:hover {
@@ -39,6 +41,13 @@
 }
 .logo.react:hover {
   filter: drop-shadow(0 0 2em #61dafbaa);
+}
+
+@media screen and (max-width: 600px) {
+  .main-logo {
+    height: 12em;
+    margin-top: 8rem;
+  }
 }
 
 @keyframes logo-spin {
