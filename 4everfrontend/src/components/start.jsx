@@ -4,6 +4,7 @@ import { Button } from "@chakra-ui/react";
 import ConnectToMetaMask from "./metamask";
 import { motion } from "framer-motion";
 import { HelpModal } from "./helpmodal";
+import JoinMarketplace from "./joinmarket";
 
 function Start({ isconnected, setIsConnected, step1, setStep1 }) {
     const [metamask, setMetaMask] = useState(false);
@@ -58,7 +59,8 @@ function Start({ isconnected, setIsConnected, step1, setStep1 }) {
                 transition={{ delay: 0.5, duration: 0.5 }}
                 style={{ color: 'white', fontFamily: 'mephistoregular', fontSize: '3rem' }}>
                 <hr className="separator"></hr>
-                Step 1<br/>Join a Faction
+                Step 1<br/>Join the Market<br/>
+                <JoinMarketplace />
                 </motion.div>
                 </>
             )}
