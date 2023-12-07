@@ -1,34 +1,22 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import React, { useState } from 'react'
+import NavBar from './components/navbar-component'
+import MainLogo from './components/mainlogo'
 import './App.css'
+import Start from './components/start'
 
 function App() {
-  const [count, setCount] = useState(0)
+
+  const [isconnected, setIsConnected] = useState(localStorage.getItem('connected'));
+  const [step1, setStep1] = useState(localStorage.getItem('accounts') ? true : false);
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <div className='main'>
+      <NavBar setIsConnected={setIsConnected} setStep1={setStep1}/>
+      <MainLogo />
+      <Start isconnected={isconnected} setIsConnected={setIsConnected} 
+      step1={step1} setStep1={setStep1}
+      />
+    </div>
   )
 }
 

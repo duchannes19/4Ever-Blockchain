@@ -1,18 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
-import "@openzeppelin/contracts/token/ERC721/extensions/IERC721Enumerable.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
-
-contract GameAssetMarketplace is Ownable {
-    using EnumerableSet for EnumerableSet.UintSet;
-
-    IERC721 private _gameAssetContract;
-    uint256 private _listingFee = 0.01 ether;
-
-    EnumerableSet.UintSet private _listedAssets;
+contract GameAssetMarketplace {
+    address public owner;
+    mapping(uint256 => bool) public assetListings;
+    mapping(uint256 => uint256) public assetPrices;
 
     event AssetListed(
         uint256 indexed tokenId,
@@ -25,50 +17,33 @@ contract GameAssetMarketplace is Ownable {
         uint256 price
     );
 
-    constructor(address gameAssetContract) {
-        _gameAssetContract = IERC721(gameAssetContract);
+    constructor() {
+        owner = msg.sender;
     }
 
-    function listAsset(uint256 tokenId, uint256 price) external payable {
-        require(
-            _gameAssetContract.ownerOf(tokenId) == msg.sender,
-            "Not the owner"
-        );
-        require(!_listedAssets.contains(tokenId), "Asset already listed");
+    function listAsset(uint256 tokenId, uint256 price) external {
+        require(msg.sender == owner, "Not the owner");
+        require(!assetListings[tokenId], "Asset already listed");
         require(price > 0, "Price must be greater than 0");
 
-        _gameAssetContract.transferFrom(msg.sender, address(this), tokenId);
-        _listedAssets.add(tokenId);
+        assetListings[tokenId] = true;
+        assetPrices[tokenId] = price;
 
         emit AssetListed(tokenId, msg.sender, price);
     }
 
     function buyAsset(uint256 tokenId) external payable {
-        require(_listedAssets.contains(tokenId), "Asset not listed");
-        uint256 price = msg.value;
-        address seller = _gameAssetContract.ownerOf(tokenId);
+        require(assetListings[tokenId], "Asset not listed");
+        require(msg.value == assetPrices[tokenId], "Incorrect payment amount");
 
-        require(price > 0, "Invalid price");
-        require(msg.sender != seller, "Cannot buy own asset");
+        address seller = owner;
+        address buyer = msg.sender;
 
-        _gameAssetContract.transferFrom(address(this), msg.sender, tokenId);
-        _listedAssets.remove(tokenId);
-        payable(seller).transfer(price);
+        assetListings[tokenId] = false;
+        assetPrices[tokenId] = 0;
 
-        emit AssetSold(tokenId, msg.sender, price);
-    }
+        payable(seller).transfer(msg.value);
 
-    function getListingFee() external view returns (uint256) {
-        return _listingFee;
-    }
-
-    function setListingFee(uint256 newFee) external onlyOwner {
-        _listingFee = newFee;
-    }
-
-    function getAssetListingStatus(
-        uint256 tokenId
-    ) external view returns (bool) {
-        return _listedAssets.contains(tokenId);
+        emit AssetSold(tokenId, buyer, msg.value);
     }
 }

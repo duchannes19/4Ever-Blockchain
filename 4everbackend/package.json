@@ -4,14 +4,18 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@openzeppelin/contracts": "^5.0.0",
+    "@ganache/cli": "^0.10.1",
     "axios": "^1.6.2",
-    "express": "^4.18.2"
+    "cors": "^2.8.5",
+    "ethers": "^6.9.0",
+    "express": "^4.18.2",
+    "nodemon": "^3.0.2"
   }
 }
