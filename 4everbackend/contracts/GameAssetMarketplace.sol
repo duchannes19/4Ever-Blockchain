@@ -14,15 +14,26 @@ contract GameAssetMarketplace is Ownable {
 
     EnumerableSet.UintSet private _listedAssets;
 
-    event AssetListed(uint256 indexed tokenId, address indexed owner, uint256 price);
-    event AssetSold(uint256 indexed tokenId, address indexed buyer, uint256 price);
+    event AssetListed(
+        uint256 indexed tokenId,
+        address indexed owner,
+        uint256 price
+    );
+    event AssetSold(
+        uint256 indexed tokenId,
+        address indexed buyer,
+        uint256 price
+    );
 
     constructor(address gameAssetContract) {
         _gameAssetContract = IERC721(gameAssetContract);
     }
 
     function listAsset(uint256 tokenId, uint256 price) external payable {
-        require(_gameAssetContract.ownerOf(tokenId) == msg.sender, "Not the owner");
+        require(
+            _gameAssetContract.ownerOf(tokenId) == msg.sender,
+            "Not the owner"
+        );
         require(!_listedAssets.contains(tokenId), "Asset already listed");
         require(price > 0, "Price must be greater than 0");
 
@@ -55,7 +66,9 @@ contract GameAssetMarketplace is Ownable {
         _listingFee = newFee;
     }
 
-    function getAssetListingStatus(uint256 tokenId) external view returns (bool) {
+    function getAssetListingStatus(
+        uint256 tokenId
+    ) external view returns (bool) {
         return _listedAssets.contains(tokenId);
     }
 }
