@@ -8,18 +8,19 @@ import {
     ModalBody,
     ModalCloseButton,
     useDisclosure,
-    Button
+    Button,
   } from '@chakra-ui/react'
 
 export function HelpModal() {
         const { isOpen, onOpen, onClose } = useDisclosure()
+        const colorMode  = 'dark';
         return (
             <>
                 <Button onClick={onOpen}>Help</Button>
     
                 <Modal isOpen={isOpen} onClose={onClose}    >
                     <ModalOverlay />
-                    <ModalContent>
+                    <ModalContent bg={colorMode === 'dark' ? 'gray.800' : 'white'} color={colorMode === 'dark' ? 'white' : 'black'} margin={'1rem'}> 
                         <ModalHeader>Requirements</ModalHeader>
                         <ModalCloseButton />
                         <ModalBody margin={'0.5rem'}>

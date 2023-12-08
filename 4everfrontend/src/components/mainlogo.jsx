@@ -2,12 +2,14 @@ import React from 'react';
 import { Box, Image } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
 import Logo from '../assets/Logo.png';
+import Logo2 from '../assets/logo2.png';
 
 const MainLogo = () => {
     return (
         <Box display="flex" justifyContent="center" alignItems="center" bg='#242424'>
-            <motion.div initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
-                <Image src={Logo} alt="App Logo" className='main-logo'/>
+            <motion.div className='logo-container' initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
+                <Image src={Logo} alt="App Logo" className='main-logo first'/>
+                <Image src={Logo2} alt="App Logo" className='main-logo second'/>
             </motion.div>
         </Box>
     );

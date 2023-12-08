@@ -1,6 +1,6 @@
 # 4Ever
 
-![Title Image](logo.jpeg)
+![Title Image](Logo.png)
 
 ## Introduction
 

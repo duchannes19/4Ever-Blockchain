@@ -2,7 +2,7 @@
 @font-face {
   font-family: 'mephistoregular';
   src: url('assets/fonts/mephisto-webfont.woff2') format('woff2'),
-       url('assets/fonts/mephisto-webfont.woff') format('woff');
+    url('assets/fonts/mephisto-webfont.woff') format('woff');
   font-weight: normal;
   font-style: normal;
 }
@@ -14,11 +14,18 @@
   text-align: center;
 }
 
-.main{
+.main {
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
+}
+
+.logo-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
 }
 
 .logo {
@@ -33,7 +40,16 @@
   margin-top: 10rem;
   margin-bottom: 2em;
   pointer-events: none;
-  transform: translateX(-1rem);
+}
+
+.main-logo.first {
+  transform: translateX(1.1rem);
+  filter: drop-shadow(0 0 0.2em black);
+}
+
+.main-logo.second {
+  transform: translateX(-1.1rem);
+  filter: drop-shadow(0 0 1em black);
 }
 
 .separator {
@@ -45,6 +61,7 @@
 .logo:hover {
   filter: drop-shadow(0 0 2em #646cffaa);
 }
+
 .logo.react:hover {
   filter: drop-shadow(0 0 2em #61dafbaa);
 }
@@ -60,6 +77,7 @@
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
