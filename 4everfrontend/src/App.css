@@ -66,7 +66,32 @@
   filter: drop-shadow(0 0 2em #61dafbaa);
 }
 
+
+
+.figure-image {
+  position: absolute;
+  width: 30%;
+  overflow: hidden;
+  filter: drop-shadow(0 0 0.15em black);
+}
+
+.figure-image.left {
+  width: 34%;
+  left: 0;
+  transform: translate(-17px, -316px);
+}
+
+.figure-image.right {
+  right: 0;
+  transform: translate(-48px, -320px);
+}
+
 @media screen and (max-width: 600px) {
+
+  .figure-image {
+    display: none;
+  }
+
   .main-logo {
     height: 12em;
     margin-top: 8rem;

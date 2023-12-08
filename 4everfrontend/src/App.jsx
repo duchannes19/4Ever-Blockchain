@@ -3,6 +3,7 @@ import NavBar from './components/navbar-component'
 import MainLogo from './components/mainlogo'
 import './App.css'
 import Start from './components/start'
+import SideFigures from './components/sidefigures'
 
 function App() {
 
@@ -13,6 +14,7 @@ function App() {
     <div className='main'>
       <NavBar setIsConnected={setIsConnected} setStep1={setStep1}/>
       <MainLogo />
+      <SideFigures />
       <Start isconnected={isconnected} setIsConnected={setIsConnected} 
       step1={step1} setStep1={setStep1}
       />
