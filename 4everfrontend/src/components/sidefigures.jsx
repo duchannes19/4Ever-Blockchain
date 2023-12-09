@@ -8,17 +8,17 @@ const SideFigures = () => {
     return (
         <Box className="side-figures">
             <motion.div
-                initial={{ x: -1000 }}
-                animate={{ x: 0 }}
-                transition={{ duration: 1 }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 2 }}
                 className="left-figure"
             >
                 <Image src={Left} alt="Left Image" className="figure-image left" />
             </motion.div>
             <motion.div
-                initial={{ x: 1000 }}
-                animate={{ x: 0 }}
-                transition={{ duration: 1 }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 2 }}
                 className="right-figure"
             >
                 <Image src={Right} alt="Right Image" className="figure-image right" />
