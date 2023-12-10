@@ -18,7 +18,7 @@ function Start({ isconnected, setIsConnected, step1, setStep1 }) {
         <>
             {!isconnected && (
                 <motion.div
-                    style={{ color: 'white', marginBottom: '1rem', fontFamily: 'mephistoregular', fontSize: '3rem' }}
+                    style={{ color: 'white', marginBottom: '1rem', fontFamily: 'mephistoregular', fontSize: '3rem', zIndex: '1' }}
                     initial="hidden"
                     animate="visible"
                     variants={fadeInVariants}
@@ -45,7 +45,7 @@ function Start({ isconnected, setIsConnected, step1, setStep1 }) {
                     animate="visible"
                     variants={fadeInVariants}
                     transition={{ duration: 0.5 }}
-                    style={{ color: 'white', fontFamily: 'mephistoregular', fontSize: '3rem' }}>
+                    style={{ color: 'white', fontFamily: 'mephistoregular', fontSize: '3rem', zIndex: '1' }}>
                     Connected to MetaMask
                 </motion.div>
             }
@@ -57,7 +57,7 @@ function Start({ isconnected, setIsConnected, step1, setStep1 }) {
                 animate="visible"
                 variants={fadeInVariants}
                 transition={{ delay: 0.5, duration: 0.5 }}
-                style={{ color: 'white', fontFamily: 'mephistoregular', fontSize: '3rem' }}>
+                style={{ color: 'white', fontFamily: 'mephistoregular', fontSize: '3rem', zIndex: '1' }}>
                 <hr className="separator"></hr>
                 Step 1<br/>Join the Market<br/>
                 <JoinMarketplace />
