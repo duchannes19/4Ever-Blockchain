@@ -1,4 +1,3 @@
-import React from 'react'
 import {
     Modal,
     ModalOverlay,
@@ -9,11 +8,13 @@ import {
     ModalCloseButton,
     useDisclosure,
     Button,
-} from '@chakra-ui/react'
+} from '@chakra-ui/react';
 
-export function HelpModal() {
-    const { isOpen, onOpen, onClose } = useDisclosure()
+export default function HelpModal() {
+
+    const { isOpen, onOpen, onClose } = useDisclosure();
     const colorMode = 'dark';
+
     return (
         <>
             <Button onClick={onOpen}>Help</Button>
@@ -42,5 +43,5 @@ export function HelpModal() {
                 </ModalContent>
             </Modal>
         </>
-    )
+    );
 }

@@ -1,12 +1,12 @@
-
-import React, { useState } from "react";
+import { useState } from "react";
 import { Button } from "@chakra-ui/react";
-import ConnectToMetaMask from "./Metamask";
 import { motion } from "framer-motion";
-import { HelpModal } from "./HelpModal";
+
+import ConnectToMetaMask from "./Metamask";
+import HelpModal from "./HelpModal";
 import JoinMarketplace from "./JoinMarket";
 
-function Start({ isConnected, setIsConnected, step1, setStep1 }) {
+export default function Start({ isConnected, setIsConnected, step1, setStep1 }) {
     const [metamask, setMetaMask] = useState(false);
 
     const fadeInVariants = {
@@ -67,5 +67,3 @@ function Start({ isConnected, setIsConnected, step1, setStep1 }) {
         </>
     );
 }
-
-export default Start;

@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import Web3 from 'web3';
 
-const ConnectToMetaMask = ({ setMetaMask, setIsConnected, setStep1 }) => {
+export default function ConnectToMetaMask({ setMetaMask, setIsConnected, setStep1 }) {
 
     useEffect(() => {
         const connectToMetaMask = async () => {
@@ -46,6 +46,4 @@ const ConnectToMetaMask = ({ setMetaMask, setIsConnected, setStep1 }) => {
     }, []);
 
     return <div>Connecting to MetaMask...</div>;
-};
-
-export default ConnectToMetaMask;
+}

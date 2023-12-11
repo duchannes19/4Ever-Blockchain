@@ -1,10 +1,10 @@
-import React from 'react';
 import { Box, Image } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
+
 import Logo from '../assets/img/Logo.png';
 import Logo2 from '../assets/img/logo2.png';
 
-const MainLogo = () => {
+export default function MainLogo() {
     return (
         <Box display="flex" justifyContent="center" alignItems="center" bg='#242424'>
             <motion.div className='logo-container' initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
@@ -13,6 +13,4 @@ const MainLogo = () => {
             </motion.div>
         </Box>
     );
-};
-
-export default MainLogo;
+}

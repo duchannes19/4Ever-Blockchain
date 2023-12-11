@@ -1,6 +1,6 @@
 import { Button } from '@chakra-ui/react';
 
-const JoinMarketplace = () => {
+export default function JoinMarketplace() {
 
     const userAddress = localStorage.getItem('accounts');
 
@@ -31,6 +31,4 @@ const JoinMarketplace = () => {
             Join
         </Button>
     );
-};
-
-export default JoinMarketplace;
+}

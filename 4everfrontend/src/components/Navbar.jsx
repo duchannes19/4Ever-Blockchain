@@ -1,9 +1,8 @@
-// Navbar.js
-import React from 'react';
 import { Flex, Spacer, Box, Heading, useColorMode, Button } from '@chakra-ui/react';
+
 import Logo from '../assets/img/logo(small).png';
 
-const Navbar = ({ setIsConnected, setStep1 }) => {
+export default function Navbar({ setIsConnected, setStep1 }) {
 
     const handleMetaMask = () => {
         localStorage.clear();
@@ -25,6 +24,4 @@ const Navbar = ({ setIsConnected, setStep1 }) => {
             </Box>
         </Flex>
     );
-};
-
-export default Navbar;
+}
