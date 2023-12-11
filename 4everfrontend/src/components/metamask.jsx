@@ -15,7 +15,7 @@ const ConnectToMetaMask = ({ setMetaMask, setIsConnected, setStep1 }) => {
                     console.log('Connected to MetaMask:', web3);
                     const accounts = await window.ethereum.request({
                         method: 'eth_accounts',
-                      });
+                    });
 
                     // Put content on localstorage
                     localStorage.setItem('connected', true);

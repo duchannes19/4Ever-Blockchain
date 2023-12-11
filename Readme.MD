@@ -1,10 +1,14 @@
 # 4Ever
 
-![Title Image](Logo.png)
+![Title Image](README_logo.png)
 
 ## Introduction
 
 4Ever is an MMORPG-inspired decentralized application (DApp) that leverages blockchain technology to manage the in-game economy, asset ownership, and decentralized governance. The project aims to provide a secure and transparent environment for players to trade in-game assets, maintain ownership through NFTs (Non-Fungible Tokens), and participate in the governance of certain aspects of the game.
+
+## Develop rule (TEMP)
+- **Component File**: UpperToLower.jsx (Same for the function)
+- **Variable, Props and Function**: lowerToUpper
 
 ## Setup
 

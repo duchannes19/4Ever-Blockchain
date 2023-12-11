@@ -6,17 +6,17 @@ import './index.css'
 import { extendTheme } from "@chakra-ui/react"
 
 const theme = extendTheme({
-  styles: {
-    global: {
-      body: {
-        bg: "#242424",
-      },
+    styles: {
+        global: {
+            body: {
+                bg: "#242424",
+            },
+        },
     },
-  },
 })
 
 ReactDOM.createRoot(document.getElementById('root')).render(
     <ChakraProvider theme={theme}>
-      <App />
+        <App />
     </ChakraProvider>,
 )

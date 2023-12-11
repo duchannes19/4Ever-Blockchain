@@ -1,22 +1,22 @@
 /*FONTS*/
 @font-face {
-  font-family: 'mephistoregular';
-  src: url('assets/fonts/mephisto-webfont.woff2') format('woff2'),
-    url('assets/fonts/mephisto-webfont.woff') format('woff');
-  font-weight: normal;
-  font-style: normal;
+    font-family: 'mephistoregular';
+    src: url('assets/fonts/mephisto-webfont.woff2') format('woff2'),
+        url('assets/fonts/mephisto-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
 }
 
 #root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 2rem;
+    text-align: center;
 }
 
 .main {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
 }

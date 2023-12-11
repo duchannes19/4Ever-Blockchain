@@ -1,12 +1,12 @@
 
 import React, { useState } from "react";
 import { Button } from "@chakra-ui/react";
-import ConnectToMetaMask from "./metamask";
+import ConnectToMetaMask from "./Metamask";
 import { motion } from "framer-motion";
-import { HelpModal } from "./helpmodal";
-import JoinMarketplace from "./joinmarket";
+import { HelpModal } from "./HelpModal";
+import JoinMarketplace from "./JoinMarket";
 
-function Start({ isconnected, setIsConnected, step1, setStep1 }) {
+function Start({ isConnected, setIsConnected, step1, setStep1 }) {
     const [metamask, setMetaMask] = useState(false);
 
     const fadeInVariants = {
@@ -16,7 +16,7 @@ function Start({ isconnected, setIsConnected, step1, setStep1 }) {
 
     return (
         <>
-            {!isconnected && (
+            {!isConnected && (
                 <motion.div
                     style={{ color: 'white', marginBottom: '1rem', fontFamily: 'mephistoregular', fontSize: '3rem', zIndex: '1' }}
                     initial="hidden"
@@ -27,7 +27,7 @@ function Start({ isconnected, setIsConnected, step1, setStep1 }) {
                     Connect to MetaMask
                 </motion.div>
             )}
-            {!isconnected &&
+            {!isConnected &&
                 <motion.div
                     style={{ display: "flex" }}
                     initial="hidden"
@@ -39,7 +39,7 @@ function Start({ isconnected, setIsConnected, step1, setStep1 }) {
                     <HelpModal />
                 </motion.div>
             }
-            {isconnected &&
+            {isConnected &&
                 <motion.div
                     initial="hidden"
                     animate="visible"
@@ -52,16 +52,16 @@ function Start({ isconnected, setIsConnected, step1, setStep1 }) {
             {metamask && <ConnectToMetaMask setMetaMask={setMetaMask} setIsConnected={setIsConnected} setStep1={setStep1} />}
             {step1 && (
                 <>
-                <motion.div
-                initial="hidden"
-                animate="visible"
-                variants={fadeInVariants}
-                transition={{ delay: 0.5, duration: 0.5 }}
-                style={{ color: 'white', fontFamily: 'mephistoregular', fontSize: '3rem', zIndex: '1' }}>
-                <hr className="separator"></hr>
-                Step 1<br/>Join the Market<br/>
-                <JoinMarketplace />
-                </motion.div>
+                    <motion.div
+                        initial="hidden"
+                        animate="visible"
+                        variants={fadeInVariants}
+                        transition={{ delay: 0.5, duration: 0.5 }}
+                        style={{ color: 'white', fontFamily: 'mephistoregular', fontSize: '3rem', zIndex: '1' }}>
+                        <hr className="separator"></hr>
+                        Step 1<br />Join the Market<br />
+                        <JoinMarketplace />
+                    </motion.div>
                 </>
             )}
         </>
