@@ -6,7 +6,7 @@ import Start from './components/Start';
 import SideFigures from './components/SideFigures';
 import { ToastContainer } from 'react-toastify';
 
-import './App.css';
+import './CSS/App.css';
 import './CSS/images.css';
 import 'react-toastify/dist/ReactToastify.css';
 

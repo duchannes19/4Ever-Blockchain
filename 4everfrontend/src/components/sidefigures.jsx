@@ -1,8 +1,8 @@
 import { motion } from 'framer-motion';
 import { Box, Image } from '@chakra-ui/react';
 
-import Right from '../assets/img/sorcerer.png';
-import Left from '../assets/img/knight.png';
+import Right from '/img/sorcerer.png';
+import Left from '/img/knight.png';
 
 export default function SideFigures() {
     return (

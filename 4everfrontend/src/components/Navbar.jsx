@@ -1,6 +1,6 @@
 import { Flex, Spacer, Box, Heading, useColorMode, Button } from '@chakra-ui/react';
 
-import Logo from '../assets/img/logo(small).png';
+import Logo from '/img/logo(small).png';
 
 export default function Navbar({ setIsConnected, setStep1 }) {
 

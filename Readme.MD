@@ -8,16 +8,38 @@
 
 ## Develop rule (TEMP)
 
+<ins>Non-mandatory but appreciated rules for keeping code clean and well-organized, facilitating readability and teamwork.</ins>😄😄😄😄😄😄😄😄😄
+
 ### Naming convention
 
-- **Component File**: `UpperToLower.jsx`
-- **Variable, Props and Function**: `lowerToUpper`
-- **Semicolon**: Not essential but appreciated 😄
+- **Semicolon**: 
 
-### Add new component
+    ```js
+    let i = 0;
+    ```
+
+- **Component File and Component itself**: `UpperToLower.jsx`
+    
+    ```js
+    function MyComponent(...) {
+
+    }
+    ```
+
+- **Variable, Props and Function**: `lowerToUpper`
+
+    ```js
+    let accountBalance = getAccountBalance();
+    ```
+
+    ```html
+    <MyComponent propOne={...} propTwo={...} />
+    ```
+
+### Adding new component
 
 - `Component.jsx`
-    ```
+    ```js
     export default function Component(...) {
         ...
         return (
@@ -27,10 +49,10 @@
     ```
 - When importing
 
-    ```
+    ```js
     import Component from "path/Component";
 
-    export defautl function OtherComponent(...) {
+    export default function OtherComponent(...) {
 
         return (
             ...
@@ -41,6 +63,35 @@
     }
     ```
     
+### Adding images, fonts or static resources
+
+- Put the resources in `4everfrontend/public` folder
+- Import them like this:
+
+    ```js
+    import logo from "/img/logo.png";
+    ```
+
+### Importing order
+
+```js
+import { Component, func, ... } from "react" or "external modules";
+import { Component, func, ... } from "chakraui" or "external modules";
+//Empty line
+import Component1 from "./user_defined_component";
+import Component2 from "./user_defined_component";
+//Empty line
+import resource from "local resources (png, css, ...)";
+```
+
+### Commenting
+
+If you are working on something unfinished it would be appreciated if you added a comment somewhere in the code like:
+
+```js
+//TODO: username
+```
+
 ## Setup
 
 ### Prerequisites

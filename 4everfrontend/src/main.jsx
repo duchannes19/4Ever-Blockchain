@@ -4,7 +4,7 @@ import { extendTheme } from "@chakra-ui/react";
 
 import App from './App.jsx';
 
-import './index.css';
+import './CSS/index.css';
 
 const theme = extendTheme({
     styles: {
