@@ -1,7 +1,7 @@
 import { Button } from '@chakra-ui/react';
-
 import axios from 'axios';
-import Notify from './notify';
+
+import Notify from './Notify';
 
 export default function JoinMarketplace() {
 

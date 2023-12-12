@@ -9,7 +9,7 @@ contract Marketplace {
 
     function joinMarketplace() public returns (bool) {
         address sender = msg.sender;
-        
+
         if (!isMember[sender]) {
             members.push(sender);
             isMember[sender] = true;

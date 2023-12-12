@@ -17,9 +17,9 @@ export default function HelpModal() {
 
     return (
         <>
-            <Button onClick={onOpen}>Help</Button>
+            <Button fontFamily={'mephistoregular'} onClick={onOpen}>Help</Button>
 
-            <Modal isOpen={isOpen} onClose={onClose}    >
+            <Modal isOpen={isOpen} onClose={onClose}>
                 <ModalOverlay />
                 <ModalContent bg={colorMode === 'dark' ? 'gray.800' : 'white'} color={colorMode === 'dark' ? 'white' : 'black'} margin={'1rem'}>
                     <ModalHeader>Requirements</ModalHeader>

@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 
 import ConnectToMetaMask from "./Metamask";
 import HelpModal from "./HelpModal";
-import JoinMarketplace from "./joinmarket";
+import JoinMarketplace from "./JoinMarket";
 
 export default function Start({ isConnected, setIsConnected, step1, setStep1 }) {
     const [metamask, setMetaMask] = useState(false);
@@ -35,7 +35,7 @@ export default function Start({ isConnected, setIsConnected, step1, setStep1 }) 
                     variants={fadeInVariants}
                     transition={{ duration: 0.5 }}
                 >
-                    <Button mr={2} onClick={() => setMetaMask(true)}>Connect</Button>
+                    <Button fontFamily={'mephistoregular'} mr={2} onClick={() => setMetaMask(true)}>Connect</Button>
                     <HelpModal />
                 </motion.div>
             }

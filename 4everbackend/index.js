@@ -18,19 +18,19 @@ const web3 = new Web3(ganacheRpcEndpoint);
 
 // Middleware to pass web3 to all routes
 app.use((req, res, next) => {
-  req.web3 = web3;
-  next();
+    req.web3 = web3;
+    next();
 });
 
 // Test the connection
 web3.eth.getBlockNumber()
-  .then(blockNumber => {
-    console.log('Connected to Ganache. Current block number:', blockNumber);
-  })
-  .catch(error => {
-    console.error('Error connecting to Ganache:', error);
-  });
- 
+    .then(blockNumber => {
+        console.log('Connected to Ganache. Current block number:', blockNumber);
+    })
+    .catch(error => {
+        console.error('Error connecting to Ganache:', error);
+    });
+
 // Routes 
 //const assetRouter = require('./src/controllers/AssetController');
 //const governanceRouter = require('./src/controllers/GovernanceController');
@@ -41,11 +41,11 @@ web3.eth.getBlockNumber()
 
 // Join Market
 app.post('/api/join-marketplace', (req, res) => {
-  // Pass the web3 instance to the joinMarketplace function
-  joinMarketplace(web3, req, res);
+    // Pass the web3 instance to the joinMarketplace function
+    joinMarketplace(web3, req, res);
 });
 
 // Start the server
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+    console.log(`Server is running on port ${PORT}`);
 });

@@ -25,7 +25,7 @@ const Notify = (type, message) => {
             theme: "light",
         });
     }
-    else if (type === 'info'){
+    else if (type === 'info') {
         toast.info(message, {
             position: "top-right",
             autoClose: 3000,
