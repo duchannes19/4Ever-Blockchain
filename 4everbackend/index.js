@@ -1,19 +1,19 @@
+//Requirements
+require('dotenv').config();
+var cors = require('cors')
+const PORT = process.env.PORT || 5000;
+const ganacheRpcEndpoint = process.env.GANACHE;
+
+const { joinMarketplace } = require('./src/services/market');
+const { Web3 } = require('web3');
+
+//App Setup
 const express = require('express');
 const app = express();
-var cors = require('cors')
-require('dotenv').config();
-const PORT = process.env.PORT || 5000;
-const { joinMarketplace } = require('./src/services/market');
 app.use(express.json());
 app.use(cors());
 
 //Connect to Ganache
-const { Web3 } = require('web3');
-
-// Replace with the Ganache RPC endpoint
-const ganacheRpcEndpoint = 'http://127.0.0.1:7545';
-
-// Create a Web3 instance connected to Ganache
 const web3 = new Web3(ganacheRpcEndpoint);
 
 // Middleware to pass web3 to all routes
@@ -45,6 +45,7 @@ app.post('/api/join-marketplace', (req, res) => {
   joinMarketplace(web3, req, res);
 });
 
+// Start the server
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
