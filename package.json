@@ -2,6 +2,9 @@
     "name": "4ever",
     "version": "1.0.0",
     "scripts": {
-        "install-all": "cd 4everfrontend && npm install && cd ../4everbackend && npm install && npm install -g truffle cd .."
+        "install-all": "cd 4everfrontend && npm install && cd ../4everbackend && npm install && npm install -g truffle cd ..",
+        "client": "cd 4everfrontend && npm run dev",
+        "server": "cd 4everbackend && npm start",
+        "truffle": "cd 4everbackend/Truffle && truffle compile && truffle migrate"
     }
 }

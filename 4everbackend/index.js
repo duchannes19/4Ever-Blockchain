@@ -32,12 +32,12 @@ web3.eth.getBlockNumber()
   });
  
 // Routes 
-const assetRouter = require('./src/controllers/AssetController');
-const governanceRouter = require('./src/controllers/GovernanceController');
+//const assetRouter = require('./src/controllers/AssetController');
+//const governanceRouter = require('./src/controllers/GovernanceController');
 
 // Existing routes
-app.use('/api/assets', assetRouter);
-app.use('/api/governance', governanceRouter);
+//app.use('/api/assets', assetRouter);
+//app.use('/api/governance', governanceRouter);
 
 // Join Market
 app.post('/api/join-marketplace', (req, res) => {
