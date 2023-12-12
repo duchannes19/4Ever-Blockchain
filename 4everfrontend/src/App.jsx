@@ -10,7 +10,7 @@ import './CSS/images.css';
 
 export default function App() {
 
-    const [isConnected, setIsConnected] = useState(localStorage.getItem('connected'));
+    const [isConnected, setIsConnected] = useState(localStorage.getItem('connected') && localStorage.getItem('accounts'));
     const [step1, setStep1] = useState(localStorage.getItem('accounts') ? true : false);
 
     return (
@@ -18,7 +18,7 @@ export default function App() {
             <NavBar setIsConnected={setIsConnected} setStep1={setStep1} />
             <MainLogo />
             <SideFigures />
-            <Start isconnected={isConnected} setIsConnected={setIsConnected}
+            <Start isConnected={isConnected} setIsConnected={setIsConnected}
                 step1={step1} setStep1={setStep1}
             />
         </div>
