@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 
 import ConnectToMetaMask from "./Metamask";
 import HelpModal from "./HelpModal";
-import JoinMarketplace from "./JoinMarket";
+import JoinMarketplace from "./joinmarket";
 
 export default function Start({ isConnected, setIsConnected, step1, setStep1 }) {
     const [metamask, setMetaMask] = useState(false);

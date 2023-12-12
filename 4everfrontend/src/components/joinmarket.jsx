@@ -1,24 +1,27 @@
 import { Button } from '@chakra-ui/react';
+import axios from 'axios';
+import Notify from './notify';
 
 export default function JoinMarketplace() {
 
     const userAddress = localStorage.getItem('accounts');
+    console.log(userAddress);
 
     const handleJoinMarketplace = async () => {
         try {
             // Make a request to your backend to join the marketplace
-            const response = await fetch('http://localhost:5000/api/join-marketplace', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ userAddress }),
+            const response = await axios.post('http://localhost:5000/api/join-marketplace', {
+                userAddress: userAddress,
             });
 
             // Handle the response accordingly
-            const data = await response.json();
-            console.log('Join Marketplace Response:', data);
-
+            if (response.data.success) {
+                console.log('Join Marketplace Response:', response.data.message);
+                Notify('success', response.data.message);
+            }
+            else {
+                console.log('Join Marketplace Error:', response.data.message);
+            }
             // Add logic for further actions or UI updates
 
         } catch (error) {

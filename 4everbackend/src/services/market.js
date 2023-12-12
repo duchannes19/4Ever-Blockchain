@@ -1,29 +1,34 @@
-// marketplaceModule.js
-const { ethers } = require('ethers');
+async function joinMarketplace(web3, req, res) {
+  require('dotenv').config();
 
-const ganacheRpcEndpoint = 'http://127.0.0.1:7545';
+  const { userAddress } = req.body;
 
-const marketplaceAddress = '0x123abc...';
-// const marketplaceABI = [...]; // ABI for your Marketplace contract
+  const marketplaceAddress = process.env.MARKETADDR;
+  console.log(marketplaceAddress);
+  const marketplaceABI = require('../../Truffle/build/contracts/Marketplace.json').abi;
 
-const privateKey = '0xabcdef...';
+  console.log(userAddress);
+  try {
+    const marketplaceContract = new web3.eth.Contract(marketplaceABI, marketplaceAddress);
 
-async function joinMarketplace() {
-  const provider = new ethers.providers.JsonRpcProvider(ganacheRpcEndpoint);
-  const wallet = new ethers.Wallet(privateKey, provider);
+    // Get the return of the contract function
+    
 
-  const marketplaceContract = new ethers.Contract(marketplaceAddress, marketplaceABI, wallet);
+    const gasPrice = web3.utils.toWei('20', 'gwei');
+    const gasLimit = 6721975;
 
-  const userAddress = '0xuseraddress...';
+    const transaction = await marketplaceContract.methods.joinMarketplace().send({
+      from: userAddress,
+      gasPrice,
+      gasLimit,
+    });
 
-  const transaction = await marketplaceContract.joinMarketplace({
-    gasLimit: 200000,
-    gasPrice: ethers.utils.parseUnits('20', 'gwei'),
-  });
-
-  const receipt = await transaction.wait();
-
-  console.log('User joined the marketplace:', receipt);
+    console.log('User joined the marketplace:', transaction);
+    res.status(200).send({ success: true, transactionHash: transaction.transactionHash, message: 'Joined!' } );
+  } catch (error) {
+    console.error('Failed to join the marketplace:', error);
+    res.send('Operation failed');
+  }
 }
 
 module.exports = { joinMarketplace };
