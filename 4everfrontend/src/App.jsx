@@ -5,7 +5,7 @@ import MainLogo from './components/MainLogo';
 import Start from './components/Start';
 import SideFigures from './components/SideFigures';
 
-import './App.css';
+import './CSS/App.css';
 import './CSS/images.css';
 
 export default function App() {

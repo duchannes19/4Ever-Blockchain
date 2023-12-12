@@ -1,8 +1,8 @@
 import { Box, Image } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
 
-import Logo from '../assets/img/Logo.png';
-import Logo2 from '../assets/img/logo2.png';
+import Logo from '/img/Logo.png';
+import Logo2 from '/img/logo2.png';
 
 export default function MainLogo() {
     return (
