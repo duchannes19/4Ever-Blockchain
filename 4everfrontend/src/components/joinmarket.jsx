@@ -1,11 +1,11 @@
 import { Button } from '@chakra-ui/react';
+
 import axios from 'axios';
 import Notify from './notify';
 
 export default function JoinMarketplace() {
 
     const userAddress = localStorage.getItem('accounts');
-    console.log(userAddress);
 
     const handleJoinMarketplace = async () => {
         try {
@@ -21,11 +21,12 @@ export default function JoinMarketplace() {
             }
             else {
                 console.log('Join Marketplace Error:', response.data.message);
+                Notify('error', response.data.message);
             }
-            // Add logic for further actions or UI updates
 
         } catch (error) {
             console.error('Error joining the marketplace:', error);
+            Notify('error', error.message);
         }
     };
 

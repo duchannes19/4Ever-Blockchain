@@ -1,10 +1,10 @@
 import { useState } from 'react';
+import { ToastContainer } from 'react-toastify';
 
 import NavBar from './components/Navbar';
 import MainLogo from './components/MainLogo';
 import Start from './components/Start';
 import SideFigures from './components/SideFigures';
-import { ToastContainer } from 'react-toastify';
 
 import './CSS/App.css';
 import './CSS/images.css';

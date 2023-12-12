@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+
 import Web3 from 'web3';
 
 export default function ConnectToMetaMask({ setMetaMask, setIsConnected, setStep1 }) {
