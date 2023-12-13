@@ -1,11 +1,6 @@
-async function joinMarketplace(web3, req, res) {
-    require('dotenv').config();
+async function joinMarketplace(web3, req, res, marketplaceAddress, marketplaceABI) {
 
     const { userAddress } = req.body;
-
-    const marketplaceAddress = process.env.MARKETADDR;
-    console.log(marketplaceAddress);
-    const marketplaceABI = require('../../Truffle/build/contracts/Marketplace.json').abi;
 
     console.log(userAddress);
     try {
@@ -13,6 +8,14 @@ async function joinMarketplace(web3, req, res) {
 
         const gasPrice = web3.utils.toWei('20', 'gwei');
         const gasLimit = 6721975;
+
+        const verifyMembership = await marketplaceContract.methods.isMember(userAddress).call();
+
+        if(verifyMembership) {
+            console.log('User is already a member');
+            res.status(200).send({ success: true, message: 'User is already a member' });
+            return;
+        }
 
         const transaction = await marketplaceContract.methods.joinMarketplace().send({
             from: userAddress,

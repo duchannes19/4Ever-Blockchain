@@ -5,6 +5,6 @@
         "install-all": "cd 4everfrontend && npm install && cd ../4everbackend && npm install && npm install -g truffle cd ..",
         "client": "cd 4everfrontend && npm run dev",
         "server": "cd 4everbackend && npm start",
-        "truffle": "cd 4everbackend/Truffle && truffle compile && truffle migrate"
+        "truffle": "cd 4everbackend/Truffle && truffle migrate"
     }
 }

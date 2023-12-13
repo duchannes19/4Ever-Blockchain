@@ -3,6 +3,8 @@ require('dotenv').config();
 var cors = require('cors')
 const PORT = process.env.PORT || 5000;
 const ganacheRpcEndpoint = process.env.GANACHE;
+const FourEverAddress = process.env.MARKETADDR;
+const FourEverABI = require('./Truffle/build/contracts/FourEver.json').abi;
 
 const { joinMarketplace } = require('./src/services/market');
 const { Web3 } = require('web3');
@@ -42,7 +44,7 @@ web3.eth.getBlockNumber()
 // Join Market
 app.post('/api/join-marketplace', (req, res) => {
     // Pass the web3 instance to the joinMarketplace function
-    joinMarketplace(web3, req, res);
+    joinMarketplace(web3, req, res, FourEverAddress, FourEverABI);
 });
 
 // Start the server

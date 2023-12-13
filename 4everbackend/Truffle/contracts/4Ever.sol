@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-contract Marketplace {
+contract FourEver {
     address[] public members;
     mapping(address => bool) public isMember;
 
@@ -9,7 +9,7 @@ contract Marketplace {
 
     function joinMarketplace() public returns (bool) {
         address sender = msg.sender;
-
+        
         if (!isMember[sender]) {
             members.push(sender);
             isMember[sender] = true;
@@ -22,5 +22,9 @@ contract Marketplace {
 
     function getMembers() public view returns (address[] memory) {
         return members;
+    }
+
+    function isUserMember(address user) public view returns (bool) {
+        return isMember[user];
     }
 }
