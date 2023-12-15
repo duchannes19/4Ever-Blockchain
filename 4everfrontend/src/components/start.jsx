@@ -6,12 +6,17 @@ import ConnectToMetaMask from "./Metamask";
 import HelpModal from "./HelpModal";
 import JoinMarketplace from "./JoinMarket";
 
-export default function Start({ isConnected, setIsConnected, step1, setStep1 }) {
+export default function Start({ isConnected, setIsConnected, step1, setStep1, step2, setStep2 }) {
     const [metamask, setMetaMask] = useState(false);
 
     const fadeInVariants = {
         hidden: { opacity: 0, y: 50 },
         visible: { opacity: 1, y: 0 }
+    };
+
+    const fadeOutVariants = {
+        hidden: { opacity: 1, y: 0 },
+        visible: { opacity: 0, y: 50 }
     };
 
     return (
@@ -43,9 +48,9 @@ export default function Start({ isConnected, setIsConnected, step1, setStep1 }) 
                 <motion.div
                     initial="hidden"
                     animate="visible"
-                    variants={fadeInVariants}
+                    variants={step2 ? fadeOutVariants : fadeInVariants}
                     transition={{ duration: 0.5 }}
-                    style={{ color: 'white', fontFamily: 'mephistoregular', fontSize: '3rem', zIndex: '1' }}>
+                    style={{ color: 'white', fontFamily: 'mephistoregular', fontSize: '3rem', zIndex: '1', pointerEvents: 'none' }}>
                     Connected to MetaMask
                 </motion.div>
             }
@@ -55,12 +60,12 @@ export default function Start({ isConnected, setIsConnected, step1, setStep1 }) 
                     <motion.div
                         initial="hidden"
                         animate="visible"
-                        variants={fadeInVariants}
+                        variants={step2 ? fadeOutVariants : fadeInVariants}
                         transition={{ delay: 0.5, duration: 0.5 }}
                         style={{ color: 'white', fontFamily: 'mephistoregular', fontSize: '3rem', zIndex: '1' }}>
                         <hr className="separator"></hr>
                         Step 1<br />Join the Market<br />
-                        <JoinMarketplace />
+                        <JoinMarketplace setStep1={setStep1} setStep2={setStep2}/>
                     </motion.div>
                 </>
             )}

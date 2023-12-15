@@ -13,7 +13,7 @@ class Market {
             const verifyMembership = await this.contract.methods.isUserMember(userAddress).call();
             if (verifyMembership) {
                 console.log('User is already a member');
-                res.status(200).send({ success: true, message: 'User is already a member' });
+                res.status(200).send({ success: true, message: 'Welcome Back!' });
                 return;
             }
             const transaction = await this.contract.methods.joinMarketplace().send({
