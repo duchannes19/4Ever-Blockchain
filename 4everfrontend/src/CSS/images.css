@@ -17,6 +17,7 @@
     margin-top: 10rem;
     margin-bottom: 2em;
     pointer-events: none;
+    transition: all 800ms ease-in-out;
 }
 
 .main-logo.first {
@@ -27,6 +28,11 @@
 .main-logo.second {
     transform: translateX(-1.1rem);
     filter: drop-shadow(0 0 1em black);
+}
+
+.main-logo.first.resize, .main-logo.second.resize {
+    height: 13em;
+    margin-top: 6rem;
 }
 
 .separator {
