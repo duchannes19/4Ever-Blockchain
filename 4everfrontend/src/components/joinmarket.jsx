@@ -19,6 +19,7 @@ export default function JoinMarketplace({ setStep1 , setStep2 }) {
                 console.log('Join Marketplace Response:', response.data.message);
                 Notify('success', response.data.message);
                 setStep2(true);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
                 setTimeout(() => {
                     setStep1(false);
                 }, 3000);
