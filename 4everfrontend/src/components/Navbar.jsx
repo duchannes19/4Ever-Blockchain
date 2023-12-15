@@ -2,12 +2,13 @@ import { Flex, Spacer, Box, Heading, useColorMode, Button } from '@chakra-ui/rea
 
 import Logo from '/img/logo(small).png';
 
-export default function Navbar({ setIsConnected, setStep1 }) {
+export default function Navbar({ setIsConnected, setStep1, setStep2 }) {
 
     const handleMetaMask = () => {
         localStorage.clear();
         setIsConnected(false);
         setStep1(false);
+        setStep2(false);
     };
 
     return (

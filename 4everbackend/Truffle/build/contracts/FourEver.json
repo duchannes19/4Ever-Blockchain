@@ -806,7 +806,7 @@
   "sourceMap": "60:586:0:-:0;;;;;;;;;;;;;;;;;;;",
   "deployedSourceMap": "60:586:0:-:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;540:103;;;;;;;;;;;;;:::i;:::-;;:::i;:::-;;;;;;;:::i;:::-;;;;;;;;85:40;;;;;;;;;;;;;:::i;:::-;;:::i;:::-;;;;;;;:::i;:::-;;;;;;;;185:347;;;:::i;:::-;;;;;;;:::i;:::-;;;;;;;;540:103;597:4;621:8;:14;630:4;621:14;;;;;;;;;;;;;;;;;;;;;;;;;614:21;;540:103;;;:::o;85:40::-;;;;;;;;;;;;;;;;;;;;;;:::o;185:347::-;228:4;245:14;262:10;245:27;;290:8;:16;299:6;290:16;;;;;;;;;;;;;;;;;;;;;;;;;285:240;;342:4;323:8;:16;332:6;323:16;;;;;;;;;;;;;;;;:23;;;;;;;;;;;;;;;;;;379:6;366:20;;;;;;;;;;;;408:4;401:11;;;;;285:240;480:5;473:12;;;185:347;;:::o;7:139:1:-;;91:6;78:20;69:29;;107:33;134:5;107:33;:::i;:::-;59:87;;;;:::o;152:262::-;;260:2;248:9;239:7;235:23;231:32;228:2;;;276:1;273;266:12;228:2;319:1;344:53;389:7;380:6;369:9;365:22;344:53;:::i;:::-;334:63;;290:117;218:196;;;;:::o;420:109::-;501:21;516:5;501:21;:::i;:::-;496:3;489:34;479:50;;:::o;535:210::-;;660:2;649:9;645:18;637:26;;673:65;735:1;724:9;720:17;711:6;673:65;:::i;:::-;627:118;;;;:::o;751:96::-;;817:24;835:5;817:24;:::i;:::-;806:35;;796:51;;;:::o;853:90::-;;930:5;923:13;916:21;905:32;;895:48;;;:::o;949:126::-;;1026:42;1019:5;1015:54;1004:65;;994:81;;;:::o;1081:122::-;1154:24;1172:5;1154:24;:::i;:::-;1147:5;1144:35;1134:2;;1193:1;1190;1183:12;1134:2;1124:79;:::o",
   "source": "// SPDX-License-Identifier: MIT\r\npragma solidity ^0.8.0;\r\n\r\ncontract FourEver {\r\n    mapping(address => bool) public isMember;\r\n\r\n    event MemberJoined(address indexed member);\r\n\r\n    function joinMarketplace() public returns (bool) {\r\n        address sender = msg.sender;\r\n\r\n        if (!isMember[sender]) {\r\n            isMember[sender] = true;\r\n            emit MemberJoined(sender);\r\n            return true; // User joined successfully\r\n        } else {\r\n            return false; // User is already a member\r\n        }\r\n    }\r\n\r\n    function isUserMember(address user) public view returns (bool) {\r\n        return isMember[user];\r\n    }\r\n}\r\n",
-  "sourcePath": "C:\\Dev\\VSCode Projects\\4Ever-Blockchain\\4everbackend\\Truffle\\contracts\\4Ever.sol",
+  "sourcePath": "C:\\Users\\andri\\Documents\\GitHub\\4Ever-Blockchain\\4everbackend\\Truffle\\contracts\\4Ever.sol",
   "ast": {
     "absolutePath": "project:/contracts/4Ever.sol",
     "exportedSymbols": {
@@ -1439,12 +1439,12 @@
     "5777": {
       "events": {},
       "links": {},
-      "address": "0x679db5f1e424fdd30aE7CD984776f8Bb11349A45",
-      "transactionHash": "0x0865ed8a492c5a880ae97a4bc5678d77bcd4165ddfc2103ca4f53dbf1ed88e5c"
+      "address": "0x76e2d6F8163867323763751122fc3e7ccc0a8fe9",
+      "transactionHash": "0xa0c58c82b0f88088c8b4efb06f7d116656ae2d1092a06f0b0571139009a347f3"
     }
   },
   "schemaVersion": "3.4.16",
-  "updatedAt": "2023-12-15T12:09:15.136Z",
+  "updatedAt": "2023-12-15T19:49:41.927Z",
   "networkType": "ethereum",
   "devdoc": {
     "kind": "dev",
