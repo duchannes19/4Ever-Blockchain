@@ -3,7 +3,7 @@ import axios from 'axios';
 
 import Notify from './Notify';
 
-export default function JoinMarketplace() {
+export default function JoinMarketplace({ setStep1 , setStep2 }) {
 
     const userAddress = localStorage.getItem('accounts');
 
@@ -18,6 +18,10 @@ export default function JoinMarketplace() {
             if (response.data.success) {
                 console.log('Join Marketplace Response:', response.data.message);
                 Notify('success', response.data.message);
+                setStep2(true);
+                setTimeout(() => {
+                    setStep1(false);
+                }, 3000);
             }
             else {
                 console.log('Join Marketplace Error:', response.data.message);
