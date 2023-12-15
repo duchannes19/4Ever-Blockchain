@@ -1,22 +1,23 @@
+//Load environment variables from a .env file into process.env
 require('dotenv').config();
 
+//Require modules
 const express = require('express');
 const cors = require('cors');
-
-const PORT = process.env.PORT || 3000;
-const ganacheRpcEndpoint = process.env.GANACHE;
-const FourEverAddress = process.env.MARKETADDR;
+const { Web3 } = require('web3');
+const { Market } = require('./src/services/Market');
 const FourEverABI = require('./Truffle/build/contracts/FourEver.json').abi;
 
-const { joinMarketplace } = require('./src/services/market');
-const { Web3 } = require('web3');
-
 //Connect to Ganache
-const web3 = new Web3(ganacheRpcEndpoint);
+const web3 = new Web3(process.env.GANACHE);
 
 //Contract instance
-const marketplaceContract = new web3.eth.Contract(FourEverABI, FourEverAddress);
+const marketplaceContract = new web3.eth.Contract(FourEverABI, process.env.MARKETADDR);
 
+//Market interface
+const market = new Market(web3, marketplaceContract);
+
+//Create express app
 const app = express();
 app.use(express.json());
 app.use(cors());
@@ -36,12 +37,13 @@ web3.eth.getBlockNumber()
         console.error('Error connecting to Ganache:', error);
     });
 
-// Join Market
+// Join Market endpoint
 app.post('/api/join-marketplace', (req, res) => {
-    joinMarketplace(web3, req, res, marketplaceContract);
+    //Call class method to join the market
+    market.joinMarketplace(req, res);
 });
 
 // Start the server
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+app.listen(process.env.PORT, () => {
+    console.log(`Server is running on port ${process.env.PORT}`);
 });
