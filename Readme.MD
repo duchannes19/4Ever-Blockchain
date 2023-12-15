@@ -116,3 +116,29 @@ Make sure you have the following installed:
     ```bash
     npm run install-all
     
+## Usage
+
+- First of all open Ganache and add a new workspace
+    - In the Truffle Prject add the `truffle-config.js` file located `4everbackend/Truffle/truffle-config.js`
+- Launche the workspace
+- In the root folder of the repo `4Ever-Blockchain` run
+
+    ```bash
+    npm run truffle
+    ```
+
+- Copy the contract address found in the log in the console and replace the `MARKETADDR` in the `.env` file located in `4everbackend/.env`
+- From the root folder `4Ever-Blockchain` run (Separated terminal):
+
+    ```bash
+    npm run server
+    ```
+
+    ```bash
+    npm run client
+    ```
+- Open the client side address
+- Connnect to Metamask with one of the account in the ganache blockchain (Tutorial in the slides)
+- Press the `Connect` buttonin the middle of the page
+- Press `Join` button
+- ... Coming soon
