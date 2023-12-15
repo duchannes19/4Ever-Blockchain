@@ -10,8 +10,8 @@ export default function JoinMarketplace() {
     const handleJoinMarketplace = async () => {
         try {
             // Make a request to your backend to join the marketplace
-            const response = await axios.post('http://localhost:5000/api/join-marketplace', {
-                userAddress: userAddress,
+            const response = await axios.post('http://localhost:3000/api/join-marketplace', {
+                userAddress: userAddress
             });
 
             // Handle the response accordingly

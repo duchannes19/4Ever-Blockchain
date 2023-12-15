@@ -1,7 +1,9 @@
-//Requirements
 require('dotenv').config();
-var cors = require('cors')
-const PORT = process.env.PORT || 5000;
+
+const express = require('express');
+const cors = require('cors');
+
+const PORT = process.env.PORT || 3000;
 const ganacheRpcEndpoint = process.env.GANACHE;
 const FourEverAddress = process.env.MARKETADDR;
 const FourEverABI = require('./Truffle/build/contracts/FourEver.json').abi;
@@ -9,14 +11,15 @@ const FourEverABI = require('./Truffle/build/contracts/FourEver.json').abi;
 const { joinMarketplace } = require('./src/services/market');
 const { Web3 } = require('web3');
 
-//App Setup
-const express = require('express');
+//Connect to Ganache
+const web3 = new Web3(ganacheRpcEndpoint);
+
+//Contract instance
+const marketplaceContract = new web3.eth.Contract(FourEverABI, FourEverAddress);
+
 const app = express();
 app.use(express.json());
 app.use(cors());
-
-//Connect to Ganache
-const web3 = new Web3(ganacheRpcEndpoint);
 
 // Middleware to pass web3 to all routes
 app.use((req, res, next) => {
@@ -33,18 +36,9 @@ web3.eth.getBlockNumber()
         console.error('Error connecting to Ganache:', error);
     });
 
-// Routes 
-//const assetRouter = require('./src/controllers/AssetController');
-//const governanceRouter = require('./src/controllers/GovernanceController');
-
-// Existing routes
-//app.use('/api/assets', assetRouter);
-//app.use('/api/governance', governanceRouter);
-
 // Join Market
 app.post('/api/join-marketplace', (req, res) => {
-    // Pass the web3 instance to the joinMarketplace function
-    joinMarketplace(web3, req, res, FourEverAddress, FourEverABI);
+    joinMarketplace(web3, req, res, marketplaceContract);
 });
 
 // Start the server
