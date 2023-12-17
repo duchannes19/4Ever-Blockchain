@@ -19,11 +19,11 @@ export default function App() {
     return (
         <div className='main'>
             <ToastContainer />
-            <NavBar setIsConnected={setIsConnected} setStep1={setStep1} setStep2={setStep2}/>
-            <MainLogo resize={step2}/>
-            <SideFigures fadeout={step2}/>
+            <NavBar setIsConnected={setIsConnected} setStep1={setStep1} setStep2={setStep2} />
+            <MainLogo resize={step2} />
+            <SideFigures fadeout={step2} />
             <Start isConnected={isConnected} setIsConnected={setIsConnected}
-                step1={step1} setStep1={setStep1} 
+                step1={step1} setStep1={setStep1}
                 step2={step2} setStep2={setStep2}
             />
         </div>

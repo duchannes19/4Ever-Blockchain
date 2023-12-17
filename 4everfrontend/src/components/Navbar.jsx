@@ -9,6 +9,7 @@ export default function Navbar({ setIsConnected, setStep1, setStep2 }) {
         setIsConnected(false);
         setStep1(false);
         setStep2(false);
+        document.body.style.backgroundImage = 'none';
     };
 
     return (

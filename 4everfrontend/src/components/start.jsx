@@ -44,7 +44,7 @@ export default function Start({ isConnected, setIsConnected, step1, setStep1, st
                     <HelpModal />
                 </motion.div>
             }
-            {isConnected &&
+            {isConnected && !step2 &&
                 <motion.div
                     initial="hidden"
                     animate="visible"
@@ -65,9 +65,23 @@ export default function Start({ isConnected, setIsConnected, step1, setStep1, st
                         style={{ color: 'white', fontFamily: 'mephistoregular', fontSize: '3rem', zIndex: '1' }}>
                         <hr className="separator"></hr>
                         Step 1<br />Join the Market<br />
-                        <JoinMarketplace setStep1={setStep1} setStep2={setStep2}/>
+                        <JoinMarketplace setStep1={setStep1} setStep2={setStep2} />
                     </motion.div>
                 </>
+            )}
+            {step2 && (
+                <motion.div
+                    initial="hidden"
+                    animate="visible"
+                    variants={fadeInVariants}
+                    transition={{ delay: 1, duration: 0.5 }}
+                    // Andrea: the height is temporary, it's just to show the whole background
+                    style={{ color: 'white', fontFamily: 'mephistoregular', fontSize: '3rem', zIndex: '1', height: '25rem', filter: 'drop-shadow(0px 0px 10px black)'}}>
+                    Choose<br />
+                    <Button fontFamily={'mephistoregular'} mr={2} /*TODO Next Action*/>Create NFT</Button>
+                    <Button fontFamily={'mephistoregular'} mr={2} /*TODO Next Action*/>Buy</Button>
+                    <Button fontFamily={'mephistoregular'} mr={2} /*TODO Next Action*/>Sell</Button>
+                </motion.div>
             )}
         </>
     );

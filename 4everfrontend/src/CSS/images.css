@@ -30,6 +30,20 @@
     filter: drop-shadow(0 0 1em black);
 }
 
+.main-logo.third {
+    height: 18em;
+    transform: translate(4rem, -2.2rem);
+    filter: drop-shadow(0 0 1em black);
+}
+
+.main-logo.first.resize {
+    transform: translateX(-3.1rem);
+}
+
+.main-logo.second.resize {
+    transform: translateX(2.1rem);
+}
+
 .main-logo.first.resize, .main-logo.second.resize {
     height: 13em;
     margin-top: 6rem;
