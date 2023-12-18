@@ -48,8 +48,10 @@ contract FourEver {
         return isMember[user];
     }
 
-    function getUserNFT(address user) public view returns (uint256) {
-        return userNFTs[user];
+    function getUserNFTs(address user) public view returns (uint256[] memory) {
+        uint256[] memory userNFTList = new uint256[](1);
+        userNFTList[0] = userNFTs[user];
+        return userNFTList;
     }
 
     function getAllNFTs(address user) public view returns (uint256[] memory) {

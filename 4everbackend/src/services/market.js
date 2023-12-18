@@ -13,7 +13,25 @@ class Market {
             const verifyMembership = await this.contract.methods.isUserMember(userAddress).call();
             if (verifyMembership) {
                 console.log('User is already a member');
-                res.status(200).send({ success: true, message: 'Welcome Back!' });
+
+                // Get the user's balance
+                const balance = await this.contract.methods.balanceOf(userAddress).call();
+                console.log('Balance:', balance.toString());
+
+                // Get the user's NFTs
+                let nfts = await this.contract.methods.getUserNFTs(userAddress).call();
+                
+                if (nfts.length === 0) {
+                    nfts = ['None'];
+                }
+                
+                console.log('NFTs:', nfts.map(nft => nft.toString()));
+
+                res.status(200).send({
+                    success: true,
+                    balance: balance.toString(),
+                    nfts: nfts.map(nft => nft.toString()),
+                    message: 'Welcome Back!' });
                 return;
             }
             const transaction = await this.contract.methods.joinMarketplace().send({
@@ -28,17 +46,21 @@ class Market {
             console.log('Balance:', balance.toString());
 
             // Get the user's NFTs
-            const nfts = await this.contract.methods.getUserNFT(userAddress).call();
+            let nfts = await this.contract.methods.getUserNFT(userAddress).call();
+
+            if (nfts.length === 0) {
+                nfts = ['None'];
+            }
+
             console.log('NFTs:', nfts.map(nft => nft.toString()));
 
-            // Andrea: at the moment balance and nft is undefined for me, I get it for the nft since
-            // I don't have one cause I joined earlier, but I don't know for the balance.
-
-            res.status(200).send({ success: true, 
+            res.status(200).send({
+                success: true,
                 transactionHash: transaction.transactionHash,
                 balance: balance.toString(),
                 nfts: nfts.map(nft => nft.toString()),
-                message: 'Joined!' });
+                message: 'Joined!'
+            });
 
         } catch (error) {
             console.error('Failed to join the marketplace:', error);
