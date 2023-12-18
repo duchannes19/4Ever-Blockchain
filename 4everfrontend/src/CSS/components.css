@@ -1,0 +1,17 @@
+.choice {
+    color: white;
+    font-family: mephistoregular;
+    font-size: 3rem;
+    z-index: 1;
+    height: 25rem;
+    filter: drop-shadow(0px 0px 10px black);
+}
+
+
+@media screen and (max-width: 700px) {
+
+    .choice{
+        transform: translateY(-3rem) !important;
+    }
+
+}

@@ -63,8 +63,6 @@
     filter: drop-shadow(0 0 2em #61dafbaa);
 }
 
-
-
 .figure-image {
     position: absolute;
     width: 30%;
@@ -96,6 +94,21 @@
 }
 
 @media screen and (max-width: 700px) {
+
+    .main-logo.first.resize{
+        height: 7em;
+        transform: translateX(1rem);
+    }
+
+    .main-logo.second.resize{
+        height: 7em;
+        transform: translateX(1rem);
+    }
+
+    .main-logo.third{
+        height: 9em;
+        transform: translate(0rem, -1rem);
+    }
 
     .figure-image {
         display: none;

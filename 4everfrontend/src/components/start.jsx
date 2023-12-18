@@ -76,7 +76,7 @@ export default function Start({ isConnected, setIsConnected, step1, setStep1, st
                     variants={fadeInVariants}
                     transition={{ delay: 1, duration: 0.5 }}
                     // Andrea: the height is temporary, it's just to show the whole background
-                    style={{ color: 'white', fontFamily: 'mephistoregular', fontSize: '3rem', zIndex: '1', height: '25rem', filter: 'drop-shadow(0px 0px 10px black)'}}>
+                    className="choice">
                     Choose<br />
                     <Button fontFamily={'mephistoregular'} mr={2} /*TODO Next Action*/>Create NFT</Button>
                     <Button fontFamily={'mephistoregular'} mr={2} /*TODO Next Action*/>Buy</Button>

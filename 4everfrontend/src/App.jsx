@@ -8,6 +8,7 @@ import SideFigures from './components/SideFigures';
 
 import './CSS/App.css';
 import './CSS/images.css';
+import './CSS/components.css'
 import 'react-toastify/dist/ReactToastify.css';
 
 export default function App() {
