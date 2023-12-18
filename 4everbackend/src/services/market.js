@@ -22,12 +22,43 @@ class Market {
                 gasLimit,
             });
             console.log('User joined the marketplace:', transaction);
-            res.status(200).send({ success: true, transactionHash: transaction.transactionHash, message: 'Joined!' });
+
+            // Get the user's balance
+            const balance = await this.contract.methods.balanceOf(userAddress).call();
+            console.log('Balance:', balance.toString());
+
+            // Get the user's NFTs
+            const nfts = await this.contract.methods.getUserNFT(userAddress).call();
+            console.log('NFTs:', nfts.map(nft => nft.toString()));
+
+            // Andrea: at the moment balance and nft is undefined for me, I get it for the nft since
+            // I don't have one cause I joined earlier, but I don't know for the balance.
+
+            res.status(200).send({ success: true, 
+                transactionHash: transaction.transactionHash,
+                balance: balance.toString(),
+                nfts: nfts.map(nft => nft.toString()),
+                message: 'Joined!' });
+
         } catch (error) {
             console.error('Failed to join the marketplace:', error);
             res.status(500).send('Operation failed');
         }
-    }
+    };
+
+    async addNFT(userAddress) {
+        try {
+            const nftId = Math.floor(Math.random() * 1000); // Generate random nftId
+            const transaction = await this.contract.methods.AddNFTtoUser(userAddress, nftId).send({
+                from: userAddress,
+            });
+            console.log('NFT added:', transaction);
+            res.status(200).send({ success: true, transactionHash: transaction.transactionHash, message: 'NFT Added!' });
+        } catch (error) {
+            console.error('Failed to add NFT:', error);
+            res.status(500).send('Operation failed');
+        }
+    };
 }
 
 module.exports = { Market };

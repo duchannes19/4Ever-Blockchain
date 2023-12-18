@@ -15,7 +15,10 @@ export default function App() {
 
     const [isConnected, setIsConnected] = useState(localStorage.getItem('connected') && localStorage.getItem('accounts'));
     const [step1, setStep1] = useState(localStorage.getItem('accounts') ? true : false);
-    const [step2, setStep2] = useState(false);
+    const [step2, setStep2] = useState(localStorage.getItem('isjoined') && localStorage.getItem('balance') && localStorage.getItem('nfts'));
+
+    //Chek your localstorage
+    console.log(localStorage);
 
     return (
         <div className='main'>

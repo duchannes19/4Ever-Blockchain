@@ -17,9 +17,16 @@ export default function JoinMarketplace({ setStep1 , setStep2 }) {
             // Handle the response accordingly
             if (response.data.success) {
                 console.log('Join Marketplace Response:', response.data.message);
+
+                localStorage.setItem('isjoined', true);
+                localStorage.setItem('balance', response.data.balance);
+                localStorage.setItem('nfts', response.data.nfts);
+
                 Notify('success', response.data.message);
-                setStep2(true);
+                
                 window.scrollTo({ top: 0, behavior: 'smooth' });
+
+                setStep2(true);
                 setStep1(false);
             }
             else {

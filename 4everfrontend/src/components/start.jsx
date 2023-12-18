@@ -55,7 +55,7 @@ export default function Start({ isConnected, setIsConnected, step1, setStep1, st
                 </motion.div>
             }
             {metamask && <ConnectToMetaMask setMetaMask={setMetaMask} setIsConnected={setIsConnected} setStep1={setStep1} />}
-            {step1 && (
+            {step1 && !step2 && (
                 <>
                     <motion.div
                         initial="hidden"
