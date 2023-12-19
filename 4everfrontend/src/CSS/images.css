@@ -74,12 +74,12 @@
 .figure-image.left {
     width: 34%;
     left: 0;
-    transform: translate(-17px, -316px);
+    transform: translate(-17px, -418px);
 }
 
 .figure-image.right {
     right: 0;
-    transform: translate(-48px, -320px);
+    transform: translate(-48px, -421px);
 }
 
 @media screen and (max-width: 1500px) {

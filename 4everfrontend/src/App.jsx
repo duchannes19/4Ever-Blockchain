@@ -13,11 +13,12 @@ import 'react-toastify/dist/ReactToastify.css';
 
 export default function App() {
 
-    const [isConnected, setIsConnected] = useState(localStorage.getItem('connected') && localStorage.getItem('accounts'));
+    const [isConnected, setIsConnected] = useState(localStorage.getItem('connected') ? true : false);
     const [isJoined, setIsJoined] = useState(localStorage.getItem('isjoined'));
     const [step1, setStep1] = useState(localStorage.getItem('accounts') ? true : false);
-    const [step2, setStep2] = useState(localStorage.getItem('isjoined') && localStorage.getItem('balance') && localStorage.getItem('nfts'));
+    const [step2, setStep2] = useState(localStorage.getItem('isjoined') ? true : false);
 
+    console.log(step2);
     
     useEffect(() => {
         setIsJoined(localStorage.getItem('isjoined'));

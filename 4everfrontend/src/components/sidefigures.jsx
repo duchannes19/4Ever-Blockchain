@@ -8,7 +8,7 @@ export default function SideFigures({ fadeout }) {
     return (
         <Box className="side-figures">
             <motion.div
-                initial={{ opacity: fadeout ? 0 : 1 }}
+                initial={{ opacity: 0 }}
                 animate={{ opacity: fadeout ? 0 : 1 }}
                 transition={{ duration: fadeout ? 0.5 : 2 }}
                 className="left-figure"
@@ -16,7 +16,7 @@ export default function SideFigures({ fadeout }) {
                 <Image src={Left} alt="Left Image" className="figure-image left" />
             </motion.div>
             <motion.div
-                initial={{ opacity: fadeout ? 0 : 1 }}
+                initial={{ opacity: 0 }}
                 animate={{ opacity: fadeout ? 0 : 1 }}
                 transition={{ duration: fadeout ? 0.5 : 2 }}
                 className="right-figure"
