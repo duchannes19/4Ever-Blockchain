@@ -19,7 +19,6 @@ export default function JoinMarketplace({ setStep1 , setStep2 }) {
                 console.log('Join Marketplace Response:', response.data.message);
 
                 localStorage.setItem('isjoined', true);
-                localStorage.setItem('balance', response.data.balance);
                 localStorage.setItem('nfts', response.data.nfts);
 
                 Notify('success', response.data.message);

@@ -1,10 +1,13 @@
+import React from 'react';
+
+import { useEffect } from 'react';
 import { Flex, Spacer, Box, Heading, useColorMode, Button } from '@chakra-ui/react';
 
 import Logo from '/img/logo(small).png';
 
 import User from './user';
 
-export default function Navbar({ setIsConnected, setStep1, setStep2 }) {
+export default function Navbar({ setIsConnected, setStep1, setStep2, isJoined }) {
 
     const handleMetaMask = () => {
         localStorage.clear();
@@ -14,7 +17,6 @@ export default function Navbar({ setIsConnected, setStep1, setStep2 }) {
         document.body.style.backgroundImage = 'none';
     };
 
-    const isLogged = localStorage.getItem('connected');
 
     return (
         <Flex p={4} bg="#191410" align="center" position="absolute" top={0} left={0} right={0} boxShadow="0px 2px 4px rgba(0, 0, 0, 0.25)">
@@ -25,8 +27,11 @@ export default function Navbar({ setIsConnected, setStep1, setStep2 }) {
                 </Heading>
             </Box>
             <Spacer />
-            <Box style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-                {isLogged && <User reset={handleMetaMask}/>}
+            <Box style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                {!isJoined && <Button colorScheme="teal" variant="outline" mr={3} onClick={handleMetaMask}>
+                    Reset
+                </Button>}
+                {isJoined && <User reset={handleMetaMask} />}
             </Box>
         </Flex>
     );

@@ -4,7 +4,6 @@ pragma solidity ^0.8.19;
 contract FourEver {
     mapping(address => bool) public isMember;
     mapping(address => uint256) public userNFTs;
-    mapping(address => uint256) public balanceOf;
 
     event MemberJoined(address indexed member);
 
@@ -38,10 +37,6 @@ contract FourEver {
         } else {
             return false;
         }
-    }
-
-    function getBalance(address user) public view returns (uint256) {
-        return balanceOf[user];
     }
 
     function isUserMember(address user) public view returns (bool) {

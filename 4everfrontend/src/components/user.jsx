@@ -1,16 +1,14 @@
 import React from 'react';
 
-import { Avatar, Menu, MenuButton, MenuList, MenuItem, Box } from '@chakra-ui/react';
+import { Avatar, Menu, MenuButton, MenuList, MenuItem, Box, Text } from '@chakra-ui/react';
 
 import AvatarImg from '/img/avatar.jpeg';
-
-import { Text } from '@chakra-ui/react';
 
 const User = ({ reset }) => {
 
     const account = localStorage.getItem('accounts');
-    const balance = localStorage.getItem('balance');
     const nfts = localStorage.getItem('nfts');
+    const balance = localStorage.getItem('balance');
 
     return (
         <Box>

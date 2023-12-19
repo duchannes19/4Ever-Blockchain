@@ -14,10 +14,6 @@ class Market {
             if (verifyMembership) {
                 console.log('User is already a member');
 
-                // Get the user's balance
-                const balance = await this.contract.methods.balanceOf(userAddress).call();
-                console.log('Balance:', balance.toString());
-
                 // Get the user's NFTs
                 let nfts = await this.contract.methods.getUserNFTs(userAddress).call();
                 
@@ -29,7 +25,6 @@ class Market {
 
                 res.status(200).send({
                     success: true,
-                    balance: balance.toString(),
                     nfts: nfts.map(nft => nft.toString()),
                     message: 'Welcome Back!' });
                 return;
@@ -41,12 +36,8 @@ class Market {
             });
             console.log('User joined the marketplace:', transaction);
 
-            // Get the user's balance
-            const balance = await this.contract.methods.balanceOf(userAddress).call();
-            console.log('Balance:', balance.toString());
-
             // Get the user's NFTs
-            let nfts = await this.contract.methods.getUserNFT(userAddress).call();
+            let nfts = await this.contract.methods.getUserNFTs(userAddress).call();
 
             if (nfts.length === 0) {
                 nfts = ['None'];
@@ -57,7 +48,6 @@ class Market {
             res.status(200).send({
                 success: true,
                 transactionHash: transaction.transactionHash,
-                balance: balance.toString(),
                 nfts: nfts.map(nft => nft.toString()),
                 message: 'Joined!'
             });

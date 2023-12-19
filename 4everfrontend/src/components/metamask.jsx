@@ -18,9 +18,13 @@ export default function ConnectToMetaMask({ setMetaMask, setIsConnected, setStep
                         method: 'eth_accounts',
                     });
 
+                    const balance = await web3.eth.getBalance(accounts[0]);
+
                     // Put content on localstorage
                     localStorage.setItem('connected', true);
                     localStorage.setItem('accounts', accounts[0]);
+                    localStorage.setItem('balance', balance);
+
                     setIsConnected(true);
                     setStep1(true);
                     setMetaMask(false);
