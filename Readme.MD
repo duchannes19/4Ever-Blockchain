@@ -1,10 +1,33 @@
 # 4Ever
 
-![Title Image](README_logo.png)
+<p align="center">
+  <img src="README_logo.png" alt="Title Image">
+</p>
 
 ## Introduction
 
 4Ever is an MMORPG-inspired decentralized application (DApp) that leverages blockchain technology to manage the in-game economy, asset ownership, and decentralized governance. The project aims to provide a secure and transparent environment for players to trade in-game assets, maintain ownership through NFTs (Non-Fungible Tokens), and participate in the governance of certain aspects of the game.
+
+# Considerations
+
+## Purpose
+
+The main objective of this application (at the moment) is to be utilized in the next generation of online Massively Multiplayer Online Role-Playing Games (MMORPGs). Its focus is on facilitating the exchange and verification of asset ownership among players.
+
+## To Do (To be Updated)
+
+Instead of creating traditional Non-Fungible Tokens (NFTs), the contract simulates a function that assigns in-game quests (common in MMORPGs). Upon quest completion, players receive a unique item (NFT) as a reward. These items differ from one another, potentially categorized by rarity (common, uncommon, rare, epic, legendary), each having a fixed price based on its rarity. Players can then sell or exchange items of similar price range. Consider the addition of a whistleblowing mechanism.
+
+## Advantages
+
+- **No Duplicates:** Each item received as a quest reward is unique, eliminating the possibility of duplicates in the game.
+- **No Scams:** The blockchain-based ownership verification ensures a secure and scam-resistant environment.
+- **Complete Ownership:** Players have full ownership of their in-game assets, fostering a sense of true ownership.
+
+## Limitations
+
+- **MetaMask Dependency:** The application relies on MetaMask for user interaction, limiting accessibility to users with a MetaMask wallet.
+- **Game Development Limitation:** The application does not cover the development of the actual MMORPG game. Integration with an existing game or the development of a game itself is necessary for full functionality.
 
 ## Develop rule (TEMP)
 

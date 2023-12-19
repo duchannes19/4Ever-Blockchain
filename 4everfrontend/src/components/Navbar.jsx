@@ -1,11 +1,9 @@
 import React from 'react';
+import User from './user';
 
-import { useEffect } from 'react';
-import { Flex, Spacer, Box, Heading, useColorMode, Button } from '@chakra-ui/react';
+import { Flex, Spacer, Box, Heading, Button } from '@chakra-ui/react';
 
 import Logo from '/img/logo(small).png';
-
-import User from './user';
 
 export default function Navbar({ setIsConnected, setStep1, setStep2, isJoined }) {
 
