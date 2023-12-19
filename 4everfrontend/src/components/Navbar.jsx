@@ -2,6 +2,8 @@ import { Flex, Spacer, Box, Heading, useColorMode, Button } from '@chakra-ui/rea
 
 import Logo from '/img/logo(small).png';
 
+import User from './user';
+
 export default function Navbar({ setIsConnected, setStep1, setStep2 }) {
 
     const handleMetaMask = () => {
@@ -12,6 +14,8 @@ export default function Navbar({ setIsConnected, setStep1, setStep2 }) {
         document.body.style.backgroundImage = 'none';
     };
 
+    const isLogged = localStorage.getItem('connected');
+
     return (
         <Flex p={4} bg="#191410" align="center" position="absolute" top={0} left={0} right={0} boxShadow="0px 2px 4px rgba(0, 0, 0, 0.25)">
             <Box p="2" display={'flex'} alignItems={'center'} gap={'0.1rem'}>
@@ -21,8 +25,8 @@ export default function Navbar({ setIsConnected, setStep1, setStep2 }) {
                 </Heading>
             </Box>
             <Spacer />
-            <Box>
-                <Button onClick={handleMetaMask} colorScheme="teal" variant="outline" size="sm" mr={4}>Reset</Button>
+            <Box style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+                {isLogged && <User reset={handleMetaMask}/>}
             </Box>
         </Flex>
     );
