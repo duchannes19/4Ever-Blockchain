@@ -17,8 +17,6 @@ export default function App() {
     const [isJoined, setIsJoined] = useState(localStorage.getItem('isjoined'));
     const [step1, setStep1] = useState(localStorage.getItem('accounts') ? true : false);
     const [step2, setStep2] = useState(localStorage.getItem('isjoined') ? true : false);
-
-    console.log(step2);
     
     useEffect(() => {
         setIsJoined(localStorage.getItem('isjoined'));

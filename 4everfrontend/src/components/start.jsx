@@ -64,7 +64,7 @@ export default function Start({ isConnected, setIsConnected, step1, setStep1, st
                         transition={{ delay: 0.5, duration: 0.5 }}
                         style={{ color: 'white', fontFamily: 'mephistoregular', fontSize: '3rem', zIndex: '1' }}>
                         <hr className="separator"></hr>
-                        Step 1<br />Join the Market<br />
+                        Join the Market<br />
                         <JoinMarketplace setStep1={setStep1} setStep2={setStep2} />
                     </motion.div>
                 </>
@@ -78,7 +78,8 @@ export default function Start({ isConnected, setIsConnected, step1, setStep1, st
                     // Andrea: the height is temporary, it's just to show the whole background
                     className="choice">
                     Choose<br />
-                    <Button fontFamily={'mephistoregular'} mr={2} /*TODO Next Action*/>Create NFT</Button>
+                    {/* Andrea: Maybe convert the buttons directly to components?*/}
+                    <Button fontFamily={'mephistoregular'} mr={2} /*TODO Next Action*/>Quests</Button>
                     <Button fontFamily={'mephistoregular'} mr={2} /*TODO Next Action*/>Buy</Button>
                     <Button fontFamily={'mephistoregular'} mr={2} /*TODO Next Action*/>Sell</Button>
                 </motion.div>

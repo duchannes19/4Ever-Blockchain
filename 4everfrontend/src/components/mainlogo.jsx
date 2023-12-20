@@ -11,14 +11,7 @@ export default function MainLogo({ resize }) {
 
     useEffect(() => {
         if (resize) {
-            //Set background to image with fade in
-            document.body.style.transition = "background-image 2s ease-in-out";
-            document.body.style.backgroundImage = `url(${MarketBackground})`;
-            document.body.style.backgroundSize = "cover";
-            document.body.style.backgroundPosition = "center";
-            document.body.style.backgroundRepeat = "no-repeat";
-            document.body.style.backgroundAttachment = 'fixed';
-            document.body.style.opacity = "1";
+            document.body.style.setProperty('background-image', `url(${MarketBackground})`, 'important');
         }
     }, [resize]);
 

@@ -85,11 +85,11 @@
 @media screen and (max-width: 1500px) {
 
     .figure-image.left {
-        transform: translate(-56px, -316px);
+        transform: translate(-56px, -366px);
     }
 
     .figure-image.right {
-        transform: translate(-4px, -320px);
+        transform: translate(-4px, -370px);
     }
 }
 

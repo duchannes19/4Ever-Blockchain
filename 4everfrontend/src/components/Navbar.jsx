@@ -12,7 +12,8 @@ export default function Navbar({ setIsConnected, setStep1, setStep2, isJoined })
         setIsConnected(false);
         setStep1(false);
         setStep2(false);
-        document.body.style.backgroundImage = 'none';
+        document.body.style.backgroundImage = 'url("/img/mainback.png")';
+        document.body.style.height = "100vh";
     };
 
 

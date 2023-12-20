@@ -7,16 +7,6 @@
     font-style: normal;
 }
 
-body{
-    transition: background-image 2s ease-in-out;
-    background-image: url('/img/mainback.png') !important;
-    background-size: cover;
-    background-position: center !important;
-    background-repeat: no-repeat;
-    transition: opacity 0.5s ease-in-out;
-    height: 100vh;
-}
-
 #root {
     max-width: 1280px;
     margin: 0 auto;
