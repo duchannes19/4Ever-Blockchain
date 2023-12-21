@@ -6,6 +6,7 @@ const express = require('express');
 const cors = require('cors');
 const { Web3 } = require('web3');
 const { Market } = require('./src/services/Market');
+const generatenew = require('./src/services/generation');
 const FourEverABI = require('./Truffle/build/contracts/FourEver.json').abi;
 
 //Connect to Ganache
@@ -42,6 +43,30 @@ app.post('/api/join-marketplace', (req, res) => {
     //Call class method to join the market
     market.joinMarketplace(req, res);
 });
+
+app.post('/api/create-item', async (req, res) => {
+
+    const { address } = req.body;
+
+    const isValid = market.isJoined(address);
+
+    if (isValid) {
+        try {
+            const newitem = await generatenew();
+            res.status(200).json({
+                message: 'Item created',
+                item: JSON.stringify(newitem),
+            });
+        } catch (error) {
+            console.log(error);
+        }
+    } else {
+        res.status(400).json({
+            message: 'You are not joined to the marketplace',
+        });
+    }
+});
+
 
 // Start the server
 app.listen(process.env.PORT, () => {

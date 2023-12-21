@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import ConnectToMetaMask from "./Metamask";
 import HelpModal from "./HelpModal";
 import JoinMarketplace from "./JoinMarket";
+import GenerateButton from "./generate(test)";
 
 export default function Start({ isConnected, setIsConnected, step1, setStep1, step2, setStep2 }) {
     const [metamask, setMetaMask] = useState(false);
@@ -81,6 +82,7 @@ export default function Start({ isConnected, setIsConnected, step1, setStep1, st
                     <Button fontFamily={'mephistoregular'} mr={2} /*TODO Next Action*/>Quests</Button>
                     <Button fontFamily={'mephistoregular'} mr={2} /*TODO Next Action*/>Buy</Button>
                     <Button fontFamily={'mephistoregular'} mr={2} /*TODO Next Action*/>Sell</Button>
+                    <GenerateButton />
                 </motion.div>
             )}
         </>

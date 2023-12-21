@@ -72,6 +72,16 @@ class Market {
             res.status(500).send('Operation failed');
         }
     };
+
+    async isJoined(userAddress) {
+        try {
+            const isMember = await this.contract.methods.isUserMember(userAddress).call();
+            return isMember;
+        } catch (error) {
+            console.error('Failed to check if user is joined:', error);
+            return false;
+        }
+    };
 }
 
 module.exports = { Market };
