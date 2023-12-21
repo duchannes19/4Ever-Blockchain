@@ -12,11 +12,13 @@
 
 ## Main Objective (For Now)
 
-The main objective of this application (at the moment) is to be utilized in the next generation of online Massively Multiplayer Online Role-Playing Games (MMORPGs). Its focus is on facilitating the exchange and verification of asset ownership among players.
+The main objective of this application (at the moment) is to be utilized in an hypothetical next generation of online MMORPGs.
 
 ## To Do (To be Updated)
 
 Instead of directly creating traditional Non-Fungible Tokens (NFTs), the contract simulates a function that assigns in-game quests (common in MMORPGs). Upon quest completion, players receive a unique item (NFT) as a reward. These items differ from one another, potentially categorized by rarity (common, uncommon, rare, epic, legendary), each having a fixed price based on its rarity. Players can then sell or exchange items of similar price range. Consider the addition of a whistleblowing mechanism.
+
+- **NFT Structure:** The structure for now includes an image (url), description, owner information and rarity category. It could also be added a 3d model since it is a game, however we lack the automatic generation of 3d models 😅. The images however could be generated with the help of Stable Diffusion or similars.
 
 ## Advantages
 

@@ -15,7 +15,7 @@ class Market {
                 console.log('User is already a member');
 
                 // Get the user's NFTs
-                let nfts = await this.contract.methods.getUserNFTs(userAddress).call();
+                let nfts = await this.contract.methods.getNFTsByOwner(userAddress).call();
                 
                 if (nfts.length === 0) {
                     nfts = ['None'];
@@ -37,7 +37,8 @@ class Market {
             console.log('User joined the marketplace:', transaction);
 
             // Get the user's NFTs
-            let nfts = await this.contract.methods.getUserNFTs(userAddress).call();
+            // Andrea: still don't know if this is the correct way to get an NFT
+            let nfts = await this.contract.methods.getNFTsByOwner(userAddress).call();
 
             if (nfts.length === 0) {
                 nfts = ['None'];

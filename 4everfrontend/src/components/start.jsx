@@ -40,7 +40,7 @@ export default function Start({ isConnected, setIsConnected, step1, setStep1, st
                     variants={fadeInVariants}
                     transition={{ duration: 0.5 }}
                 >
-                    <Button fontFamily={'mephistoregular'} mr={2} onClick={() => setMetaMask(true)}>Connect</Button>
+                    <Button fontFamily={'mephistoregular'} mr={2} onClick={() => setMetaMask(true)} disabled={metamask}>Connect</Button>
                     <HelpModal />
                 </motion.div>
             }
@@ -75,7 +75,6 @@ export default function Start({ isConnected, setIsConnected, step1, setStep1, st
                     animate="visible"
                     variants={fadeInVariants}
                     transition={{ delay: 1, duration: 0.5 }}
-                    // Andrea: the height is temporary, it's just to show the whole background
                     className="choice">
                     Choose<br />
                     {/* Andrea: Maybe convert the buttons directly to components?*/}
