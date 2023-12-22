@@ -6,6 +6,7 @@ import ConnectToMetaMask from "./Metamask";
 import HelpModal from "./HelpModal";
 import JoinMarketplace from "./JoinMarket";
 import GenerateButton from "./generate(test)";
+import AssignQuest from "./quest";
 
 export default function Start({ isConnected, setIsConnected, step1, setStep1, step2, setStep2 }) {
     const [metamask, setMetaMask] = useState(false);
@@ -79,7 +80,7 @@ export default function Start({ isConnected, setIsConnected, step1, setStep1, st
                     className="choice">
                     Choose<br />
                     {/* Andrea: Maybe convert the buttons directly to components?*/}
-                    <Button fontFamily={'mephistoregular'} mr={2} /*TODO Next Action*/>Quests</Button>
+                    <AssignQuest />
                     <Button fontFamily={'mephistoregular'} mr={2} /*TODO Next Action*/>Buy</Button>
                     <Button fontFamily={'mephistoregular'} mr={2} /*TODO Next Action*/>Sell</Button>
                     <GenerateButton />

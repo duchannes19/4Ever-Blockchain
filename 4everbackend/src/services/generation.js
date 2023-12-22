@@ -3,24 +3,8 @@ const fs = require("fs");
 
 const apiToken = process.env.API_TOKEN;
 
-// Function to define the prompt for generating the image
-async function definePrompt(model, input) {
-
-    const response = await fetch(
-        `https://api.cloudflare.com/client/v4/accounts/4a73a3df42c23bb43514bfd9dcebb195/ai/run/${model}`,
-        {
-            headers: { Authorization: `Bearer ${apiToken}` },
-            method: "POST",
-            body: JSON.stringify(input),
-        }
-    );
-
-    const result = await response.json();
-    return result.result.response;
-}
-
-// Function to generate the image
-async function generateImage(model, input) {
+// Function to generate the image 
+async function generateImage(model, input) { 
 
     const response = await fetch(
         `https://api.cloudflare.com/client/v4/accounts/4a73a3df42c23bb43514bfd9dcebb195/ai/run/${model}`,
@@ -36,40 +20,23 @@ async function generateImage(model, input) {
     return result;
 }
 
-async function generatenew(address) {
+async function generatenew(address, items, items_used) {
     console.log('Generating new item for address:', address);
 
     const randomseed = Math.floor(Math.random() * 1000000);
 
-    // Define the prompt
+    // Andrea: I'm gonna use a different approach, i'll get a random item from the item json file
+    const randomItem = items[Math.floor(Math.random() * items.length)];
 
-    const promptInputConfig = {
-        prompt:
-            "Seed: " + randomseed + ". Write a random magical item, that is different from the one I asked you before, in JSON format. For example:\n\n{ \"name\": \"Magical Sword of Power\", \"rarity\": \"Legendary\", \"type\": \"Weapon\",  \"description\": \"A sword that can cut through anything.\" }",
-    };
+    console.log('Prompt:\n', randomItem.description);
 
-    //Prompt for resetting the prompt generator
+    const { description } = randomItem;
 
-    const resetPromptInputConfig = {
-        prompt: "Seed: " + randomseed + ". The next time I ask you to generate an item it has to be different from the one I asked you before. Answer me with Reset Done",
-    };
-
-    console.log('Defining random prompt...')
-
-    const prompt = await definePrompt("@cf/mistral/mistral-7b-instruct-v0.1", promptInputConfig);
-
-    const parsedResponse = JSON.parse(prompt);
-
-    console.log('Prompt:\n', parsedResponse);
-
-    const { description } = parsedResponse;
-
-    const itemPrompt = 'Generate a single magical items that follows this description: ' + description;
+    const itemPrompt = `${description}. Output a single SVG element, fantasy style.`;
 
     // Define the config to generate the image
     const generateInputConfig = {
-        prompt: itemPrompt,
-        num_steps: 20,
+        prompt: itemPrompt
     };
 
     try {
@@ -81,11 +48,10 @@ async function generatenew(address) {
         fs.writeFileSync("./items/generated_image_" + randomseed + ".png", generatedImage);
         console.log('Image saved');
 
-        const reset = await definePrompt("@cf/mistral/mistral-7b-instruct-v0.1", resetPromptInputConfig);
+        // Andrea: Remove the randomItem from the items json file and add it to the used items json file
+        
 
-        console.log(reset);
-
-        return parsedResponse;
+        return randomItem;
     } catch (error) {
         console.error("Error:", error);
     }
