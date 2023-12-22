@@ -52,10 +52,10 @@ app.post('/api/create-item', async (req, res) => {
 
     if (isValid) {
         try {
-            const newitem = await generatenew();
+            const newitem = await generatenew(address);
             res.status(200).json({
                 message: 'Item created',
-                item: JSON.stringify(newitem),
+                item: newitem.description,
             });
         } catch (error) {
             console.log(error);
