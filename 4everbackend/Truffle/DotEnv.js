@@ -6,7 +6,6 @@ const contractJson = require("./build/contracts/FourEver.json");
 const dotenvPath = path.resolve(__dirname, "../.env");
 const contractAddress = contractJson.networks[5777].address;
 
-console.log("=============================");
 console.log("Creating / Updating .env file");
 console.log("=============================");
 
@@ -37,14 +36,21 @@ function setEnvValue(key, value) {
 }
 
 if (fs.existsSync(dotenvPath)) {
+    console.log();
+    console.log(".env file found!");
     setEnvValue("MARKETADDR", "\"" + contractAddress + "\"");
+    console.log();
 }
 else {
+    console.log(".env file not found!");
+    console.log("Creation....");
     try {
         fs.appendFileSync(dotenvPath,
             "PORT = 3000\n" +
             "MARKETADDR = \"" + contractAddress + "\"\n" +
-            "GANACHE = \'http://127.0.0.1:7545\'");
+            "GANACHE = \'http://127.0.0.1:7545\'"
+        );
+        console.log("Done!");
     }
     catch (err) {
         console.log(err);

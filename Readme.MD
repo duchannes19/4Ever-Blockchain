@@ -127,7 +127,6 @@ Make sure you have the following installed:
     npm run truffle
     ```
 
-- Copy the contract address found in the log in the console and replace the `MARKETADDR` in the `.env` file located in `4everbackend/.env`
 - From the root folder `4Ever-Blockchain` run (Separated terminal):
 
     ```bash
