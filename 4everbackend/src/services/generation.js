@@ -28,11 +28,11 @@ async function generatenew(address, items, items_used) {
     // Andrea: I'm gonna use a different approach, i'll get a random item from the item json file
     const randomItem = items[Math.floor(Math.random() * items.length)];
 
-    console.log('Prompt:\n', randomItem.description);
+    console.log('Prompt:\n', randomItem.prompt);
 
-    const { description } = randomItem;
+    const { prompt } = randomItem;
 
-    const itemPrompt = `${description}. Output a single SVG element, fantasy style.`;
+    const itemPrompt = `${prompt}, output a single element, only represent an item.`;
 
     // Define the config to generate the image
     const generateInputConfig = {
