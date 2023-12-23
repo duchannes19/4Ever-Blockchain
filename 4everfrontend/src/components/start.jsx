@@ -5,6 +5,8 @@ import { motion } from "framer-motion";
 import ConnectToMetaMask from "./Metamask";
 import HelpModal from "./HelpModal";
 import JoinMarketplace from "./JoinMarket";
+import GenerateButton from "./generate(test)";
+import AssignQuest from "./quest";
 
 export default function Start({ isConnected, setIsConnected, step1, setStep1, step2, setStep2 }) {
     const [metamask, setMetaMask] = useState(false);
@@ -40,11 +42,11 @@ export default function Start({ isConnected, setIsConnected, step1, setStep1, st
                     variants={fadeInVariants}
                     transition={{ duration: 0.5 }}
                 >
-                    <Button fontFamily={'mephistoregular'} mr={2} onClick={() => setMetaMask(true)}>Connect</Button>
+                    <Button fontFamily={'mephistoregular'} mr={2} onClick={() => setMetaMask(true)} disabled={metamask}>Connect</Button>
                     <HelpModal />
                 </motion.div>
             }
-            {isConnected &&
+            {isConnected && !step2 &&
                 <motion.div
                     initial="hidden"
                     animate="visible"
@@ -55,7 +57,7 @@ export default function Start({ isConnected, setIsConnected, step1, setStep1, st
                 </motion.div>
             }
             {metamask && <ConnectToMetaMask setMetaMask={setMetaMask} setIsConnected={setIsConnected} setStep1={setStep1} />}
-            {step1 && (
+            {step1 && !step2 && (
                 <>
                     <motion.div
                         initial="hidden"
@@ -64,10 +66,25 @@ export default function Start({ isConnected, setIsConnected, step1, setStep1, st
                         transition={{ delay: 0.5, duration: 0.5 }}
                         style={{ color: 'white', fontFamily: 'mephistoregular', fontSize: '3rem', zIndex: '1' }}>
                         <hr className="separator"></hr>
-                        Step 1<br />Join the Market<br />
-                        <JoinMarketplace setStep1={setStep1} setStep2={setStep2}/>
+                        Join the Market<br />
+                        <JoinMarketplace setStep1={setStep1} setStep2={setStep2} />
                     </motion.div>
                 </>
+            )}
+            {step2 && (
+                <motion.div
+                    initial="hidden"
+                    animate="visible"
+                    variants={fadeInVariants}
+                    transition={{ delay: 1, duration: 0.5 }}
+                    className="choice">
+                    Choose<br />
+                    {/* Andrea: Maybe convert the buttons directly to components?*/}
+                    <AssignQuest />
+                    <Button fontFamily={'mephistoregular'} mr={2} /*TODO Next Action*/>Buy</Button>
+                    <Button fontFamily={'mephistoregular'} mr={2} /*TODO Next Action*/>Sell</Button>
+                    <GenerateButton />
+                </motion.div>
             )}
         </>
     );

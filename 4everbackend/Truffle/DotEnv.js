@@ -48,7 +48,9 @@ else {
         fs.appendFileSync(dotenvPath,
             "PORT = 3000\n" +
             "MARKETADDR = \"" + contractAddress + "\"\n" +
-            "GANACHE = \'http://127.0.0.1:7545\'"
+            "GANACHE = \'http://127.0.0.1:7545\'\n" +
+            "API_TOKEN = \'l0InWDVIbNJuluwJBhLtF_HfF69llFp8Ll2U6Bx_\'\n" +
+            "BING_COOKIE = \"1--FZLr4SXAT1-Myc8NqI5U5P58qCIncvVrwACIZVXDzEr1LP8wvjMDaIjNOu71k1cyAOEyHBS3uFaN8KI8gty9UyKmvui9L38M_uU5F1lCW85sUtJui8B_bppXoKgUOib1GPEDPKrZRvpQadjrh6Bgdt9_3-2VtToYGUVTlTp7x3eDQLcmeZBVpBCv_EY0yfacsUUOOFx5MTUV5vctN7Ovy8kjYR5Sl70drKfrlemLs\""
         );
         console.log("Done!");
     }

@@ -30,6 +30,20 @@
     filter: drop-shadow(0 0 1em black);
 }
 
+.main-logo.third {
+    height: 18em;
+    transform: translate(4rem, -2.2rem);
+    filter: drop-shadow(0 0 1em black);
+}
+
+.main-logo.first.resize {
+    transform: translateX(-3.1rem);
+}
+
+.main-logo.second.resize {
+    transform: translateX(2.1rem);
+}
+
 .main-logo.first.resize, .main-logo.second.resize {
     height: 13em;
     margin-top: 6rem;
@@ -49,8 +63,6 @@
     filter: drop-shadow(0 0 2em #61dafbaa);
 }
 
-
-
 .figure-image {
     position: absolute;
     width: 30%;
@@ -62,26 +74,41 @@
 .figure-image.left {
     width: 34%;
     left: 0;
-    transform: translate(-17px, -316px);
+    transform: translate(-17px, -418px);
 }
 
 .figure-image.right {
     right: 0;
-    transform: translate(-48px, -320px);
+    transform: translate(-48px, -421px);
 }
 
 @media screen and (max-width: 1500px) {
 
     .figure-image.left {
-        transform: translate(-56px, -316px);
+        transform: translate(-56px, -366px);
     }
 
     .figure-image.right {
-        transform: translate(-4px, -320px);
+        transform: translate(-4px, -370px);
     }
 }
 
 @media screen and (max-width: 700px) {
+
+    .main-logo.first.resize{
+        height: 7em;
+        transform: translateX(1rem);
+    }
+
+    .main-logo.second.resize{
+        height: 7em;
+        transform: translateX(1rem);
+    }
+
+    .main-logo.third{
+        height: 9em;
+        transform: translate(0rem, -1rem);
+    }
 
     .figure-image {
         display: none;

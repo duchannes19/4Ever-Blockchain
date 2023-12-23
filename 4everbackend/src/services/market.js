@@ -13,7 +13,20 @@ class Market {
             const verifyMembership = await this.contract.methods.isUserMember(userAddress).call();
             if (verifyMembership) {
                 console.log('User is already a member');
-                res.status(200).send({ success: true, message: 'Welcome Back!' });
+
+                // Get the user's NFTs
+                let nfts = await this.contract.methods.getNFTsByOwner(userAddress).call();
+                
+                if (nfts.length === 0) {
+                    nfts = ['None'];
+                }
+                
+                console.log('NFTs:', nfts.map(nft => nft.toString()));
+
+                res.status(200).send({
+                    success: true,
+                    nfts: nfts.map(nft => nft.toString()),
+                    message: 'Welcome Back!' });
                 return;
             }
             const transaction = await this.contract.methods.joinMarketplace().send({
@@ -22,12 +35,53 @@ class Market {
                 gasLimit,
             });
             console.log('User joined the marketplace:', transaction);
-            res.status(200).send({ success: true, transactionHash: transaction.transactionHash, message: 'Joined!' });
+
+            // Get the user's NFTs
+            // Andrea: still don't know if this is the correct way to get an NFT
+            let nfts = await this.contract.methods.getNFTsByOwner(userAddress).call();
+
+            if (nfts.length === 0) {
+                nfts = ['None'];
+            }
+
+            console.log('NFTs:', nfts.map(nft => nft.toString()));
+
+            res.status(200).send({
+                success: true,
+                transactionHash: transaction.transactionHash,
+                nfts: nfts.map(nft => nft.toString()),
+                message: 'Joined!'
+            });
+
         } catch (error) {
             console.error('Failed to join the marketplace:', error);
             res.status(500).send('Operation failed');
         }
-    }
+    };
+
+    async addNFT(userAddress) {
+        try {
+            const nftId = Math.floor(Math.random() * 1000); // Generate random nftId
+            const transaction = await this.contract.methods.AddNFTtoUser(userAddress, nftId).send({
+                from: userAddress,
+            });
+            console.log('NFT added:', transaction);
+            res.status(200).send({ success: true, transactionHash: transaction.transactionHash, message: 'NFT Added!' });
+        } catch (error) {
+            console.error('Failed to add NFT:', error);
+            res.status(500).send('Operation failed');
+        }
+    };
+
+    async isJoined(userAddress) {
+        try {
+            const isMember = await this.contract.methods.isUserMember(userAddress).call();
+            return isMember;
+        } catch (error) {
+            console.error('Failed to check if user is joined:', error);
+            return false;
+        }
+    };
 }
 
 module.exports = { Market };

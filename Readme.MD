@@ -1,10 +1,37 @@
 # 4Ever
 
-![Title Image](README_logo.png)
+<p align="center">
+  <img src="README_logo.png" alt="Title Image">
+</p>
 
 ## Introduction
 
 4Ever is an MMORPG-inspired decentralized application (DApp) that leverages blockchain technology to manage the in-game economy, asset ownership, and decentralized governance. The project aims to provide a secure and transparent environment for players to trade in-game assets, maintain ownership through NFTs (Non-Fungible Tokens), and participate in the governance of certain aspects of the game.
+
+# Considerations
+
+## Main Objective (For Now)
+
+The main objective of this application (at the moment) is to be utilized in an hypothetical next generation of online MMORPGs.
+
+## To Do (To be Updated)
+
+Instead of directly creating traditional Non-Fungible Tokens (NFTs), the contract simulates a function that assigns in-game quests (common in MMORPGs). Upon quest completion, players receive a unique item (NFT) as a reward. These items differ from one another, potentially categorized by rarity (common, uncommon, rare, epic, legendary), each having a fixed price based on its rarity. Players can then sell or exchange items of similar price range. Consider the addition of a whistleblowing mechanism (Professor mentioned it, don't know if it is really necessary).
+
+- **NFT Structure:** The structure for now includes an image (url), description, owner information and rarity category. It could also be added a 3d model since it is a game, however we lack the automatic generation of 3d models 😅. For now we use Cloudflare AI with Stable Diffusion for the images, the items themselves are picked from a JSON file (see code for more).
+
+- **Quest System:** The quest system could consist in the random generation of a quest players has to complete in a certain time, each player pays something to partecipate, if no one completes the quest everyone loses the money, if somebody manages to complete the quest before the other it gets rewarded with an NFT that is the unique item with a value of all the combined partecipation quota. The quests could be divided based on the rarity of the item received, so to do a quest that rewards you with a Common item costs less than partecipate in one where you get an Epic.
+
+## Advantages
+
+- **No Duplicates:** Each item received as a quest reward is unique, eliminating the possibility of duplicates in the game.
+- **No Scams:** The blockchain-based ownership verification ensures a secure and scam-resistant environment.
+- **Complete Ownership:** Players have full ownership of their in-game assets, fostering a sense of true ownership.
+
+## Limitations
+
+- **MetaMask Dependency:** The application relies on MetaMask for user interaction, limiting accessibility to users with a MetaMask wallet.
+- **Game Development Limitation:** The application does not cover the development of the actual MMORPG game. Integration with an existing game or the development of a game itself is necessary for full functionality.
 
 ## Develop rule (TEMP)
 
