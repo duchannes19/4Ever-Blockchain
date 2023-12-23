@@ -5,7 +5,11 @@
 # Added by CesareDev
 metamask_cred.txt
 smart_contract_notes.txt
+
+# Now generated
 4everbackend/.env
+
+4everbackend/items/*.png
 
 # To avoid Conflicts
 4everbackend/Truffle/build/contracts/FourEver.json
