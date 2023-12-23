@@ -9,6 +9,7 @@ smart_contract_notes.txt
 # Now generated
 4everbackend/.env
 
+# Ignoring images
 4everbackend/items/*.png
 
 # To avoid Conflicts
