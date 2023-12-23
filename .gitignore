@@ -2,9 +2,6 @@
 4everfrontend/node_modules
 4everbackend/node_modules
 
-# Ignore Truffle build artifacts in 4everbackend
-4everbackend/Truffle/build/
-
 # Added by CesareDev
 metamask_cred.txt
 smart_contract_notes.txt
