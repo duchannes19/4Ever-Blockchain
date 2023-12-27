@@ -30,23 +30,37 @@
     filter: drop-shadow(0 0 1em black);
 }
 
-.main-logo.third {
-    height: 18em;
-    transform: translate(4rem, -2.2rem);
+.main-logo.market, .main-logo.quests {
+    height: 8em;
     filter: drop-shadow(0 0 1em black);
+    cursor: pointer;
+    pointer-events: initial;
+    transition: all 300ms ease-in-out;
+}
+
+.main-logo.market:hover {
+    filter: drop-shadow(0 0 1.5em gold);
+}
+
+.main-logo.quests:hover {
+    filter: drop-shadow(0 0 1.5em rgb(0, 197, 0));
 }
 
 .main-logo.first.resize {
-    transform: translateX(-3.1rem);
+    transform: translateX(0rem);
+    transform: translateY(-1rem);
+    opacity: 0;
 }
 
 .main-logo.second.resize {
-    transform: translateX(2.1rem);
+    transform: translateX(0rem);
+    transform: translateY(-1rem);
+    opacity: 0;
 }
 
 .main-logo.first.resize, .main-logo.second.resize {
-    height: 13em;
-    margin-top: 6rem;
+    height: 10em;
+    margin-top: -6rem;
 }
 
 .separator {
@@ -105,9 +119,8 @@
         transform: translateX(1rem);
     }
 
-    .main-logo.third{
-        height: 9em;
-        transform: translate(0rem, -1rem);
+    .main-logo.market, .main-logo.quests {
+        height: 3.5em;
     }
 
     .figure-image {

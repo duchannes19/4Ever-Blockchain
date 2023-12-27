@@ -3,9 +3,14 @@
     font-family: mephistoregular;
     font-size: 3rem;
     filter: drop-shadow(0px 0px 10px black);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: transparent;
+    height: 5em;
 }
 
-.metamask{
+.metamask {
     font-size: 2rem;
     margin-top: 1rem;
     color: white;
@@ -13,10 +18,10 @@
     font-family: 'mephistoregular';
 }
 
-@media screen and (max-width: 700px) {
+@media screen and (max-width: 768px) {
 
-    .choice{
-        transform: translateY(-3rem) !important;
+    .choice {
+        flex-direction: row;
     }
 
 }

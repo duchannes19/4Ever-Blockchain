@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Button } from "@chakra-ui/react";
 import axios from "axios";
-import Notify from "./Notify";
+import Notify from "../components/Notify";
 import { SpinnerCircular } from 'spinners-react';
 
 // Andrea: This component is for testing only 

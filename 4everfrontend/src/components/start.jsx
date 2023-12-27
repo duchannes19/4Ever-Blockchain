@@ -1,15 +1,23 @@
 import { useState } from "react";
-import { Button } from "@chakra-ui/react";
+import { Button, Text, Image, Box } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 
 import ConnectToMetaMask from "./Metamask";
 import HelpModal from "./HelpModal";
-import JoinMarketplace from "./JoinMarket";
-import GenerateButton from "./generate(test)";
-import AssignQuest from "./quest";
+import Join from "./join";
+import Market from "./market";
+import Quests from "./quests";
+
+import MarketLogo from '/img/marketlogo.png';
+import QuestsLogo from '/img/questslogo.png';
+
+//import GenerateButton from "../DEBUG/generate(DEBUG)";
+//import AssignQuest from "../DEBUG/quest(DEBUG)";
 
 export default function Start({ isConnected, setIsConnected, step1, setStep1, step2, setStep2 }) {
     const [metamask, setMetaMask] = useState(false);
+    const [market, setMarket] = useState(false);
+    const [quests, setQuests] = useState(false);
 
     const fadeInVariants = {
         hidden: { opacity: 0, y: 50 },
@@ -19,6 +27,11 @@ export default function Start({ isConnected, setIsConnected, step1, setStep1, st
     const fadeOutVariants = {
         hidden: { opacity: 1, y: 0 },
         visible: { opacity: 0, y: 50 }
+    };
+
+    const fadeInVariantsChoice = {
+        hidden: { opacity: 0, y: 50 },
+        visible: { opacity: 1, y: -50 }
     };
 
     return (
@@ -64,10 +77,10 @@ export default function Start({ isConnected, setIsConnected, step1, setStep1, st
                         animate="visible"
                         variants={step2 ? fadeOutVariants : fadeInVariants}
                         transition={{ delay: 0.5, duration: 0.5 }}
-                        style={{ color: 'white', fontFamily: 'mephistoregular', fontSize: '3rem', zIndex: '1' }}>
+                        style={{ color: 'white', fontFamily: 'mephistoregular', fontSize: '3rem', zIndex: '1', textShadow: '2px 2px 4px rgba(0, 0, 0, 0.5)' }}>
                         <hr className="separator"></hr>
-                        Join the Market<br />
-                        <JoinMarketplace setStep1={setStep1} setStep2={setStep2} />
+                        Join the Platform<br />
+                        <Join setStep1={setStep1} setStep2={setStep2} />
                     </motion.div>
                 </>
             )}
@@ -75,17 +88,18 @@ export default function Start({ isConnected, setIsConnected, step1, setStep1, st
                 <motion.div
                     initial="hidden"
                     animate="visible"
-                    variants={fadeInVariants}
+                    variants={fadeInVariantsChoice}
                     transition={{ delay: 1, duration: 0.5 }}
                     className="choice">
-                    Choose<br />
-                    {/* Andrea: Maybe convert the buttons directly to components?*/}
-                    <AssignQuest />
-                    <Button fontFamily={'mephistoregular'} mr={2} /*TODO Next Action*/>Buy</Button>
-                    <Button fontFamily={'mephistoregular'} mr={2} /*TODO Next Action*/>Sell</Button>
-                    <GenerateButton />
+
+                        <Image src={MarketLogo} alt="Market" className={`main-logo market`} />
+
+                        <Image src={QuestsLogo} alt="Market" className={`main-logo quests`} />              
+
                 </motion.div>
             )}
+            {step2 && market && !quests && <Market />}
+            {step2 && !market && quests && <Quests />}
         </>
     );
 }

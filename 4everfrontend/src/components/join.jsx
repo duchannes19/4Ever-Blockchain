@@ -3,7 +3,7 @@ import axios from 'axios';
 
 import Notify from './Notify';
 
-export default function JoinMarketplace({ setStep1 , setStep2 }) {
+export default function Join({ setStep1 , setStep2 }) {
 
     const userAddress = localStorage.getItem('accounts');
 
@@ -16,7 +16,7 @@ export default function JoinMarketplace({ setStep1 , setStep2 }) {
 
             // Handle the response accordingly
             if (response.data.success) {
-                console.log('Join Marketplace Response:', response.data.message);
+                console.log('Join Response:', response.data.message);
 
                 localStorage.setItem('isjoined', true);
                 localStorage.setItem('nfts', response.data.nfts);
@@ -29,12 +29,12 @@ export default function JoinMarketplace({ setStep1 , setStep2 }) {
                 setStep1(false);
             }
             else {
-                console.log('Join Marketplace Error:', response.data.message);
+                console.log('Join Error:', response.data.message);
                 Notify('error', response.data.message);
             }
 
         } catch (error) {
-            console.error('Error joining the marketplace:', error);
+            console.error('Error joining:', error);
             Notify('error', error.message);
         }
     };

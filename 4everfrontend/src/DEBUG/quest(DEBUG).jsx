@@ -1,6 +1,6 @@
 import { Button } from "@chakra-ui/react";
 import axios from "axios";
-import Notify from "./Notify";
+import Notify from "../components/Notify";
 
 const AssignQuest = () => {
     const handleClick = async () => {
