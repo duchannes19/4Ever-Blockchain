@@ -16,17 +16,18 @@ class Market {
 
                 // Get the user's NFTs
                 let nfts = await this.contract.methods.getNFTsByOwner(userAddress).call();
-                
+
                 if (nfts.length === 0) {
                     nfts = ['None'];
                 }
-                
+
                 console.log('NFTs:', nfts.map(nft => nft.toString()));
 
                 res.status(200).send({
                     success: true,
                     nfts: nfts.map(nft => nft.toString()),
-                    message: 'Welcome Back!' });
+                    message: 'Welcome Back!'
+                });
                 return;
             }
             const transaction = await this.contract.methods.joinMarketplace().send({

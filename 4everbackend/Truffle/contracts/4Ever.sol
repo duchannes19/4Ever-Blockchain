@@ -2,8 +2,14 @@
 pragma solidity ^0.8.19;
 
 contract FourEver {
+    enum Rarity {
+        Common,
+        Uncommon,
+        Rare,
+        Epic,
+        Legendary
+    }
 
-    enum Rarity { Common, Uncommon, Rare, Epic, Legendary }
     struct NFT {
         address owner;
         string imageURL;
@@ -16,26 +22,45 @@ contract FourEver {
     mapping(address => uint256[]) public userNFTs;
 
     event MemberJoined(address indexed member);
-    event NFTMinted(address indexed owner, uint256 tokenId, string imageURL, string description);
+
+    event NFTMinted(
+        address indexed owner,
+        uint256 tokenId,
+        string imageURL,
+        string description
+    );
 
     // Function to generate a pseudo-random NFT identifier
     function generateRandomNFT() internal view returns (uint256) {
         // In a real-world scenario, implement a secure random number generation algorithm
         // For demonstration purposes, a simple pseudo-random number is used here
-        return uint256(keccak256(abi.encodePacked(block.timestamp, block.basefee, msg.sender))) % 1000;
+        return
+            uint256(
+                keccak256(
+                    abi.encodePacked(block.timestamp, block.basefee, msg.sender)
+                )
+            ) % 1000;
     }
 
     function mintNFT(string memory imageURL, string memory description) public {
         uint256 tokenId = generateRandomNFT();
 
-        Rarity randomRarity = Rarity(uint256(keccak256(abi.encodePacked(block.timestamp, block.basefee, msg.sender))) % 5);
+        Rarity randomRarity = Rarity(
+            uint256(
+                keccak256(
+                    abi.encodePacked(block.timestamp, block.basefee, msg.sender)
+                )
+            ) % 5
+        );
         NFTs[tokenId] = NFT(msg.sender, imageURL, description, randomRarity);
         userNFTs[msg.sender].push(tokenId);
 
         emit NFTMinted(msg.sender, tokenId, imageURL, description);
     }
 
-    function getNFTsByOwner(address owner) public view returns (uint256[] memory) {
+    function getNFTsByOwner(
+        address owner
+    ) public view returns (uint256[] memory) {
         return userNFTs[owner];
     }
 

@@ -4,7 +4,7 @@ const fs = require("fs");
 const apiToken = process.env.API_TOKEN;
 
 // Function to generate the image 
-async function generateImage(model, input) { 
+async function generateImage(model, input) {
 
     const response = await fetch(
         `https://api.cloudflare.com/client/v4/accounts/4a73a3df42c23bb43514bfd9dcebb195/ai/run/${model}`,
@@ -49,7 +49,7 @@ async function generatenew(address, items, items_used) {
         console.log('Image saved');
 
         // Andrea: Remove the randomItem from the items json file and add it to the used items json file
-        
+
 
         return randomItem;
     } catch (error) {
