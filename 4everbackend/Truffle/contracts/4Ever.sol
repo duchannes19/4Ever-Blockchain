@@ -69,10 +69,6 @@ contract FourEver {
 
         if (!isMember[sender]) {
             isMember[sender] = true;
-
-            // Assign a random NFT to the user
-            userNFTs[sender].push(generateRandomNFT());
-
             emit MemberJoined(sender);
             return true; // User joined successfully
         } else {
