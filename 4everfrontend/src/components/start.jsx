@@ -77,33 +77,54 @@ export default function Start({ isConnected, setIsConnected, step1, setStep1, st
                         animate="visible"
                         variants={step2 ? fadeOutVariants : fadeInVariants}
                         transition={{ delay: 0.5, duration: 0.5 }}
-                        style={{ color: 'white', fontFamily: 'mephistoregular', fontSize: '3rem', zIndex: '1', textShadow: '2px 2px 4px rgba(0, 0, 0, 0.5)' }}>
+                        style={{
+                            color: 'white', fontFamily: 'mephistoregular', fontSize: '3rem', zIndex: '1', textShadow: '2px 2px 4px rgba(0, 0, 0, 0.5)',
+                            height: (market || quests) ? '0' : '5em'
+                        }}>
                         <hr className="separator"></hr>
                         Join the Platform<br />
                         <Join setStep1={setStep1} setStep2={setStep2} />
                     </motion.div>
                 </>
             )}
-            {(market || quests) && <Button className='backbutton' fontFamily={'mephistoregular'} onClick={() => { setMarket(false); setQuests(false); }}>Back</Button>}
+            {(market || quests) && <Button className='backbutton' fontFamily={'mephistoregular'} zIndex={3} onClick={() => { setMarket(false); setQuests(false); }}>Back</Button>}
             {step2 && (
                 <motion.div
                     initial="hidden"
                     animate="visible"
                     variants={fadeInVariantsChoice}
                     transition={{ delay: 1, duration: 0.5 }}
-                    className="choice">
+                    className="choice"
+                >
 
-                        <Image src={MarketLogo} alt="Market"
+                    <Image src={MarketLogo} alt="Market"
                         onClick={() => { setMarket(true); setQuests(false); }}
                         className={`main-logo market ${market ? 'chosen' : ''}${quests ? 'notchosen' : ''}`} />
-                        <Image src={QuestsLogo} alt="Market" 
+                    <Image src={QuestsLogo} alt="Quests"
                         onClick={() => { setQuests(true); setMarket(false); }}
-                        className={`main-logo quests ${quests ? 'chosen' : ''}${market ? 'notchosen' : ''}`} />            
-
+                        className={`main-logo quests ${quests ? 'chosen' : ''}${market ? 'notchosen' : ''}`} />
                 </motion.div>
             )}
-            {step2 && market && !quests && <Market />}
-            {step2 && !market && quests && <Quests />}
+            {step2 && market && !quests &&
+                <motion.div
+                    initial="hidden"
+                    animate="visible"
+                    variants={fadeInVariants}
+                    transition={{ delay: 0.8, duration: 0.5 }}
+                >
+                    <Market />
+                </motion.div>
+            }
+            {step2 && !market && quests &&
+                <motion.div
+                    initial="hidden"
+                    animate="visible"
+                    variants={fadeInVariants}
+                    transition={{ delay: 0.8, duration: 0.5 }}
+                >
+                    <Quests />
+                </motion.div>
+            }
         </>
     );
 }

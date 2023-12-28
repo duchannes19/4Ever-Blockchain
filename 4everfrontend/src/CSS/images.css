@@ -39,15 +39,18 @@
 }
 
 .main-logo.market.chosen{
-    transform: translate(10.1rem, -11rem);
+    transform: translate(11rem, -10rem);
     height: 5em;
     pointer-events: none;
+    /*Andrea: Modify the margins when adding something below*/
 }
 
 .main-logo.quests.chosen{
-    transform: translate(-13.1rem, -11rem);
+    transform: translate(-13rem, 25rem);
     height: 5em;
     pointer-events: none;
+    margin-top: -36rem;
+    margin-bottom: 10rem;  
 }
 
 .main-logo.market.notchosen, .main-logo.quests.notchosen {
@@ -141,11 +144,11 @@
     }
 
     .main-logo.market.chosen{
-        transform: translate(5rem, -7rem);
+        transform: translate(5.5rem, 0rem);
     }
 
     .main-logo.quests.chosen{
-        transform: translate(-5rem, -7rem);
+        transform: translate(-5.5rem, 27rem);
     }
 
     .figure-image {
