@@ -116,7 +116,13 @@ import resource from "local resources (png, css, ...)";
 If you are working on something unfinished it would be appreciated if you added a comment somewhere in the code like:
 
 ```js
-//TODO: username
+//TODO: Username
+```
+
+or
+
+```js
+//Username: feature description
 ```
 
 ## Setup
