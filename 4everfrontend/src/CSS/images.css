@@ -45,12 +45,18 @@
     /*Andrea: Modify the margins when adding something below*/
 }
 
+
 .main-logo.quests.chosen{
-    transform: translate(-13rem, 25rem);
+    transform: translate(-13rem, 13.35rem);
     height: 5em;
     pointer-events: none;
     margin-top: -36rem;
     margin-bottom: 10rem;  
+}
+
+.main-logo.quests.chosen.reposition{
+    transition: none;
+    transform: translate(-13rem, 25rem);
 }
 
 .main-logo.market.notchosen, .main-logo.quests.notchosen {
@@ -147,7 +153,15 @@
         transform: translate(5.5rem, 0rem);
     }
 
+    .main-logo.market.chosen.reposition{
+        transform: translate(5.5rem, 0rem);
+    }
+
     .main-logo.quests.chosen{
+        transform: translate(-5.5rem, 17rem);
+    }
+
+    .main-logo.quests.chosen.reposition{
         transform: translate(-5.5rem, 27rem);
     }
 

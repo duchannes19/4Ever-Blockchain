@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button, Text, Image, Box } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 
@@ -18,6 +18,8 @@ export default function Start({ isConnected, setIsConnected, step1, setStep1, st
     const [metamask, setMetaMask] = useState(false);
     const [market, setMarket] = useState(false);
     const [quests, setQuests] = useState(false);
+    const [fadeDelay, setFadeDelay] = useState(false);
+    const [fadeOutDelay, setFadeOutDelay] = useState(false);
 
     const fadeInVariants = {
         hidden: { opacity: 0, y: 50 },
@@ -33,6 +35,24 @@ export default function Start({ isConnected, setIsConnected, step1, setStep1, st
         hidden: { opacity: 0, y: 50 },
         visible: { opacity: 1, y: -50 }
     };
+
+    useEffect(() => {
+        if (market, quests) {
+            setTimeout(() => {
+                setFadeDelay(true);
+                setFadeOutDelay(false);
+            }, 400);
+        }
+    }, [market, quests]);
+
+    const handleBack = () => {
+        setFadeOutDelay(true);
+        setTimeout(() => {
+            setFadeDelay(false);
+            setMarket(false);
+            setQuests(false);
+        }, 400);
+    }
 
     return (
         <>
@@ -87,7 +107,7 @@ export default function Start({ isConnected, setIsConnected, step1, setStep1, st
                     </motion.div>
                 </>
             )}
-            {(market || quests) && <Button className='backbutton' fontFamily={'mephistoregular'} zIndex={3} onClick={() => { setMarket(false); setQuests(false); }}>Back</Button>}
+            {(market || quests) && <Button className='backbutton' fontFamily={'mephistoregular'} zIndex={3} onClick={() => handleBack()}>Back</Button>}
             {step2 && (
                 <motion.div
                     initial="hidden"
@@ -99,28 +119,28 @@ export default function Start({ isConnected, setIsConnected, step1, setStep1, st
 
                     <Image src={MarketLogo} alt="Market"
                         onClick={() => { setMarket(true); setQuests(false); }}
-                        className={`main-logo market ${market ? 'chosen' : ''}${quests ? 'notchosen' : ''}`} />
+                        className={`main-logo market ${market ? 'chosen' : ''}${quests ? 'notchosen' : ''} ${fadeDelay ? 'reposition' : ''}`} />
                     <Image src={QuestsLogo} alt="Quests"
                         onClick={() => { setQuests(true); setMarket(false); }}
-                        className={`main-logo quests ${quests ? 'chosen' : ''}${market ? 'notchosen' : ''}`} />
+                        className={`main-logo quests ${quests ? 'chosen' : ''}${market ? 'notchosen' : ''} ${fadeDelay ? 'reposition' : ''}`} />
                 </motion.div>
             )}
-            {step2 && market && !quests &&
+            {step2 && market && !quests && fadeDelay &&
                 <motion.div
                     initial="hidden"
                     animate="visible"
-                    variants={fadeInVariants}
-                    transition={{ delay: 0.8, duration: 0.5 }}
+                    variants={fadeOutDelay ? fadeOutVariants : fadeInVariants}
+                    transition={{ delay: 0.4, duration: 0.5 }}
                 >
                     <Market />
                 </motion.div>
             }
-            {step2 && !market && quests &&
+            {step2 && !market && quests && fadeDelay &&
                 <motion.div
                     initial="hidden"
                     animate="visible"
-                    variants={fadeInVariants}
-                    transition={{ delay: 0.8, duration: 0.5 }}
+                    variants={fadeOutDelay ? fadeOutVariants : fadeInVariants}
+                    transition={{ delay: fadeOutDelay ? 0 : 0.4, duration: 0.5 }}
                 >
                     <Quests />
                 </motion.div>
