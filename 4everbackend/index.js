@@ -6,13 +6,17 @@ const express = require('express');
 const cors = require('cors');
 const { Web3 } = require('web3');
 const { Market } = require('./src/services/Market');
-const { Quests } = require('./src/services/quests');
-const generatenew = require('./src/services/generation');
+const { Quests } = require('./src/services/Quests');
+const { Generator } = require('./src/services/Generator');
 const FourEverABI = require('./Truffle/build/contracts/FourEver.json').abi;
-
-const items = require('./items/unused.json');
-const items_used = require('./items/used.json'); 
 const quests_list = require('./quests/quests.json');
+
+//CesareDev: Image generation remove from now
+/*
+const items = require('./items/unused.json');
+const items_used = require('./items/used.json');
+const generator = new Generator();
+*/
 
 //Connect to Ganache
 const web3 = new Web3(process.env.GANACHE);
@@ -52,12 +56,28 @@ app.post('/api/join-marketplace', (req, res) => {
     market.joinMarketplace(req, res);
 });
 
-// Assign a quest to a user
-app.post('/api/assign-quest', (req, res) => {
-    //Call class method to assign a quest
-    quests.assignQuest(req, res);
+//CesareDev: Example to an endpoint to get all the activeQuest.
+//           This can be called, for example, when entering the "Quest" section
+app.get('/api/get-all-quest', (req, res) => {
+    quests.getActiveQuest(req, res);
 });
 
+//CesareDev: Example to an endpoint to partecipate to a quest.
+//           This can be called, for example, when a user decided to partecipate
+//           to a quest (quest identification must be in the request body)
+app.post('api/partecipate-to-quest', (req, res) => {
+    quests.partecipateToAQuest(req, res);
+});
+
+//CesareDev: Catch the quest end event from the contract, not implemented yet
+fourEverContract.on("QuestEnded", (event) => {
+    //CesareDev: Maybe from the event we can get the questid.
+    //           The quest id can be the hash value of the quest description...
+    quests.questEnded("replace-with-quest-id");
+});
+
+//CesareDev: Image generation remove from now
+/*
 app.post('/api/create-item', async (req, res) => {
 
     const { address } = req.body;
@@ -66,7 +86,7 @@ app.post('/api/create-item', async (req, res) => {
 
     if (isValid) {
         try {
-            const newitem = await generatenew(address, items, items_used);
+            const newitem = await generator.generateNew(address, items, items_used);
             res.status(200).json({
                 message: 'Item created',
                 item: newitem.description,
@@ -80,7 +100,7 @@ app.post('/api/create-item', async (req, res) => {
         });
     }
 });
-
+*/
 
 // Start the server
 app.listen(process.env.PORT, () => {

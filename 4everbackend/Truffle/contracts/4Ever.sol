@@ -17,18 +17,51 @@ contract FourEver {
         Rarity rarity;
     }
 
+    //Market Member
     mapping(address => bool) public isMember;
+
+    //NFT ID -> Concrete NFT
     mapping(uint256 => NFT) public NFTs;
+
+    //Member -> NFT ID's
     mapping(address => uint256[]) public userNFTs;
 
-    event MemberJoined(address indexed member);
+    //Quest ID -> Memebers
+    mapping(uint256 => address[]) public questParticipants;
+
+    event MemberJoined(address member);
 
     event NFTMinted(
-        address indexed owner,
+        address owner,
         uint256 tokenId,
         string imageURL,
         string description
     );
+
+    event QuestEnded(uint256 questId);
+
+    //----------------------------------------------
+    // Connection
+    //----------------------------------------------
+    function joinMarketplace() public returns (bool) {
+        address sender = msg.sender;
+
+        if (!isMember[sender]) {
+            isMember[sender] = true;
+            emit MemberJoined(sender);
+            return true; // User joined successfully
+        } else {
+            return false; // User is already a member
+        }
+    }
+
+    function isUserMember(address user) public view returns (bool) {
+        return isMember[user];
+    }
+
+    //----------------------------------------------
+    // NFT
+    //----------------------------------------------
 
     // Function to generate a pseudo-random NFT identifier
     function generateRandomNFT() internal view returns (uint256) {
@@ -39,7 +72,7 @@ contract FourEver {
                 keccak256(
                     abi.encodePacked(block.timestamp, block.basefee, msg.sender)
                 )
-            ) % 1000;
+            );
     }
 
     function mintNFT(string memory imageURL, string memory description) public {
@@ -62,25 +95,5 @@ contract FourEver {
         address owner
     ) public view returns (uint256[] memory) {
         return userNFTs[owner];
-    }
-
-    function joinMarketplace() public returns (bool) {
-        address sender = msg.sender;
-
-        if (!isMember[sender]) {
-            isMember[sender] = true;
-            emit MemberJoined(sender);
-            return true; // User joined successfully
-        } else {
-            return false; // User is already a member
-        }
-    }
-
-    function isUserMember(address user) public view returns (bool) {
-        return isMember[user];
-    }
-
-    function getAllNFTs(address user) public view returns (uint256[] memory) {
-        return userNFTs[user];
     }
 }
