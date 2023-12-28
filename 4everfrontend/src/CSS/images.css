@@ -35,7 +35,24 @@
     filter: drop-shadow(0 0 1em black);
     cursor: pointer;
     pointer-events: initial;
-    transition: all 300ms ease-in-out;
+    transition: all 400ms ease-in-out;
+}
+
+.main-logo.market.chosen{
+    transform: translate(10.1rem, -11rem);
+    height: 5em;
+    pointer-events: none;
+}
+
+.main-logo.quests.chosen{
+    transform: translate(-13.1rem, -11rem);
+    height: 5em;
+    pointer-events: none;
+}
+
+.main-logo.market.notchosen, .main-logo.quests.notchosen {
+    opacity: 0;
+    pointer-events: none;
 }
 
 .main-logo.market:hover {
@@ -120,7 +137,15 @@
     }
 
     .main-logo.market, .main-logo.quests {
-        height: 3.5em;
+        height: 3.5em !important;
+    }
+
+    .main-logo.market.chosen{
+        transform: translate(5rem, -7rem);
+    }
+
+    .main-logo.quests.chosen{
+        transform: translate(-5rem, -7rem);
     }
 
     .figure-image {

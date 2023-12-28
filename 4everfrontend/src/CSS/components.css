@@ -18,6 +18,12 @@
     font-family: 'mephistoregular';
 }
 
+.backbutton {
+    position: absolute !important;
+    left: 1rem;
+    top: 9rem;
+}
+
 @media screen and (max-width: 768px) {
 
     .choice {

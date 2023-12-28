@@ -84,6 +84,7 @@ export default function Start({ isConnected, setIsConnected, step1, setStep1, st
                     </motion.div>
                 </>
             )}
+            {(market || quests) && <Button className='backbutton' fontFamily={'mephistoregular'} onClick={() => { setMarket(false); setQuests(false); }}>Back</Button>}
             {step2 && (
                 <motion.div
                     initial="hidden"
@@ -92,9 +93,12 @@ export default function Start({ isConnected, setIsConnected, step1, setStep1, st
                     transition={{ delay: 1, duration: 0.5 }}
                     className="choice">
 
-                        <Image src={MarketLogo} alt="Market" className={`main-logo market`} />
-
-                        <Image src={QuestsLogo} alt="Market" className={`main-logo quests`} />              
+                        <Image src={MarketLogo} alt="Market"
+                        onClick={() => { setMarket(true); setQuests(false); }}
+                        className={`main-logo market ${market ? 'chosen' : ''}${quests ? 'notchosen' : ''}`} />
+                        <Image src={QuestsLogo} alt="Market" 
+                        onClick={() => { setQuests(true); setMarket(false); }}
+                        className={`main-logo quests ${quests ? 'chosen' : ''}${market ? 'notchosen' : ''}`} />            
 
                 </motion.div>
             )}
