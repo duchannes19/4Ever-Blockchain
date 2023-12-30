@@ -10,7 +10,7 @@ const { Quests } = require('./src/services/Quests');
 const { Generator } = require('./src/services/Generator');
 const FourEverABI = require('./Truffle/build/contracts/FourEver.json').abi;
 
-//CesareDev: Image generation remove from now
+//CesareDev: Image generation remove for now
 /*
 const items = require('./items/unused.json');
 const items_used = require('./items/used.json');
@@ -80,7 +80,7 @@ fourEverContract.on("QuestEnded", (event) => {
     quests.questEnded("replace-with-quest-id");
 });
 
-//CesareDev: Image generation remove from now
+//CesareDev: Image generation remove for now
 /*
 app.post('/api/create-item', async (req, res) => {
 
