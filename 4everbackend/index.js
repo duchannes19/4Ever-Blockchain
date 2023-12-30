@@ -9,7 +9,6 @@ const { Market } = require('./src/services/Market');
 const { Quests } = require('./src/services/Quests');
 const { Generator } = require('./src/services/Generator');
 const FourEverABI = require('./Truffle/build/contracts/FourEver.json').abi;
-const quests_list = require('./quests/quests.json');
 
 //CesareDev: Image generation remove from now
 /*
@@ -28,7 +27,7 @@ const fourEverContract = new web3.eth.Contract(FourEverABI, process.env.MARKETAD
 const market = new Market(web3, fourEverContract);
 
 // Quests interface
-const quests = new Quests(web3, fourEverContract, quests_list);
+const quests = new Quests(web3, fourEverContract);
 
 //Create express app
 const app = express();
@@ -62,11 +61,16 @@ app.get('/api/get-all-quest', (req, res) => {
     quests.getActiveQuest(req, res);
 });
 
+//CesareDev: DEBUG ONLY END POINT
+app.get("/api/submit-quests", (req, res) => {
+    quests.submitQuests(req, res);
+})
+
 //CesareDev: Example to an endpoint to partecipate to a quest.
 //           This can be called, for example, when a user decided to partecipate
 //           to a quest (quest identification must be in the request body)
-app.post('api/partecipate-to-quest', (req, res) => {
-    quests.partecipateToAQuest(req, res);
+app.post('api/join-quest', (req, res) => {
+    quests.joinQuest(req, res);
 });
 
 //CesareDev: Catch the quest end event from the contract, not implemented yet
