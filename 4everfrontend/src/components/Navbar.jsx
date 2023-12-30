@@ -16,7 +16,6 @@ export default function Navbar({ setIsConnected, setStep1, setStep2, isJoined })
         document.body.style.height = "100vh";
     };
 
-
     return (
         <Flex p={4} bg="#191410" align="center" position="absolute" top={0} left={0} right={0} boxShadow="0px 2px 4px rgba(0, 0, 0, 0.25)">
             <Box p="2" display={'flex'} alignItems={'center'} gap={'0.1rem'}>
