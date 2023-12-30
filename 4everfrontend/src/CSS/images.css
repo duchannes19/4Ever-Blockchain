@@ -45,6 +45,10 @@
     /*Andrea: Modify the margins when adding something below*/
 }
 
+.main-logo.market.chosen.reposition{
+    transition: none;
+    transform: translate(11rem, 1.5rem);
+}
 
 .main-logo.quests.chosen{
     transform: translate(-13rem, 13.35rem);
@@ -154,7 +158,7 @@
     }
 
     .main-logo.market.chosen.reposition{
-        transform: translate(5.5rem, 0rem);
+        transform: translate(5rem, 3rem);
     }
 
     .main-logo.quests.chosen{

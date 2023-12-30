@@ -36,14 +36,12 @@ export default function Start({ isConnected, setIsConnected, step1, setStep1, st
         visible: { opacity: 1, y: -50 }
     };
 
-    useEffect(() => {
-        if (market, quests) {
-            setTimeout(() => {
-                setFadeDelay(true);
-                setFadeOutDelay(false);
-            }, 400);
-        }
-    }, [market, quests]);
+    const handleForth = () => {
+        setTimeout(() => {
+            setFadeOutDelay(false);
+            setFadeDelay(true);
+        }, 400);
+    };
 
     const handleBack = () => {
         setFadeOutDelay(true);
@@ -118,10 +116,10 @@ export default function Start({ isConnected, setIsConnected, step1, setStep1, st
                 >
 
                     <Image src={MarketLogo} alt="Market"
-                        onClick={() => { setMarket(true); setQuests(false); }}
+                        onClick={() => { handleForth(); setMarket(true); setQuests(false); }}
                         className={`main-logo market ${market ? 'chosen' : ''}${quests ? 'notchosen' : ''} ${fadeDelay ? 'reposition' : ''}`} />
                     <Image src={QuestsLogo} alt="Quests"
-                        onClick={() => { setQuests(true); setMarket(false); }}
+                        onClick={() => { handleForth(); setQuests(true); setMarket(false); }}
                         className={`main-logo quests ${quests ? 'chosen' : ''}${market ? 'notchosen' : ''} ${fadeDelay ? 'reposition' : ''}`} />
                 </motion.div>
             )}
