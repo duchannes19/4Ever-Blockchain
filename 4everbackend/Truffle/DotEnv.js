@@ -1,6 +1,5 @@
 const fs = require("fs");
 const path = require("path");
-const os = require("os");
 const contractJson = require("./build/contracts/FourEver.json");
 
 const dotenvPath = path.resolve(__dirname, "../.env");

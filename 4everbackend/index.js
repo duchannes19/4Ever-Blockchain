@@ -61,23 +61,19 @@ app.get('/api/get-all-quest', (req, res) => {
     quests.getActiveQuest(req, res);
 });
 
-//CesareDev: DEBUG ONLY END POINT
-app.get("/api/submit-quests", (req, res) => {
-    quests.submitQuests(req, res);
-})
-
 //CesareDev: Example to an endpoint to partecipate to a quest.
 //           This can be called, for example, when a user decided to partecipate
 //           to a quest (quest identification must be in the request body)
-app.post('api/join-quest', (req, res) => {
+app.get('/api/join-quest', (req, res) => {
     quests.joinQuest(req, res);
 });
 
 //CesareDev: Catch the quest end event from the contract, not implemented yet
-fourEverContract.on("QuestEnded", (event) => {
+fourEverContract.once("QuestRegistration", (event) => {
     //CesareDev: Maybe from the event we can get the questid.
     //           The quest id can be the hash value of the quest description...
     quests.questEnded("replace-with-quest-id");
+    console.log("CIOOOOOOOO");
 });
 
 //CesareDev: Image generation remove for now

@@ -32,7 +32,8 @@ contract FourEver {
         //CesareDev: In a mapping all the value are initizialized to default value
         //           bool -> false, with this trick we can check if a quest is already registered
         bool registered;
-        address[] participants;
+        //CesareDev: users addresses -> users' quote
+        mapping(address => uint256) participants;
         //CesareDev: Maybe add a NFT member that represents the reward
     }
 
@@ -48,7 +49,7 @@ contract FourEver {
         string description
     );
     event QuestEnded(uint256 questId);
-    event QuestRegistration(uint256 questId);
+    event QuestRegistration(uint256 questId, address user);
     //----------------------------------------------
     // Contract memebers
     //----------------------------------------------
@@ -89,11 +90,24 @@ contract FourEver {
     // Quest
     //----------------------------------------------
 
-    function registerQuest(uint256 questId) public returns (bool) {
-        if (quests[questId].registered) return false;
-        quests[questId].registered = true;
-        emit QuestRegistration(questId);
-        return true;
+    function joinQuest(uint256 questId) public payable {
+        if (!quests[questId].registered) {
+            quests[questId].registered = true;
+        }
+        //CesareDev: the check for the already existing user is done on the backend
+        quests[questId].participants[msg.sender] = msg.value;
+        emit QuestRegistration(questId, msg.sender);
+    }
+
+    function isAlreadyRegistered(
+        uint256 questId,
+        address user
+    ) public view returns (bool) {
+        return quests[questId].participants[user] > 0;
+    }
+
+    function refundUsers(uint256 questId) public {
+        //CesareDev: Refound users if the quest doesn't start
     }
 
     //----------------------------------------------

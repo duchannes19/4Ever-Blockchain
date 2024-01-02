@@ -2,32 +2,9 @@ const questsList = require('../../quests/quests.json');
 
 class Quests {
 
-    constructor(web3, contract, quests) {
+    constructor(web3, contract) {
         this.web3 = web3;
         this.contract = contract;
-    }
-
-    async submitQuests(req, res) {
-        //CesareDev: Old style for loop -> more readible for me, feel free to change :)
-        for (let i = 0; i < questsList.quests.length; i++) {
-
-            //CesareDev: soliditySha3 = keccak256 form the web3.js documentation
-            let questIdHash = this.web3.utils.soliditySha3(questsList.quests[i].name);
-
-            //CesareDev: To change contract state we need a real transaction,
-            //           the function call isn't enought...
-            //           Who register the quests??????
-            let questRegistration = await this.contract.methods.registerQuest(questIdHash).call();
-            if (questRegistration)
-                console.log(questsList.quests[i].name + " registered!");
-            else
-                console.log(questsList.quests[i].name + " already registered!");
-        }
-
-        //CesareDev: DEBUG ONLY
-        res.status(200).send({
-            message: "okay!"
-        });
     }
 
     async getActiveQuest(req, res) {
@@ -38,6 +15,38 @@ class Quests {
         //CesareDev: call this func when a user want to partecipate to a quest, 
         //           in the request must be the quest "index" o the quest "identificator"
         //           that the contract handles to register the user
+
+        const { userAddress, questIndex } = req.body;
+        try {
+            const gasPrice = this.web3.utils.toWei('20', 'gwei');
+
+            //CesareDev: Hard coded quote for partecipate to quest
+            const quote = this.web3.utils.toWei('50', 'gwei');
+            const gasLimit = 6721975;
+
+            //CesareDev: soliditySha3 = keccak256 form the web3.js documentation
+            const questIdHash = this.web3.utils.soliditySha3(questsList.quests[questIndex].name);
+            const alreadyRegister = await this.contract.methods.isAlreadyRegistered(questIdHash, userAddress).call();
+            if (alreadyRegister) {
+                //CesareDev: 409 Conflict response status
+                res.status(409).send({
+                    message: "User already registered"
+                });
+                return;
+            }
+            const questRegistration = await this.contract.methods.joinQuest(questIdHash).send({
+                value: quote,
+                from: userAddress,
+                gasPrice,
+                gasLimit
+            });
+            res.status(200).send({
+                message: 'User added!'
+            });
+        } catch (error) {
+            console.error('Failed to join the quest:', error);
+            res.status(500).send('Operation failed');
+        }
     }
 
     async questEnded(questId) {

@@ -1,20 +1,25 @@
 {
     "quests": [
-      {
-        "name": "Hunt for the Lost Relic",
-        "description": "Embark on a journey to find the ancient relic hidden deep in the Forbidden Forest.",
-        "expirationDate": "2023-12-31"
-      },
-      {
-        "name": "Defeat the Dragon",
-        "description": "A fearsome dragon has been terrorizing the kingdom. Slay the dragon and bring peace to the land.",
-        "expirationDate": "2023-11-15"
-      },
-      {
-        "name": "Save the Princess",
-        "description": "The princess has been kidnapped by the evil wizard. Rescue her from the wizard's castle.",
-        "expirationDate": "2023-10-31"
-      }
+        {
+            "name": "Hunt for the Lost Relic",
+            "description": "Embark on a journey to find the ancient relic hidden deep in the Forbidden Forest.",
+            "expirationDate": "2023-12-31",
+            "participants": [],
+            "usersThreshold": 5
+        },
+        {
+            "name": "Defeat the Dragon",
+            "description": "A fearsome dragon has been terrorizing the kingdom. Slay the dragon and bring peace to the land.",
+            "expirationDate": "2023-11-15",
+            "participants": [],
+            "usersThreshold": 5
+        },
+        {
+            "name": "Save the Princess",
+            "description": "The princess has been kidnapped by the evil wizard. Rescue her from the wizard's castle.",
+            "expirationDate": "2023-10-31",
+            "participants": [],
+            "usersThreshold": 5
+        }
     ]
 }
-  
