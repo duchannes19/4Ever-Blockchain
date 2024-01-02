@@ -74,7 +74,7 @@ export default function ContentModal({ isOpen, onClose, type, selectedMerchant }
                         </ModalHeader>
                         <ModalCloseButton />
                         <hr style={{ margin: 'auto', marginBottom: '1rem', width: '80%' }} />
-                        <ModalBody margin={'0.5rem'} >
+                        <ModalBody margin={'0.5rem'} alignItems='center' display='flex' justifyContent='center'>
                             {!switchToDescription && (
                                 <motion.div className='merchantmodal' initial='hidden' animate='visible' variants={delay ? fadeOutVariants : fadeInVariants} transition={{ duration: 0.5 }}>
                                     <Image src={MerchIcon} alt='merchant icon' className='merchant icon' />
