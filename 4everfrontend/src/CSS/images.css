@@ -93,6 +93,24 @@
     margin-top: -6rem;
 }
 
+.merchant.icon{
+    height: 20em;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    filter: drop-shadow(0 0 1em black);
+    pointer-events: none;
+    transition: all 400ms ease-in-out;
+}
+
+.item.icon{
+    height: 20em;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    filter: drop-shadow(0 0 1em black);
+    pointer-events: none;
+    transition: all 400ms ease-in-out;
+}
+
 .separator {
     margin: 2rem;
     font-size: 2em;
@@ -138,6 +156,14 @@
 }
 
 @media screen and (max-width: 700px) {
+
+    .item.icon{
+        height: 10em;
+    }
+
+    .merchant.icon{
+        display: none;
+    }
 
     .main-logo.first.resize{
         height: 7em;

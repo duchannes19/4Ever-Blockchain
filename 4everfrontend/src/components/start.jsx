@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { Button, Text, Image, Box } from "@chakra-ui/react";
+import { useState } from "react";
+import { Button, Image } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 
 import ConnectToMetaMask from "./Metamask";

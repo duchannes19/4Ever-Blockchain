@@ -1,0 +1,85 @@
+{
+    "merchants": [
+      {
+        "address": "0x1234567890123456789012345678901234567890",
+        "items": [
+          {
+            "name": "Orb of Astral Projection",
+            "rarity": "Rare",
+            "type": "Artifact",
+            "description": "A crystal orb that allows the user to project their consciousness into the astral plane.",
+            "price": "200"
+          },
+          {
+            "name": "Scepter of Elemental Mastery",
+            "rarity": "Epic",
+            "type": "Weapon",
+            "description": "A powerful scepter that grants mastery over the elements.",
+            "price": "200"
+          },
+          {
+            "name": "Cloak of Invisibility",
+            "rarity": "Legendary",
+            "type": "Armor",
+            "description": "A magical cloak that renders the wearer invisible to the naked eye.",
+            "price": "200"
+          },
+          {
+            "name": "Potion of Healing",
+            "rarity": "Common",
+            "type": "Potion",
+            "description": "A basic potion that heals wounds when consumed.",
+            "price": "200"
+          },
+          {
+            "name": "Cloak of Invisibility",
+            "rarity": "Legendary",
+            "type": "Armor",
+            "description": "A magical cloak that renders the wearer invisible to the naked eye.",
+            "price": "200"
+          },
+          {
+            "name": "Potion of Healing",
+            "rarity": "Common",
+            "type": "Potion",
+            "description": "A basic potion that heals wounds when consumed.",
+            "price": "200"
+          },
+          {
+            "name": "Cloak of Invisibility",
+            "rarity": "Legendary",
+            "type": "Armor",
+            "description": "A magical cloak that renders the wearer invisible to the naked eye.",
+            "price": "200"
+          },
+          {
+            "name": "Potion of Healing",
+            "rarity": "Common",
+            "type": "Potion",
+            "description": "A basic potion that heals wounds when consumed.",
+            "price": "200"
+          }
+        ]
+      },
+      {
+        "address": "0xabcdefabcdefabcdefabcdefabcdefabcdefabcdefab",
+        "items": [
+          {
+            "name": "Cloak of Invisibility",
+            "rarity": "Legendary",
+            "type": "Armor",
+            "description": "A magical cloak that renders the wearer invisible to the naked eye.",
+            "price": "200"
+          },
+          {
+            "name": "Potion of Healing",
+            "rarity": "Common",
+            "type": "Potion",
+            "description": "A basic potion that heals wounds when consumed.",
+            "price": "200"
+          }
+        ]
+      }
+    ]
+  }
+  
