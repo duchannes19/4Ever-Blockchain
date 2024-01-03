@@ -29,7 +29,6 @@ class Quests {
         const filter = { name: 1, expirationDate: 1, description: 1, participants: 1, usersThreshold: 1, _id: 1 };
         this.database.findOne({ name: questName }, filter, (err, docs) => {
             if (docs) {
-                const usersNum = docs.participants.length;
                 //CesareDev: Add the user address in the entry
                 this.database.update({ _id: docs._id }, { $addToSet: { participants: userAddress } }, {}, (err) => {
                     if (err) {
