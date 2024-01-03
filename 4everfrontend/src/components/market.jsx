@@ -62,7 +62,7 @@ export default function Market() {
                     <Image key={index} src={Icon} className='quest' marginBottom='2rem' onClick={() => { handleModal(item.address, item.items) }} />
                 ))}
             </Box>
-            {selectedMerchant && <MarketModal type={'merchant'} selectedMerchant={selectedMerchant} isOpen={isOpen} onClose={onClose}/>}
+            {selectedMerchant && <MarketModal selectedMerchant={selectedMerchant} isOpen={isOpen} onClose={onClose}/>}
         </Box>
     )
 };

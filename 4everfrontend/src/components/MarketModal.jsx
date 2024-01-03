@@ -19,7 +19,7 @@ import MerchIcon from '/img/merchant-icon.png';
 
 // Andrea: NB! Items images are placeholders for now, it should be replaced by the URL of the actual NFTs
 
-export default function ContentModal({ isOpen, onClose, type, selectedMerchant }) {
+export default function MarketModal({ isOpen, onClose, selectedMerchant }) {
 
     const [switchToDescription, setSwitch] = useState(false);
     const [delay, setDelay] = useState(false);
@@ -67,7 +67,7 @@ export default function ContentModal({ isOpen, onClose, type, selectedMerchant }
         <>
             <Modal isOpen={isOpen} onClose={onClose} size='full'>
                 <ModalOverlay />
-                {type === 'merchant' && (
+                
                     <ModalContent bg={colorMode === 'dark' ? 'gray.800' : 'white'} color={colorMode === 'dark' ? 'white' : 'black'} margin={'1rem'} >
                         <ModalHeader textAlign={'center'} fontFamily='mephistoregular' fontSize='3rem'>
                             {switchToDescription ? selectedItem.name : 'Merchant'}
@@ -119,7 +119,7 @@ export default function ContentModal({ isOpen, onClose, type, selectedMerchant }
                             </Button>
                         </ModalFooter>
                     </ModalContent>
-                )}
+                
             </Modal>
         </>
     );

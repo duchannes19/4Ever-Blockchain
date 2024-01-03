@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button, Image } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 
@@ -7,6 +7,7 @@ import HelpModal from "./HelpModal";
 import Join from "./join";
 import Market from "./market";
 import Quests from "./quests";
+import MetaMaskHelper from "./MetaMaskHelper";
 
 import MarketLogo from '/img/marketlogo.png';
 import QuestsLogo from '/img/questslogo.png';
@@ -20,6 +21,17 @@ export default function Start({ isConnected, setIsConnected, step1, setStep1, st
     const [quests, setQuests] = useState(false);
     const [fadeDelay, setFadeDelay] = useState(false);
     const [fadeOutDelay, setFadeOutDelay] = useState(false);
+
+    //Add useEffect to check if metamask is connected
+    useEffect(() => {
+        const checkMetaMask = async () => {
+            if (localStorage.getItem('connected') === 'true') {
+                MetaMaskHelper(setIsConnected, setStep1, setMetaMask);
+            }
+        }
+
+        checkMetaMask();
+    }, []);
 
     const fadeInVariants = {
         hidden: { opacity: 0, y: 50 },

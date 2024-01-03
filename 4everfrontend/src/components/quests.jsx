@@ -2,24 +2,42 @@ import React from 'react';
 import axios from 'axios';
 
 import { useState, useEffect } from "react";
-import { Box, Text, Image } from "@chakra-ui/react";
+import { Box, Text, Image, useDisclosure } from "@chakra-ui/react";
 
+import QuestsModal from './QuestsModal';
+
+import DEBUG_QUESTS from '../DEBUG/quests(DEBUG).json';
 // Andrea: To complete with api requests and stuff 
 
 const Quests = () => {
     const [quests, setQuests] = useState([]);
+    const [selectedQuest, setSelectedQuest] = useState(null);
+    const { isOpen, onOpen, onClose } = useDisclosure();
 
-    /* Andrea: This is to be replaced by an api request to actually get the quests
+    /* Andrea: This is to be replaced by an api request to actually get the quests */
     useEffect(() => {
         const getQuests = async () => {
             // Andrea: To Do: Actually gets a list of quests from the backend
-            const quests = await axios.get('http://localhost:3001/quests');
-            setQuests(quests.data);
-            console.log(quests);
+            try {
+                const quests = await axios.get('http://localhost:3001/getMerchants');
+                setItems(quests.data);
+                console.log(quests.message);
+            }
+            catch (error) {
+                console.error(error);
+            }
         };
-        getQuests();
+
+        //getQuests();
+
+        // Andrea: DEBUG, load some quests from a local json file
+        setQuests(DEBUG_QUESTS.quests);
     }, []);
-    */
+
+    const handleModal = (quest) => {
+        setSelectedQuest(quest);
+        onOpen();
+    }
 
     return (
         <Box className='quests-box'>
@@ -39,10 +57,11 @@ const Quests = () => {
                 marginBottom='2rem'
             >
                 {/* Andrea: These are just placeholders */}
-                {Array.from({ length: 3 }).map((_, index) => (
-                    <Image key={index} src='/img/questslogo.png' className='quest' marginBottom='2rem' />
+                {quests.map((quest, index) => (
+                    <Image key={index} src='/img/quest.png' className='quest' marginBottom='2rem' onClick={() => { handleModal(quest) }} />
                 ))}
             </Box>
+            {selectedQuest && <QuestsModal isOpen={isOpen} onClose={onClose} selectedQuest={selectedQuest} />}
         </Box>
     );
 };
