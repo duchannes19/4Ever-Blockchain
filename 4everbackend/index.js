@@ -53,25 +53,35 @@ web3.eth.getBlockNumber()
         console.error('Error connecting to Ganache:', error);
     });
 
+//------------------------------------------
+// Market API
+//------------------------------------------
+
 // Join Market endpoint
 app.post('/api/join-marketplace', (req, res) => {
-    //Call class method to join the market
     market.joinMarketplace(req, res);
 });
 
-//CesareDev: Example to an endpoint to get all the activeQuest.
-//           This can be called, for example, when entering the "Quest" section
-app.get('/api/get-all-quest', (req, res) => {
-    quests.getActiveQuest(req, res);
-});
+//------------------------------------------
+// Quest API
+//------------------------------------------
 
-//CesareDev: Example to an endpoint to partecipate to a quest.
-//           This can be called, for example, when a user decided to partecipate
-//           to a quest (quest identification must be in the request body)
-app.get('/api/join-quest', (req, res) => {
+//CesareDev: Virtually join the quest
+//           REQUEST must contain
+//           - userAddress
+//           - questName
+app.post('/api/join-quest', (req, res) => {
     quests.joinQuest(req, res);
 });
 
+//CesareDev: Check the user's quest participations
+//           REQUEST must contain
+//           - userAddress
+app.post('/api/is-user-registered', (req, res) => {
+    quests.isUserRegistered(req, res);
+})
+
+//CesareDev: Get all the activeQuest.
 app.get('/api/get-quests', (req, res) => {
     quests.getActiveQuest(req, res);
 });

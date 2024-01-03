@@ -13,19 +13,17 @@ class Quests {
                 res.status(200).send(docs);
             }
             else {
-                res.status(500).send('Database error');
+                res.status(500).send({
+                    message: 'Database error',
+                    body: err
+                });
             }
         });
     }
 
     joinQuest(req, res) {
-        //CesareDev: call this func when a user want to partecipate to a quest, 
-        //           in the request must be the quest "index" o the quest "identificator"
-        //           that the contract handles to register the user
-
-        //const { userAddress, questName } = req.body;
-        const userAddress = '0x325hbviuf314iaSFi';
-        const questName = 'Hunt for the Lost Relic';
+        //CesareDev: Get useraddress and quest name from the post request's body
+        const { userAddress, questName } = req.body;
 
         //CesareDev: Find the quest id in the database
         const filter = { name: 1, expirationDate: 1, description: 1, participants: 1, usersThreshold: 1, _id: 1 };
@@ -47,12 +45,11 @@ class Quests {
             }
             else {
                 res.status(500).send({
-                    type: 'Database error',
-                    message: err
+                    message: 'Database error',
+                    body: err
                 });
             }
         });
-
 
         /* CesareDev: The registration on chain in delayed
         try {
@@ -90,10 +87,21 @@ class Quests {
         */
     }
 
-    async questEnded(questId) {
-        //CesareDev: Handle the questEnded event from the smart contract
+    isUserRegistered(req, res) {
+        //CesareDev: Get useraddress from the post request's body
+        const { userAddress } = req.body;
+        //CesareDev: Check wich quest has this user as a participant
+        this.database.find({ participants: userAddress }, (err, docs) => {
+            if (docs) {
+                res.status(200).send(docs);
+            }
+            else {
+                res.status(500).send({
+                    message: 'Database error',
+                    body: err
+                })
+            }
+        });
     }
-
 }
-
 module.exports = { Quests };
