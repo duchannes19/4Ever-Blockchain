@@ -83,7 +83,6 @@ app.post('/api/is-user-registered', (req, res) => {
 
 //CesareDev: Get all the activeQuest.
 app.get('/api/get-quests', (req, res) => {
-    console.log("Get quests request received");
     quests.getActiveQuest(req, res);
 });
 

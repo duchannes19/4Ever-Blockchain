@@ -19,9 +19,12 @@ const Quests = () => {
                 const quests = await axios.get('http://localhost:3000/api/get-quests');
                 if (quests.data.success) {
                     setQuests(quests.data.quests);
-                    console.log(quests.data.message);
+                    if (selectedQuest) {
+                        const quest = quests.data.quests[selectedQuest.index];
+                        setSelectedQuest({ quest, index: selectedQuest.index });
+                    }
                 }
-                else{
+                else {
                     console.log(quests.data.message);
                     Notify('error', quests.data.message);
                 }
@@ -35,6 +38,36 @@ const Quests = () => {
         getQuests();
 
     }, []);
+
+    //Andrea: Add Loop to keep the quests log updated (maybe use sockets instead?)
+    useEffect(() => {
+        const interval = setInterval(() => {
+            const getQuests = async () => {
+                try {
+                    const quests = await axios.get('http://localhost:3000/api/get-quests');
+                    if (quests.data.success) {
+                        setQuests(quests.data.quests);
+                        if (selectedQuest) {
+                            const quest = quests.data.quests[selectedQuest.index];
+                            setSelectedQuest({ quest, index: selectedQuest.index });
+                        }
+                    }
+                    else {
+                        console.log(quests.data.message);
+                        Notify('error', quests.data.message);
+                    }
+                }
+                catch (error) {
+                    console.error(error);
+                    Notify('error', error.message);
+                }
+            };
+
+            getQuests();
+        }, 10000);
+        return () => clearInterval(interval);
+    }, []);
+
 
     const handleModal = (quest, index) => {
         setSelectedQuest({ quest, index });

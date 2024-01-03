@@ -118,7 +118,7 @@ export default function QuestsModal({ isOpen, onClose, selectedQuest, setSelecte
                         <motion.div className='merchantmodal' initial='hidden' animate='visible' variants={fadeInVariants} transition={{ duration: 0.5 }}>
                             <Image src={QuestsLogo} alt='merchant icon' className='merchant icon' />
                             <Box bg='#333232' style={{ borderRadius: '10px' }}>
-                                <Box className='merchant items'>
+                                <Box className='merchant items' style={{maxHeight: '80%'}}>
                                     <Box bg='#333232' style={{ borderRadius: '10px' }}>
                                         <Text fontFamily='mephistoregular' fontSize='2.5rem' color='white' marginBottom='2rem' marginTop='2rem' textAlign='center'>Description</Text>
                                         <hr style={{ margin: 'auto', marginBottom: '1rem', width: '80%' }} />
