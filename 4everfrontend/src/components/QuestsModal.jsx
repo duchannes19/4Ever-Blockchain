@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React from 'react';
+import axios from 'axios';
 
 import {
     Modal,
@@ -14,19 +15,93 @@ import {
     Text
 } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
+import { useState } from 'react';
 
 import QuestsLogo from '/img/quest.png';
 
-export default function QuestsModal({ isOpen, onClose, selectedQuest }) {
+import Notify from './Notify';
+
+export default function QuestsModal({ isOpen, onClose, selectedQuest, setSelectedQuest, setQuests }) {
 
     const colorMode = 'dark';
+    const address = localStorage.getItem('accounts');
+    const isDisabled = selectedQuest.quest.participants.includes(address);
+    const cantUnjoin = selectedQuest.quest.startDate < Date.now();
+
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const fadeInVariants = {
         hidden: { opacity: 0, x: -50 },
         visible: { opacity: 1, x: 0 }
     };
 
-    // Andrea: To Do -> Actually submit the quest to the backend
+    const getQuests = async () => {
+        try {
+            const quests = await axios.get('http://localhost:3000/api/get-quests');
+            if (quests.data.success) {
+                setQuests(quests.data.quests);
+                console.log(quests.data.message);
+                // Andrea: Refresh the selected quest in the modal too
+                const quest = quests.data.quests[selectedQuest.index];
+                setSelectedQuest({ quest, index: selectedQuest.index });
+            } else {
+                console.log(quests.data.message);
+                Notify('error', quests.data.message);
+            }
+        } catch (error) {
+            console.error(error);
+            Notify('error', error.message);
+        }
+    };
+
+
+    const handleSubmit = async () => {
+        setIsSubmitting(true);
+        try {
+            const response = await axios.post('http://localhost:3000/api/join-quest', {
+                userAddress: address,
+                questName: selectedQuest.quest.name
+            });
+            if (response.data.success) {
+                console.log(response.data.message);
+                Notify('success', response.data.message);
+            }
+            else {
+                console.log(response.data.message);
+                Notify('error', response.data.message);
+            }
+        } catch (error) {
+            console.error(error);
+            Notify('error', error.message);
+        } finally {
+            getQuests();
+            setIsSubmitting(false);
+        }
+    };
+
+    const handleUnjoin = async () => {
+        setIsSubmitting(true);
+        try {
+            const response = await axios.post('http://localhost:3000/api/unjoin-quest', {
+                userAddress: address,
+                questName: selectedQuest.quest.name
+            });
+            if (response.data.success) {
+                console.log(response.data.message);
+                Notify('success', response.data.message);
+            }
+            else {
+                console.log(response.data.message);
+                Notify('error', response.data.message);
+            }
+        } catch (error) {
+            console.error(error);
+            Notify('error', error.message);
+        } finally {
+            getQuests();
+            setIsSubmitting(false);
+        }
+    }
 
     return (
         <>
@@ -34,7 +109,7 @@ export default function QuestsModal({ isOpen, onClose, selectedQuest }) {
                 <ModalOverlay />
                 <ModalContent bg={colorMode === 'dark' ? 'gray.800' : 'white'} color={colorMode === 'dark' ? 'white' : 'black'} margin={'1rem'} >
                     <ModalHeader textAlign={'center'} fontFamily='mephistoregular' fontSize='3rem'>
-                        {selectedQuest.name}
+                        {selectedQuest.quest.name}
                     </ModalHeader>
                     <ModalCloseButton />
                     <hr style={{ margin: 'auto', marginBottom: '1rem', width: '80%' }} />
@@ -48,14 +123,14 @@ export default function QuestsModal({ isOpen, onClose, selectedQuest }) {
                                         <Text fontFamily='mephistoregular' fontSize='2.5rem' color='white' marginBottom='2rem' marginTop='2rem' textAlign='center'>Description</Text>
                                         <hr style={{ margin: 'auto', marginBottom: '1rem', width: '80%' }} />
                                         <Box className='merchant description'>
-                                            <Text fontFamily='mephistoregular' fontSize='1.5rem' color='white' marginBottom='2rem' marginTop='2rem' textAlign='center'>{selectedQuest.description}</Text>
+                                            <Text fontFamily='mephistoregular' fontSize='1.5rem' color='white' marginBottom='2rem' marginTop='2rem' textAlign='center'>{selectedQuest.quest.description}</Text>
                                         </Box>
                                         <hr style={{ margin: 'auto', marginBottom: '1rem', width: '80%' }} />
-                                        <Text fontFamily='mephistoregular' fontSize='2.5rem' color='white' marginBottom='2rem' marginTop='2rem' textAlign='center'>Partecipants: {selectedQuest.participants.length}</Text>
+                                        <Text fontFamily='mephistoregular' fontSize='2.5rem' color='white' marginBottom='2rem' marginTop='2rem' textAlign='center'>Partecipants: {selectedQuest.quest.participants.length}</Text>
                                         <hr style={{ margin: 'auto', marginBottom: '1rem', width: '80%' }} />
-                                        <Text fontFamily='mephistoregular' fontSize='2.5rem' color='white' marginBottom='2rem' marginTop='2rem' textAlign='center'>Starts: *To Implement*</Text>
+                                        <Text fontFamily='mephistoregular' fontSize='2.5rem' color='white' marginBottom='2rem' marginTop='2rem' textAlign='center'>Starts: {selectedQuest.quest.startDate}</Text>
                                         <hr style={{ margin: 'auto', marginBottom: '1rem', width: '80%' }} />
-                                        <Text fontFamily='mephistoregular' fontSize='2.5rem' color='white' marginBottom='2rem' marginTop='2rem' textAlign='center'>Expires: {selectedQuest.expirationDate}</Text>
+                                        <Text fontFamily='mephistoregular' fontSize='2.5rem' color='white' marginBottom='2rem' marginTop='2rem' textAlign='center'>Expires: {selectedQuest.quest.expirationDate}</Text>
                                     </Box>
 
                                 </Box>
@@ -65,9 +140,10 @@ export default function QuestsModal({ isOpen, onClose, selectedQuest }) {
                     </ModalBody>
 
                     <ModalFooter>
-                        <Button fontFamily={'mephistoregular'} colorScheme='green' mr={3} onClick={onClose}>
+                        <Button fontFamily={'mephistoregular'} colorScheme='green' mr={3} onClick={handleSubmit} isLoading={isSubmitting} isDisabled={isDisabled}>
                             Partecipate
                         </Button>
+                        {isDisabled && <Button fontFamily={'mephistoregular'} colorScheme='red' mr={3} onClick={handleUnjoin} isLoading={isSubmitting} isDisabled={cantUnjoin}> Unjoin </Button>}
                         <Button fontFamily={'mephistoregular'} colorScheme='gray' mr={3} onClick={onClose}>
                             Close
                         </Button>

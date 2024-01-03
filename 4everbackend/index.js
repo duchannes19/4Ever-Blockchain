@@ -83,8 +83,15 @@ app.post('/api/is-user-registered', (req, res) => {
 
 //CesareDev: Get all the activeQuest.
 app.get('/api/get-quests', (req, res) => {
+    console.log("Get quests request received");
     quests.getActiveQuest(req, res);
 });
+
+//Andrea: Added endpoint to unjoin a quest, if the quest has not started yet (for testing or should we keep?)
+app.post('/api/unjoin-quest', (req, res) => {
+    console.log("Unjoin request received");
+    quests.unjoinQuest(req, res);
+}); 
 
 //CesareDev: Image generation remove for now
 /*

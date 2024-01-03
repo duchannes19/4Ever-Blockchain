@@ -10,13 +10,10 @@ class Quests {
         //CesareDev: From the nedb doc, passing {} to the find function returns all the entries
         this.database.find({}, (err, docs) => {
             if (docs) {
-                res.status(200).send(docs);
+                res.status(200).send({ success: true, quests: docs, message: 'Quests found' });
             }
             else {
-                res.status(500).send({
-                    message: 'Database error',
-                    body: err
-                });
+                res.status(500).send({ success: false, message: 'Database error' });
             }
         });
     }
@@ -36,6 +33,7 @@ class Quests {
                     }
                     else {
                         res.status(200).send({
+                            success: true,
                             message: 'User ' + userAddress + ' added',
                         });
                         this.database.persistence.compactDatafile();
@@ -44,6 +42,7 @@ class Quests {
             }
             else {
                 res.status(500).send({
+                    success: false,
                     message: 'Database error',
                     body: err
                 });
@@ -86,6 +85,50 @@ class Quests {
         */
     }
 
+    // Andrea: Added function to unjoin a quest, if the quest has not started yet (for testing or should we keep?)
+    unjoinQuest(req, res) {
+        const { userAddress, questName } = req.body;
+
+        //Andrea: Checks if the user is in the participants list, and if the quest has not started yet, 
+        //then removes the user from the list of participants 
+    
+        this.database.findOne({ name: questName, participants: userAddress }, (err, quest) => {
+            if (err) {
+                res.status(500).send({
+                    success: false,
+                    message: 'Database error',
+                    body: err
+                });
+            } else if (!quest) {
+                res.status(404).send({
+                    success: false,
+                    message: 'User ' + userAddress + ' not found in participants for quest ' + questName,
+                });
+            } else if (quest.startDate && new Date() >= new Date(quest.startDate)) {
+                res.status(400).send({
+                    success: false,
+                    message: 'Cannot unjoin quest ' + questName + ' as the quest has already started.',
+                });
+            } else {
+                this.database.update({ name: questName }, { $pull: { participants: userAddress } }, {}, (err) => {
+                    if (err) {
+                        res.status(500).send({
+                            success: false,
+                            message: 'Database error',
+                            body: err
+                        });
+                    } else {
+                        res.status(200).send({
+                            success: true,
+                            message: 'User ' + userAddress + ' removed from participants for quest ' + questName,
+                        });
+                        this.database.persistence.compactDatafile();
+                    }
+                });
+            }
+        });
+    }
+    
     isUserRegistered(req, res) {
         //CesareDev: Get useraddress from the post request's body
         const { userAddress } = req.body;
