@@ -4,10 +4,12 @@ require('dotenv').config();
 //Require modules
 const express = require('express');
 const cors = require('cors');
+const path = require('path');
 const { Web3 } = require('web3');
 const { Market } = require('./src/services/Market');
 const { Quests } = require('./src/services/Quests');
 const { Generator } = require('./src/services/Generator');
+var Datastore = require('nedb');
 const FourEverABI = require('./Truffle/build/contracts/FourEver.json').abi;
 
 //CesareDev: Image generation remove for now
@@ -26,8 +28,10 @@ const fourEverContract = new web3.eth.Contract(FourEverABI, process.env.MARKETAD
 //Market interface
 const market = new Market(web3, fourEverContract);
 
+//Create database
+var database = new Datastore({ filename: path.join(__dirname, '/database/quests.db'), autoload: true });
 // Quests interface
-const quests = new Quests(web3, fourEverContract);
+const quests = new Quests(web3, fourEverContract, database);
 
 //Create express app
 const app = express();
@@ -68,12 +72,8 @@ app.get('/api/join-quest', (req, res) => {
     quests.joinQuest(req, res);
 });
 
-//CesareDev: Catch the quest end event from the contract, not implemented yet
-fourEverContract.once("QuestRegistration", (event) => {
-    //CesareDev: Maybe from the event we can get the questid.
-    //           The quest id can be the hash value of the quest description...
-    quests.questEnded("replace-with-quest-id");
-    console.log("CIOOOOOOOO");
+app.get('/api/get-quests', (req, res) => {
+    quests.getActiveQuest(req, res);
 });
 
 //CesareDev: Image generation remove for now
