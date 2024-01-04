@@ -1,19 +1,28 @@
 class Quests {
 
-    constructor(web3, contract, database) {
+    constructor(web3, contract, database, clients) {
         this.web3 = web3;
         this.contract = contract;
         this.database = database;
+        this.clients = clients;
     }
 
     getActiveQuest(req, res) {
         //CesareDev: From the nedb doc, passing {} to the find function returns all the entries
         this.database.find({}, (err, docs) => {
-            if (docs) {
-                res.status(200).send({ success: true, quests: docs, message: 'Quests found' });
+            if (err) {
+                res.status(500).send({
+                    success: false,
+                    message: 'Database error',
+                    body: err
+                });
             }
-            else {
-                res.status(500).send({ success: false, message: 'Database error' });
+            else if (docs) {
+                res.status(200).send({
+                    success: true,
+                    message: 'Quests found',
+                    quests: docs,
+                });
             }
         });
     }
@@ -25,11 +34,29 @@ class Quests {
         //CesareDev: Find the quest id in the database
         const filter = { name: 1, expirationDate: 1, description: 1, participants: 1, usersThreshold: 1, _id: 1 };
         this.database.findOne({ name: questName }, filter, (err, docs) => {
-            if (docs) {
+            if (err) {
+                res.status(500).send({
+                    success: false,
+                    message: 'Database error',
+                    body: err
+                });
+            }
+            else if (!docs && !err) {
+                res.status(404).send({
+                    success: false,
+                    message: 'Quest ' + questName + ' not found',
+                    body: err
+                });
+            }
+            else if (docs) {
                 //CesareDev: Add the user address in the entry
                 this.database.update({ _id: docs._id }, { $addToSet: { participants: userAddress } }, {}, (err) => {
                     if (err) {
-                        res.status(500).send('Database error');
+                        res.status(500).send({
+                            success: false,
+                            message: 'Database error',
+                            body: err
+                        });
                     }
                     else {
                         res.status(200).send({
@@ -37,14 +64,33 @@ class Quests {
                             message: 'User ' + userAddress + ' added',
                         });
                         this.database.persistence.compactDatafile();
+                        //CesareDev: if successfully updated the quest send, via websocket,
+                        //           an event to the clients containing the updated entry
+                        this.database.find({}, (err, docs) => {
+                            if (err) {
+                                this.clients.forEach((client) => {
+                                    if (client.readyState == WebSocket.OPEN) {
+                                        client.send({
+                                            success: false,
+                                            message: 'Quests not found',
+                                            body: err
+                                        });
+                                    }
+                                });
+                            }
+                            else if (docs) {
+                                this.clients.forEach((client) => {
+                                    if (client.readyState == WebSocket.OPEN) {
+                                        client.send({
+                                            success: true,
+                                            message: 'Quests found',
+                                            quests: docs
+                                        });
+                                    }
+                                });
+                            }
+                        });
                     }
-                });
-            }
-            else {
-                res.status(500).send({
-                    success: false,
-                    message: 'Database error',
-                    body: err
                 });
             }
         });
@@ -91,7 +137,7 @@ class Quests {
 
         //Andrea: Checks if the user is in the participants list, and if the quest has not started yet, 
         //then removes the user from the list of participants 
-    
+
         this.database.findOne({ name: questName, participants: userAddress }, (err, quest) => {
             if (err) {
                 res.status(500).send({
@@ -123,25 +169,56 @@ class Quests {
                             message: 'User ' + userAddress + ' removed from participants for quest ' + questName,
                         });
                         this.database.persistence.compactDatafile();
+                        //CesareDev: if successfully updated the quest send, via websocket,
+                        //           an event to the clients containing the updated entry
+                        this.database.find({}, (err, docs) => {
+                            if (err) {
+                                this.clients.forEach((client) => {
+                                    if (client.readyState == WebSocket.OPEN) {
+                                        client.send({
+                                            success: false,
+                                            message: 'Quests not found',
+                                            body: err
+                                        });
+                                    }
+                                });
+                            }
+                            else if (docs) {
+                                this.clients.forEach((client) => {
+                                    if (client.readyState == WebSocket.OPEN) {
+                                        client.send({
+                                            success: true,
+                                            message: 'Quests found',
+                                            quests: docs
+                                        });
+                                    }
+                                });
+                            }
+                        });
                     }
                 });
             }
         });
     }
-    
+
     isUserRegistered(req, res) {
         //CesareDev: Get useraddress from the post request's body
         const { userAddress } = req.body;
         //CesareDev: Check wich quest has this user as a participant
         this.database.find({ participants: userAddress }, (err, docs) => {
-            if (docs) {
-                res.status(200).send(docs);
-            }
-            else {
+            if (err) {
                 res.status(500).send({
+                    success: false,
                     message: 'Database error',
                     body: err
-                })
+                });
+            }
+            else if (docs) {
+                res.status(200).send({
+                    success: true,
+                    message: 'User found',
+                    quests: docs
+                });
             }
         });
     }

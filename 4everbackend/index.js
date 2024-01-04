@@ -5,11 +5,14 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
+const WebSocket = require('ws');
+const http = require('http');
 const { Web3 } = require('web3');
 const { Market } = require('./src/services/Market');
 const { Quests } = require('./src/services/Quests');
 const { Generator } = require('./src/services/Generator');
 var Datastore = require('nedb');
+const { ws } = require('web3/lib/commonjs/providers.exports');
 const FourEverABI = require('./Truffle/build/contracts/FourEver.json').abi;
 
 //CesareDev: Image generation remove for now
@@ -33,17 +36,6 @@ var database = new Datastore({ filename: path.join(__dirname, '/database/quests.
 // Quests interface
 const quests = new Quests(web3, fourEverContract, database);
 
-//Create express app
-const app = express();
-app.use(express.json());
-app.use(cors());
-
-// Middleware to pass web3 to all routes
-app.use((req, res, next) => {
-    req.web3 = web3;
-    next();
-});
-
 // Test the connection
 web3.eth.getBlockNumber()
     .then(blockNumber => {
@@ -52,6 +44,34 @@ web3.eth.getBlockNumber()
     .catch(error => {
         console.error('Error connecting to Ganache:', error);
     });
+
+//Create express app
+const app = express();
+app.use(express.json());
+app.use(cors());
+
+//CesareDev: create web socket for realt time update
+const server = http.createServer(app);
+const wss = new WebSocket.Server({ server });
+//CesareDev: clients set to send events 
+const clients = new Set();
+
+//CesareDev: web socket event
+wss.on('connection', (ws) => {
+    console.log('Client connected');
+    clients.add(ws);
+
+    ws.on('close', () => {
+        console.log('Client disconnected');
+        clients.delete(ws);
+    });
+});
+
+// Middleware to pass web3 to all routes
+app.use((req, res, next) => {
+    req.web3 = web3;
+    next();
+});
 
 //------------------------------------------
 // Market API
@@ -90,7 +110,7 @@ app.get('/api/get-quests', (req, res) => {
 app.post('/api/unjoin-quest', (req, res) => {
     console.log("Unjoin request received");
     quests.unjoinQuest(req, res);
-}); 
+});
 
 //CesareDev: Image generation remove for now
 /*
@@ -119,6 +139,6 @@ app.post('/api/create-item', async (req, res) => {
 */
 
 // Start the server
-app.listen(process.env.PORT, () => {
+server.listen(process.env.PORT, () => {
     console.log(`Server is running on port ${process.env.PORT}`);
 });
