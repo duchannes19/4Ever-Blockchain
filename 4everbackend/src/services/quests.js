@@ -1,6 +1,5 @@
 //CesareDev: Add this to access WebSocket.OPEN
 const WebSocket = require('ws');
-
 class Quests {
 
     constructor(web3, contract, database, clients) {
@@ -73,23 +72,23 @@ class Quests {
                         this.database.find({}, (err, docs) => {
                             if (err) {
                                 this.clients.forEach((client) => {
-                                    if (client.readyState == WebSocket.OPEN) {
-                                        client.send({
+                                    if (client.readyState === WebSocket.OPEN) {
+                                        client.send(JSON.stringify({
                                             success: false,
                                             message: 'Quests not found',
                                             body: err
-                                        });
+                                        }));
                                     }
                                 });
                             }
                             else if (docs) {
                                 this.clients.forEach((client) => {
-                                    if (client.readyState == WebSocket.OPEN) {
-                                        client.send({
+                                    if (client.readyState === WebSocket.OPEN) {
+                                        client.send(JSON.stringify({
                                             success: true,
                                             message: 'Quests found',
                                             quests: docs
-                                        });
+                                        }));
                                     }
                                 });
                             }
@@ -180,22 +179,22 @@ class Quests {
                             if (err) {
                                 this.clients.forEach((client) => {
                                     if (client.readyState === WebSocket.OPEN) {
-                                        client.send({
+                                        client.send(JSON.stringify({
                                             success: false,
                                             message: 'Quests not found',
-                                            body: err
-                                        });
+                                            body: JSON.stringify(err)
+                                        }));
                                     }
                                 });
                             }
                             else if (docs) {
                                 this.clients.forEach((client) => {
                                     if (client.readyState === WebSocket.OPEN) {
-                                        client.send({
+                                        client.send(JSON.stringify({
                                             success: true,
                                             message: 'Quests found',
                                             quests: docs
-                                        });
+                                        }));
                                     }
                                 });
                             }

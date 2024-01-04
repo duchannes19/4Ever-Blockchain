@@ -51,27 +51,29 @@ app.use(cors());
 const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
 //CesareDev: clients set to send events 
-const clients = new Set();
+let latestClients = new Set();
 
-//CesareDev: web socket event
+//CesareDev: WebSocket connection event
 wss.on('connection', (ws) => {
     console.log('Client connected');
-    clients.add(ws);
+    latestClients.add(ws);
 
     ws.on('close', () => {
         console.log('Client disconnected');
-        clients.delete(ws);
+        latestClients.delete(ws);
     });
 });
 
-// Middleware to pass web3 to all routes
+//CesareDev: Middleware to pass web3 and clients to all routes
 app.use((req, res, next) => {
     req.web3 = web3;
+    req.latestClients = latestClients;
     next();
 });
 
 // Quests interface
-const quests = new Quests(web3, fourEverContract, database, clients);
+const quests = new Quests(web3, fourEverContract, database, latestClients);
+
 
 //------------------------------------------
 // Market API
