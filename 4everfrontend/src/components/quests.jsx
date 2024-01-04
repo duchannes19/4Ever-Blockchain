@@ -1,5 +1,6 @@
 import React from 'react';
 import axios from 'axios';
+import WebSocket from 'react-websocket';
 
 import { useState, useEffect } from "react";
 import { Box, Text, Image, useDisclosure } from "@chakra-ui/react";
@@ -38,6 +39,10 @@ const Quests = () => {
         getQuests();
 
     }, []);
+
+    function updateQuest() {
+
+    }
 
     //Andrea: Add Loop to keep the quests log updated (maybe use sockets instead?)
     useEffect(() => {
@@ -95,6 +100,7 @@ const Quests = () => {
                     <Image key={index} src='/img/quest.png' className='quest' marginBottom='2rem' onClick={() => { handleModal(quest, index) }} />
                 ))}
             </Box>
+            <WebSocket url='ws:://localhost:3000' onMessage={updateQuest} />
             {selectedQuest && <QuestsModal isOpen={isOpen} onClose={onClose} selectedQuest={selectedQuest} setSelectedQuest={setSelectedQuest} setQuests={setQuests} />}
         </Box>
     );
