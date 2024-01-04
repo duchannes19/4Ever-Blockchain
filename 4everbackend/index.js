@@ -5,14 +5,13 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
-const WebSocket = require('ws');
 const http = require('http');
+const WebSocket = require('ws');
 const { Web3 } = require('web3');
 const { Market } = require('./src/services/Market');
 const { Quests } = require('./src/services/Quests');
 const { Generator } = require('./src/services/Generator');
 var Datastore = require('nedb');
-const { ws } = require('web3/lib/commonjs/providers.exports');
 const FourEverABI = require('./Truffle/build/contracts/FourEver.json').abi;
 
 //CesareDev: Image generation remove for now
@@ -33,6 +32,7 @@ const market = new Market(web3, fourEverContract);
 
 //Create database
 var database = new Datastore({ filename: path.join(__dirname, '/database/quests.db'), autoload: true });
+
 // Quests interface
 const quests = new Quests(web3, fourEverContract, database);
 
