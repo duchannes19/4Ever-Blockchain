@@ -1,4 +1,7 @@
-class Quests { 
+//CesareDev: Add this to access WebSocket.OPEN
+const WebSocket = require('ws');
+
+class Quests {
 
     constructor(web3, contract, database, clients) {
         this.web3 = web3;
@@ -27,7 +30,7 @@ class Quests {
         });
     }
 
-    joinQuest(req, res) { 
+    joinQuest(req, res) {
 
         //CesareDev: Get useraddress and quest name from the post request's body
         const { userAddress, questName } = req.body;

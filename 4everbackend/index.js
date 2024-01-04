@@ -91,7 +91,14 @@ app.post('/api/join-marketplace', (req, res) => {
 //           - userAddress
 //           - questName
 app.post('/api/join-quest', (req, res) => {
+    console.log("Join request received");
     quests.joinQuest(req, res);
+});
+
+//Andrea: Added endpoint to unjoin a quest, if the quest has not started yet (for testing or should we keep?)
+app.post('/api/unjoin-quest', (req, res) => {
+    console.log("Unjoin request received");
+    quests.unjoinQuest(req, res);
 });
 
 //CesareDev: Check the user's quest participations
@@ -104,12 +111,6 @@ app.post('/api/is-user-registered', (req, res) => {
 //CesareDev: Get all the activeQuest.
 app.get('/api/get-quests', (req, res) => {
     quests.getActiveQuest(req, res);
-});
-
-//Andrea: Added endpoint to unjoin a quest, if the quest has not started yet (for testing or should we keep?)
-app.post('/api/unjoin-quest', (req, res) => {
-    console.log("Unjoin request received");
-    quests.unjoinQuest(req, res);
 });
 
 //CesareDev: Image generation remove for now
