@@ -64,15 +64,14 @@ wss.on('connection', (ws) => {
     });
 });
 
+// Quests interface
+const quests = new Quests(web3, fourEverContract, database, latestClients);
+
 //CesareDev: Middleware to pass web3 to all routes
 app.use((req, res, next) => {
     req.web3 = web3;
     next();
 });
-
-// Quests interface
-const quests = new Quests(web3, fourEverContract, database, latestClients);
-
 
 //------------------------------------------
 // Market API
@@ -113,6 +112,12 @@ app.post('/api/is-user-registered', (req, res) => {
 app.get('/api/get-quests', (req, res) => {
     quests.getActiveQuest(req, res);
 });
+
+//CesareDev: DEBUG API
+app.get('/api/test', (req, res) => {
+    quests.tryRegisterQuest("Hunt for the Lost Relic");
+    res.send("hi");
+})
 
 //CesareDev: Image generation remove for now
 /*

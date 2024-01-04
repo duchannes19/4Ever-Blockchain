@@ -1,5 +1,6 @@
 //CesareDev: Add this to access WebSocket.OPEN
 const WebSocket = require('ws');
+
 class Quests {
 
     constructor(web3, contract, database, clients) {
@@ -35,7 +36,16 @@ class Quests {
         const { userAddress, questName } = req.body;
 
         //CesareDev: Find the quest id in the database
-        const filter = { name: 1, expirationDate: 1, description: 1, participants: 1, usersThreshold: 1, _id: 1 };
+        const filter = {
+            name: 1,
+            description: 1,
+            startDate: 1,
+            expirationDate: 1,
+            participants: 1,
+            usersThreshold: 1,
+            questRegistered: 1,
+            _id: 1
+        };
         this.database.findOne({ name: questName }, filter, (err, docs) => {
             if (err) {
                 res.status(500).send({
@@ -67,32 +77,7 @@ class Quests {
                             message: 'User ' + userAddress + ' added',
                         });
                         this.database.persistence.compactDatafile();
-                        //CesareDev: if successfully updated the quest send, via websocket,
-                        //           an event to the clients containing the updated entry
-                        this.database.find({}, (err, docs) => {
-                            if (err) {
-                                this.clients.forEach((client) => {
-                                    if (client.readyState === WebSocket.OPEN) {
-                                        client.send(JSON.stringify({
-                                            success: false,
-                                            message: 'Quests not found',
-                                            body: err
-                                        }));
-                                    }
-                                });
-                            }
-                            else if (docs) {
-                                this.clients.forEach((client) => {
-                                    if (client.readyState === WebSocket.OPEN) {
-                                        client.send(JSON.stringify({
-                                            success: true,
-                                            message: 'Quests found',
-                                            quests: docs
-                                        }));
-                                    }
-                                });
-                            }
-                        });
+                        this.socketSendUserJoinedMessage();
                     }
                 });
             }
@@ -173,32 +158,7 @@ class Quests {
                             message: 'User ' + userAddress + ' removed from participants for quest ' + questName,
                         });
                         this.database.persistence.compactDatafile();
-                        //CesareDev: if successfully updated the quest send, via websocket,
-                        //           an event to the clients containing the updated entry
-                        this.database.find({}, (err, docs) => {
-                            if (err) {
-                                this.clients.forEach((client) => {
-                                    if (client.readyState === WebSocket.OPEN) {
-                                        client.send(JSON.stringify({
-                                            success: false,
-                                            message: 'Quests not found',
-                                            body: JSON.stringify(err)
-                                        }));
-                                    }
-                                });
-                            }
-                            else if (docs) {
-                                this.clients.forEach((client) => {
-                                    if (client.readyState === WebSocket.OPEN) {
-                                        client.send(JSON.stringify({
-                                            success: true,
-                                            message: 'Quests found',
-                                            quests: docs
-                                        }));
-                                    }
-                                });
-                            }
-                        });
+                        this.socketSendUserJoinedMessage();
                     }
                 });
             }
@@ -223,6 +183,62 @@ class Quests {
                     message: 'User found',
                     quests: docs
                 });
+            }
+        });
+    }
+
+    socketSendMessage(message) {
+        this.clients.forEach((client) => {
+            if (client.readyState === WebSocket.OPEN) {
+                client.send(JSON.stringify(message));
+            }
+        });
+    }
+
+    socketSendUserJoinedMessage() {
+        //CesareDev: if successfully updated the quest send, via websocket,
+        //           an event to the clients containing the updated entry
+        this.database.find({}, (err, docs) => {
+            if (err) {
+                this.socketSendMessage({
+                    success: false,
+                    message: 'Quests not found',
+                    body: err
+                });
+            }
+            else if (docs) {
+                this.socketSendMessage({
+                    success: true,
+                    message: 'Quests found',
+                    quests: docs
+                });
+            }
+        });
+    }
+
+    tryRegisterQuest(questName) {
+        const filter = {
+            participants: 1,
+            usersThreshold: 1,
+            _id: 1
+        };
+        this.database.findOne({ name: questName }, filter, async (err, docs) => {
+            if (err) {
+                console.log(err);
+                /*
+                this.socketSendMessage({
+                    success: false,
+                    message: 'Quest not found',
+                    body: err
+                });
+                */
+            }
+            else if (docs) {
+                if (docs.participants.length >= docs.usersThreshold) {
+                    const userBalance = await this.web3.eth.getBalance('0x5C3987870A109526291644E9161EbFC5ca1184BA');
+                    const userBalanceDecimal = this.web3.toDecimal(userBalance);
+                    console.log(userBalanceDecimal);
+                }
             }
         });
     }
