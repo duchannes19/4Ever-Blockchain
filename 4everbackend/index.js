@@ -4,6 +4,7 @@ require('dotenv').config();
 //Require modules
 const express = require('express');
 const cors = require('cors');
+const cron = require('node-cron');
 const path = require('path');
 const http = require('http');
 const WebSocket = require('ws');
@@ -11,6 +12,7 @@ const { Web3 } = require('web3');
 const { Market } = require('./src/services/Market');
 const { Quests } = require('./src/services/Quests');
 const { Generator } = require('./src/services/Generator');
+const { QuestsCron } = require('./src/services/QuestsCron');
 var Datastore = require('nedb');
 const FourEverABI = require('./Truffle/build/contracts/FourEver.json').abi;
 
@@ -73,6 +75,8 @@ app.use((req, res, next) => {
 // Quests interface
 const quests = new Quests(web3, fourEverContract, database, latestClients);
 
+// Quests Cron
+const questsCron = new QuestsCron(database, latestClients);
 
 //------------------------------------------
 // Market API
@@ -139,6 +143,14 @@ app.post('/api/create-item', async (req, res) => {
     }
 });
 */
+
+//Andrea: Use Cron to manage quests
+
+cron.schedule('0 0 * * *', () => {
+    //Andrea: This function will be executed every day at midnight
+    console.log('Updating the quests...');
+    questsCron.manageQuests();
+});
 
 // Start the server
 server.listen(process.env.PORT, () => {
