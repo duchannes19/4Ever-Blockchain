@@ -1,4 +1,4 @@
-class Quests {
+class Quests { 
 
     constructor(web3, contract, database, clients) {
         this.web3 = web3;
@@ -27,7 +27,8 @@ class Quests {
         });
     }
 
-    joinQuest(req, res) {
+    joinQuest(req, res) { 
+
         //CesareDev: Get useraddress and quest name from the post request's body
         const { userAddress, questName } = req.body;
 
@@ -133,6 +134,7 @@ class Quests {
 
     // Andrea: Added function to unjoin a quest, if the quest has not started yet (for testing or should we keep?)
     unjoinQuest(req, res) {
+
         const { userAddress, questName } = req.body;
 
         //Andrea: Checks if the user is in the participants list, and if the quest has not started yet, 
@@ -174,7 +176,7 @@ class Quests {
                         this.database.find({}, (err, docs) => {
                             if (err) {
                                 this.clients.forEach((client) => {
-                                    if (client.readyState == WebSocket.OPEN) {
+                                    if (client.readyState === WebSocket.OPEN) {
                                         client.send({
                                             success: false,
                                             message: 'Quests not found',
@@ -185,7 +187,7 @@ class Quests {
                             }
                             else if (docs) {
                                 this.clients.forEach((client) => {
-                                    if (client.readyState == WebSocket.OPEN) {
+                                    if (client.readyState === WebSocket.OPEN) {
                                         client.send({
                                             success: true,
                                             message: 'Quests found',

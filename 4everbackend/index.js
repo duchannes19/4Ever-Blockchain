@@ -33,9 +33,6 @@ const market = new Market(web3, fourEverContract);
 //Create database
 var database = new Datastore({ filename: path.join(__dirname, '/database/quests.db'), autoload: true });
 
-// Quests interface
-const quests = new Quests(web3, fourEverContract, database);
-
 // Test the connection
 web3.eth.getBlockNumber()
     .then(blockNumber => {
@@ -72,6 +69,9 @@ app.use((req, res, next) => {
     req.web3 = web3;
     next();
 });
+
+// Quests interface
+const quests = new Quests(web3, fourEverContract, database, clients);
 
 //------------------------------------------
 // Market API
