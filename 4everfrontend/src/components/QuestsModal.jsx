@@ -35,25 +35,6 @@ export default function QuestsModal({ isOpen, onClose, selectedQuest, setSelecte
         visible: { opacity: 1, x: 0 }
     };
 
-    const getQuests = async () => {
-        try {
-            const quests = await axios.get('http://localhost:3000/api/get-quests');
-            if (quests.data.success) {
-                setQuests(quests.data.quests);
-                console.log(quests.data.message);
-                // Andrea: Refresh the selected quest in the modal too
-                const quest = quests.data.quests[selectedQuest.index];
-                setSelectedQuest({ quest, index: selectedQuest.index });
-            } else {
-                console.log(quests.data.message);
-                Notify('error', quests.data.message);
-            }
-        } catch (error) {
-            console.error(error);
-            Notify('error', error.message);
-        }
-    };
-
 
     const handleSubmit = async () => {
         setIsSubmitting(true);
@@ -74,7 +55,6 @@ export default function QuestsModal({ isOpen, onClose, selectedQuest, setSelecte
             console.error(error);
             Notify('error', error.message);
         } finally {
-            getQuests();
             setIsSubmitting(false);
         }
     };
@@ -98,7 +78,6 @@ export default function QuestsModal({ isOpen, onClose, selectedQuest, setSelecte
             console.error(error);
             Notify('error', error.message);
         } finally {
-            getQuests();
             setIsSubmitting(false);
         }
     }

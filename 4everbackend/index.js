@@ -64,10 +64,9 @@ wss.on('connection', (ws) => {
     });
 });
 
-//CesareDev: Middleware to pass web3 and clients to all routes
+//CesareDev: Middleware to pass web3 to all routes
 app.use((req, res, next) => {
     req.web3 = web3;
-    req.latestClients = latestClients;
     next();
 });
 
