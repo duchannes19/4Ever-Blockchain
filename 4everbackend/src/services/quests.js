@@ -329,6 +329,9 @@ class Quests {
         }
     }
 
+    // Andrea: IMPORTANT: Actually there should be a logic that acknowledges the user who finish the quest and immediatly handles
+    // the payment of the NFT to the user. This logic should be implemented in the function unregisterQuests(questId) adding the user address that finished first.
+
     endQuests(todayDate) {
         // Andrea: Check if there is any quest that ends today
         // Andrea: If there are quests that end today, schedule a cron job for each of them to end at 23:00 PM
@@ -345,6 +348,9 @@ class Quests {
                     // Andrea: The quest has ended, so we can update it from the active quests and modify the field questEnded in the database
                     this.unregisterQuests(quest._id);
                     this.socketSendUpdatedQuests();
+
+                    // Andrea: If the quest ends, and there is no winner yet, we have to handle the logic of paying the person who got more close on finishing the quest
+                    
                 }, {
                     scheduled: false, // Andrea: Don't start immediately
                     timezone: 'Europe/Rome', // Andrea: Set the timezone to Europe/Rome

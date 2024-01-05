@@ -82,8 +82,19 @@ const Quests = () => {
                 gap='1rem'
                 marginBottom='2rem'
             >
+            {/* Andrea: Add logic to make that the quest is ended more clear, maybe not passing it from the backend is better */}
                 {quests.map((quest, index) => (
-                    <Image key={index} src='/img/quest.png' className='quest' marginBottom='2rem' onClick={() => { handleModal(quest, index) }} />
+                    <Image
+                        key={index}
+                        src='/img/quest.png'
+                        className='quest'
+                        marginBottom='2rem'
+                        onClick={() => {
+                            if (!quest.questEnded) {
+                                handleModal(quest, index);
+                            }
+                        }}
+                    />
                 ))}
             </Box>
             {selectedQuest && <QuestsModal isOpen={isOpen} onClose={onClose} selectedQuest={selectedQuest} setSelectedQuest={setSelectedQuest} setQuests={setQuests} />}
