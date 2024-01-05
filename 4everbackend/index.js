@@ -12,7 +12,6 @@ const { Web3 } = require('web3');
 const { Market } = require('./src/services/Market');
 const { Quests } = require('./src/services/Quests');
 const { Generator } = require('./src/services/Generator');
-const { QuestsCron } = require('./src/services/QuestsCron');
 var Datastore = require('nedb');
 const FourEverABI = require('./Truffle/build/contracts/FourEver.json').abi;
 
@@ -66,9 +65,6 @@ wss.on('connection', (ws) => {
     });
 });
 
-// Quests interface
-const quests = new Quests(web3, fourEverContract, database, latestClients);
-
 //CesareDev: Middleware to pass web3 to all routes
 app.use((req, res, next) => {
     req.web3 = web3;
@@ -77,9 +73,6 @@ app.use((req, res, next) => {
 
 // Quests interface
 const quests = new Quests(web3, fourEverContract, database, latestClients);
-
-// Quests Cron
-const questsCron = new QuestsCron(database, latestClients);
 
 //------------------------------------------
 // Market API
@@ -123,9 +116,9 @@ app.get('/api/get-quests', (req, res) => {
 
 //CesareDev: DEBUG API
 app.get('/api/test', (req, res) => {
-    quests.tryRegisterQuest("Hunt for the Lost Relic");
-    res.send("hi");
-})
+    quests.handleQuestsLifeCycle();
+    res.send("ok");
+});
 
 //CesareDev: Image generation remove for now
 /*
@@ -154,11 +147,10 @@ app.post('/api/create-item', async (req, res) => {
 */
 
 //Andrea: Use Cron to manage quests
-
 cron.schedule('0 0 * * *', () => {
     //Andrea: This function will be executed every day at midnight
     console.log('Updating the quests...');
-    questsCron.manageQuests();
+    quests.handleQuestsLifeCycle();
 });
 
 // Start the server

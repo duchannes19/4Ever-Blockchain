@@ -29,12 +29,10 @@ contract FourEver {
     }
 
     struct Quest {
-        //CesareDev: In a mapping all the value are initizialized to default value
-        //           bool -> false, with this trick we can check if a quest is already registered
-        bool registered;
         //CesareDev: users addresses -> users' quote
         mapping(address => uint256) participants;
-        //CesareDev: Maybe add a NFT member that represents the reward
+        //CesareDev: NFT member that represents the reward
+        NFT nft;
     }
 
     //----------------------------------------------
@@ -91,10 +89,8 @@ contract FourEver {
     //----------------------------------------------
 
     function joinQuest(uint256 questId) public payable {
-        if (!quests[questId].registered) {
-            quests[questId].registered = true;
-        }
         //CesareDev: the check for the already existing user is done on the backend
+        if (quests[questId].participants[msg.sender] > 0) revert();
         quests[questId].participants[msg.sender] = msg.value;
         emit QuestRegistration(questId, msg.sender);
     }
