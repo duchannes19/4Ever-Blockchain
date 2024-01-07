@@ -116,7 +116,12 @@ app.get('/api/get-quests', (req, res) => {
 
 //CesareDev: DEBUG API
 app.get('/api/test', (req, res) => {
-    quests.handleQuestsLifeCycle();
+    quests.unregisterQuest('2tUoTnXMnOuGeyFY');
+    res.send("ok");
+});
+
+app.get('/api/test1', (req, res) => {
+    quests.registerQuest('2tUoTnXMnOuGeyFY');
     res.send("ok");
 });
 

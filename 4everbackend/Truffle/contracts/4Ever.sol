@@ -29,10 +29,14 @@ contract FourEver {
     }
 
     struct Quest {
-        //CesareDev: users addresses -> users' quote
-        mapping(address => uint256) participants;
         //CesareDev: NFT member that represents the reward
         NFT nft;
+        //CesareDev: for random userWinnerSelection
+        uint256 seed;
+        //CesareDev: member to check if the quest ended
+        bool ended;
+        //CesareDev: users addresses -> users' quote
+        mapping(address => uint256) participants;
     }
 
     //----------------------------------------------
@@ -46,7 +50,7 @@ contract FourEver {
         string imageURL,
         string description
     );
-    event QuestEnded(uint256 questId);
+    event QuestEnded(uint256 questId, address winner);
     event QuestRegistration(uint256 questId, address user);
     //----------------------------------------------
     // Contract memebers
@@ -88,11 +92,17 @@ contract FourEver {
     // Quest
     //----------------------------------------------
 
-    function joinQuest(uint256 questId) public payable {
+    function joinQuest(uint256 questId, uint128 seed) public payable {
         //CesareDev: the check for the already existing user is done on the backend
         if (quests[questId].participants[msg.sender] > 0) revert();
+        quests[questId].seed += seed;
         quests[questId].participants[msg.sender] = msg.value;
         emit QuestRegistration(questId, msg.sender);
+    }
+
+    function endQuest(uint256 questId) public {
+        quests[questId].ended = true;
+        //CesareDev: Implements quest winner
     }
 
     function isAlreadyRegistered(
@@ -102,8 +112,8 @@ contract FourEver {
         return quests[questId].participants[user] > 0;
     }
 
-    function refundUsers(uint256 questId) public {
-        //CesareDev: Refound users if the quest doesn't start
+    function getQuestSeed(uint256 questId) public view returns (uint256) {
+        return quests[questId].seed;
     }
 
     //----------------------------------------------

@@ -1,5 +1,6 @@
 const cron = require('node-cron');
 const WebSocket = require('ws');
+const { randomBytes } = require('crypto');
 
 class Quests {
 
@@ -234,7 +235,10 @@ class Quests {
                             const gasLimit = 6721975;
                             //CesareDev: soliditySha3 = keccak256 from the web3.js documentation
                             const questIdHash = this.web3.utils.soliditySha3(docs.name);
-                            const questRegistration = await this.contract.methods.joinQuest(questIdHash).send({
+                            //CesareDev: secure random seed
+                            //           16 bytes -> 128 bit to prevent integer overflow in the contract
+                            const seed = this.web3.utils.bytesToHex(randomBytes(16));
+                            const questRegistration = await this.contract.methods.joinQuest(questIdHash, seed).send({
                                 value: quote,
                                 from: docs.participants[i],
                                 gasPrice,
@@ -272,8 +276,48 @@ class Quests {
         });
     }
 
-    unregisterQuests(questId) {
-        //CesareDev: Handle chain unregistration and NFT winning
+    unregisterQuest(questId) {
+        //CesareDev: Handle chain unregistration and NFT winning -> set the winner in the db
+        const filter = {
+            name: 1,
+            participants: 1,
+            _id: 1
+        };
+        this.database.findOne({ _id: questId }, filter, async (err, docs) => {
+            if (err) {
+                this.socketSendMessage({
+                    success: false,
+                    message: 'Database error',
+                    body: err
+                });
+            }
+            else if (docs) {
+                const questIdHash = this.web3.utils.soliditySha3(docs.name);
+                const seed = await this.contract.methods.getQuestSeed(questIdHash).call();
+                //CesareDev: the index of the winner is in the range [0, participants.length - 1]
+                //           for randomness we do the module with the seed of the quest
+                const winnerIndex = this.web3.utils.toNumber(
+                    this.web3.utils.toBigInt(seed) % this.web3.utils.toBigInt(docs.participants.length)
+                );
+                const winnerAddress = docs.participants[winnerIndex];
+                this.database.update({ _id: docs._id }, { $set: { questEnded: true, winner: winnerAddress } }, {}, (err) => {
+                    if (err) {
+                        this.socketSendMessage({
+                            success: false,
+                            message: 'Database error',
+                            body: err
+                        });
+                    }
+                    else {
+                        this.socketSendMessage({
+                            success: true,
+                            message: 'The winner for ' + docs.name + ' is ' + winnerAddress
+                        });
+                        this.database.persistence.compactDatafile();
+                    }
+                })
+            }
+        });
     }
 
     //---------------------------------------
@@ -346,11 +390,11 @@ class Quests {
                     // Andrea: This function will be executed once at 23:00 PM of the current day
                     console.log('Ending quest:', quest.name);
                     // Andrea: The quest has ended, so we can update it from the active quests and modify the field questEnded in the database
-                    this.unregisterQuests(quest._id);
+                    this.unregisterQuest(quest._id);
                     this.socketSendUpdatedQuests();
 
                     // Andrea: If the quest ends, and there is no winner yet, we have to handle the logic of paying the person who got more close on finishing the quest
-                    
+
                 }, {
                     scheduled: false, // Andrea: Don't start immediately
                     timezone: 'Europe/Rome', // Andrea: Set the timezone to Europe/Rome
