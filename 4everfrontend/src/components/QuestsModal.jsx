@@ -21,12 +21,13 @@ import QuestsLogo from '/img/quest.png';
 
 import Notify from './Notify';
 
-export default function QuestsModal({ isOpen, onClose, selectedQuest, setSelectedQuest, setQuests }) {
+export default function QuestsModal({ isOpen, onClose, selectedQuest }) {
 
     const colorMode = 'dark';
     const address = localStorage.getItem('accounts');
     const isDisabled = selectedQuest.quest.participants.includes(address);
     const cantUnjoin = selectedQuest.quest.startDate < Date.now();
+    const haswinner = selectedQuest.quest.winner;
 
     const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -119,6 +120,7 @@ export default function QuestsModal({ isOpen, onClose, selectedQuest, setSelecte
                     </ModalBody>
 
                     <ModalFooter>
+                        {(haswinner === localStorage.getItem('accounts')) && <Button fontFamily={'mephistoregular'} colorScheme='green' mr={3} onClick={handleSubmit} isLoading={isSubmitting}> Claim Reward </Button>}
                         <Button fontFamily={'mephistoregular'} colorScheme='green' mr={3} onClick={handleSubmit} isLoading={isSubmitting} isDisabled={isDisabled}>
                             Partecipate
                         </Button>

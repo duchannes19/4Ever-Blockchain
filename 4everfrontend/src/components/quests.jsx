@@ -12,16 +12,16 @@ const Quests = () => {
     const [selectedQuest, setSelectedQuest] = useState(null);
     const { isOpen, onOpen, onClose } = useDisclosure();
 
-    const socketUrl = 'ws://localhost:3000'; 
+    const socketUrl = 'ws://localhost:3000';
 
     const { sendJsonMessage, readyState } = useWebSocket(socketUrl, {
         onMessage: (event) => {
             const data = JSON.parse(event.data);
             setQuests(data.quests);
-    
+
             if (selectedQuest) {
                 const matchingQuest = data.quests.find((quest) => quest.name === selectedQuest.quest.name);
-    
+
                 if (matchingQuest) {
                     setSelectedQuest({ quest: matchingQuest, index: selectedQuest.index });
                 }
@@ -32,7 +32,7 @@ const Quests = () => {
             Notify('error', 'WebSocket connection error');
         },
     });
-    
+
 
     useEffect(() => {
         const getQuests = async () => {
@@ -82,19 +82,34 @@ const Quests = () => {
                 gap='1rem'
                 marginBottom='2rem'
             >
-            {/* Andrea: Add logic to make that the quest is ended more clear, maybe not passing it from the backend is better */}
+                {/* Andrea: Add logic to make that the quest is ended more clear, maybe not passing it from the backend is better */}
                 {quests.map((quest, index) => (
-                    <Image
+                    <Box
                         key={index}
-                        src='/img/quest.png'
-                        className='quest'
-                        marginBottom='2rem'
+                        position="relative"
+                        marginBottom="2rem"
                         onClick={() => {
                             if (!quest.questEnded) {
                                 handleModal(quest, index);
                             }
                         }}
-                    />
+                    >
+                        <Image src="/img/quest.png" className="quest" />
+                        {quest.questEnded && (
+                            <Text
+                                fontFamily="mephistoregular"
+                                fontSize="2rem"
+                                color="red"
+                                position="absolute"
+                                top="50%"
+                                left="50%"
+                                transform="translate(-50%, -50%)"
+                                textShadow="0 0 5px rgba(0, 0, 0, 0.3)"
+                            >
+                                Ended
+                            </Text>
+                        )}
+                    </Box>
                 ))}
             </Box>
             {selectedQuest && <QuestsModal isOpen={isOpen} onClose={onClose} selectedQuest={selectedQuest} setSelectedQuest={setSelectedQuest} setQuests={setQuests} />}
