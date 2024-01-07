@@ -7,8 +7,8 @@ const cors = require('cors');
 const cron = require('node-cron');
 const path = require('path');
 const http = require('http');
-const WebSocket = require('ws');
 const { Web3 } = require('web3');
+const { Socket } = require('./src/services/Socket');
 const { Market } = require('./src/services/Market');
 const { Quests } = require('./src/services/Quests');
 const { Generator } = require('./src/services/Generator');
@@ -50,20 +50,7 @@ app.use(cors());
 
 //CesareDev: create web socket for realt time update
 const server = http.createServer(app);
-const wss = new WebSocket.Server({ server });
-//CesareDev: clients set to send events 
-let latestClients = new Set();
-
-//CesareDev: WebSocket connection event
-wss.on('connection', (ws) => {
-    console.log('Client connected');
-    latestClients.add(ws);
-
-    ws.on('close', () => {
-        console.log('Client disconnected');
-        latestClients.delete(ws);
-    });
-});
+const socket = new Socket(server);
 
 //CesareDev: Middleware to pass web3 to all routes
 app.use((req, res, next) => {
@@ -72,7 +59,7 @@ app.use((req, res, next) => {
 });
 
 // Quests interface
-const quests = new Quests(web3, fourEverContract, database, latestClients);
+const quests = new Quests(web3, fourEverContract, database, socket);
 
 //------------------------------------------
 // Market API

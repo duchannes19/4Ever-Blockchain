@@ -8,44 +8,11 @@ class Quests {
     // Constructor
     //---------------------------------------
 
-    constructor(web3, contract, database, clients) {
+    constructor(web3, contract, database, socket) {
         this.web3 = web3;
         this.contract = contract;
         this.database = database;
-        this.clients = clients;
-    }
-
-    //---------------------------------------
-    // Socket
-    //---------------------------------------
-
-    socketSendMessage(message) {
-        this.clients.forEach((client) => {
-            if (client.readyState === WebSocket.OPEN) {
-                client.send(JSON.stringify(message));
-            }
-        });
-    }
-
-    socketSendUpdatedQuests() {
-        //CesareDev: if successfully updated the quest send, via websocket,
-        //           an event to the clients containing the updated entry
-        this.database.find({}, (err, docs) => {
-            if (err) {
-                this.socketSendMessage({
-                    success: false,
-                    message: 'Database error',
-                    body: err
-                });
-            }
-            else if (docs) {
-                this.socketSendMessage({
-                    success: true,
-                    message: 'Updated quests',
-                    quests: docs
-                });
-            }
-        });
+        this.socket = socket;
     }
 
     //---------------------------------------
@@ -67,6 +34,28 @@ class Quests {
                     success: true,
                     message: 'Quests found',
                     quests: docs,
+                });
+            }
+        });
+    }
+
+    isUserRegistered(req, res) {
+        //CesareDev: Get useraddress from the post request's body
+        const { userAddress } = req.body;
+        //CesareDev: Check wich quest has this user as a participant
+        this.database.find({ participants: userAddress }, (err, docs) => {
+            if (err) {
+                res.status(500).send({
+                    success: false,
+                    message: 'Database error',
+                    body: err
+                });
+            }
+            else if (docs) {
+                res.status(200).send({
+                    success: true,
+                    message: 'User found',
+                    quests: docs
                 });
             }
         });
@@ -119,7 +108,7 @@ class Quests {
                             message: 'User ' + userAddress + ' added',
                         });
                         this.database.persistence.compactDatafile();
-                        this.socketSendUpdatedQuests();
+                        this.socket.sendDatabase(this.database);
                     }
                 });
             }
@@ -166,30 +155,8 @@ class Quests {
                             message: 'User ' + userAddress + ' removed from participants for quest ' + questName,
                         });
                         this.database.persistence.compactDatafile();
-                        this.socketSendUpdatedQuests();
+                        this.socket.sendDatabase(this.database);
                     }
-                });
-            }
-        });
-    }
-
-    isUserRegistered(req, res) {
-        //CesareDev: Get useraddress from the post request's body
-        const { userAddress } = req.body;
-        //CesareDev: Check wich quest has this user as a participant
-        this.database.find({ participants: userAddress }, (err, docs) => {
-            if (err) {
-                res.status(500).send({
-                    success: false,
-                    message: 'Database error',
-                    body: err
-                });
-            }
-            else if (docs) {
-                res.status(200).send({
-                    success: true,
-                    message: 'User found',
-                    quests: docs
                 });
             }
         });
@@ -208,7 +175,7 @@ class Quests {
         };
         this.database.findOne({ _id: questId }, filter, async (err, docs) => {
             if (err) {
-                this.socketSendMessage({
+                this.socket.sendMessage({
                     success: false,
                     message: 'Quest not found during registration',
                     body: err
@@ -221,7 +188,7 @@ class Quests {
                     for (let i = 0; i < docs.participants.length; i++) {
                         const userBalance = await this.web3.eth.getBalance(docs.participants[i]);
                         if (userBalance < quote * 2) {
-                            this.socketSendMessage({
+                            this.socket.sendMessage({
                                 success: false,
                                 message: 'One of the user\'s balance insufficient',
                             });
@@ -244,13 +211,13 @@ class Quests {
                                 gasPrice,
                                 gasLimit
                             });
-                            this.socketSendMessage({
+                            this.socket.sendMessage({
                                 success: true,
                                 message: 'User ' + docs.participants[i] + ' joined the quest ' + docs.name,
                                 body: questRegistration
                             });
                         } catch (error) {
-                            this.socketSendMessage({
+                            this.socket.sendMessage({
                                 success: false,
                                 message: 'Error',
                                 body: err
@@ -260,7 +227,7 @@ class Quests {
                         //CesareDev: All the users have done the transaction -> quest active
                         this.database.update({ _id: docs._id }, { $set: { questRegistered: true } }, {}, (err) => {
                             if (err) {
-                                this.socketSendMessage({
+                                this.socket.sendMessage({
                                     success: false,
                                     message: 'Database error',
                                     body: err
@@ -285,7 +252,7 @@ class Quests {
         };
         this.database.findOne({ _id: questId }, filter, async (err, docs) => {
             if (err) {
-                this.socketSendMessage({
+                this.socket.sendMessage({
                     success: false,
                     message: 'Database error',
                     body: err
@@ -302,14 +269,14 @@ class Quests {
                 const winnerAddress = docs.participants[winnerIndex];
                 this.database.update({ _id: docs._id }, { $set: { questEnded: true, winner: winnerAddress } }, {}, (err) => {
                     if (err) {
-                        this.socketSendMessage({
+                        this.socket.sendMessage({
                             success: false,
                             message: 'Database error',
                             body: err
                         });
                     }
                     else {
-                        this.socketSendMessage({
+                        this.socket.sendMessage({
                             success: true,
                             message: 'The winner for ' + docs.name + ' is ' + winnerAddress
                         });
@@ -332,7 +299,7 @@ class Quests {
         // Andrea: Get all the active quests from the database
         this.database.find({}, (err, docs) => {
             if (err) {
-                this.socketSendMessage({
+                this.socket.sendMessage({
                     success: false,
                     message: 'Database error',
                     body: err
@@ -361,7 +328,7 @@ class Quests {
                     // Andrea: The quest has started, so we can update it from the active quests and set the status to true in questRegistered in the database
                     //CesareDev: Here logic handling the start of the quests
                     this.registerQuest(quest._id);
-                    this.socketSendUpdatedQuests();
+                    this.socket.sendDatabase(this.database);
                 }, {
                     scheduled: false, // Andrea: Don't start immediately
                     timezone: 'Europe/Rome', // Andrea: Set the timezone to Europe/Rome
@@ -391,7 +358,7 @@ class Quests {
                     console.log('Ending quest:', quest.name);
                     // Andrea: The quest has ended, so we can update it from the active quests and modify the field questEnded in the database
                     this.unregisterQuest(quest._id);
-                    this.socketSendUpdatedQuests();
+                    this.socket.sendDatabase(this.database);
 
                     // Andrea: If the quest ends, and there is no winner yet, we have to handle the logic of paying the person who got more close on finishing the quest
 
