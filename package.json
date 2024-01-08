@@ -5,6 +5,7 @@
         "install-all": "pushd 4everfrontend && npm install && popd && pushd 4everbackend && npm install && npm install -g truffle && popd",
         "client": "pushd 4everfrontend && npm run dev && popd",
         "server": "pushd 4everbackend && npm start && popd",
+        "database": "pushd 4everbackend && pushd database && node Database.js && popd && popd",
         "truffle": "pushd 4everbackend && pushd Truffle && truffle migrate && node DotEnv.js && popd && popd"
     }
 }
