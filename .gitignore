@@ -14,3 +14,6 @@ smart_contract_notes.txt
 
 # To avoid Conflicts
 4everbackend/Truffle/build/contracts/FourEver.json
+
+# Ingnorign databases
+4everbackend/database/quests.db
