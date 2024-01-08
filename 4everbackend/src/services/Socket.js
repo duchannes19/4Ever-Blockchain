@@ -1,6 +1,6 @@
 const WebSocket = require('ws');
 
-//CesareDev: Socket custom API
+//CesareDev: Custom Socket API
 class Socket {
 
     //---------------------------------------
