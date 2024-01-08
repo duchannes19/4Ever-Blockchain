@@ -11,6 +11,7 @@ class Socket {
         //CesareDev: WebSocket connection event
         this.wss = new WebSocket.Server({ server });
         this.clients = new Set();
+        this.connection();
     }
 
     //---------------------------------------
@@ -44,16 +45,16 @@ class Socket {
     sendDatabase(database) {
         //CesareDev: if successfully updated the quest send, via websocket,
         //           an event to the clients containing the updated entry
-        this.database.find({}, (err, docs) => {
+        database.find({}, (err, docs) => {
             if (err) {
-                this.socketSendMessage({
+                this.sendMessage({
                     success: false,
                     message: 'Database error',
                     body: err
                 });
             }
             else if (docs) {
-                this.socketSendMessage({
+                this.sendMessage({
                     success: true,
                     message: 'Updated quests',
                     quests: docs

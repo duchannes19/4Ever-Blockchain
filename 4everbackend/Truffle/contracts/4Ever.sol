@@ -52,6 +52,7 @@ contract FourEver {
     );
     event QuestEnded(uint256 questId, address winner);
     event QuestRegistration(uint256 questId, address user);
+
     //----------------------------------------------
     // Contract memebers
     //----------------------------------------------
