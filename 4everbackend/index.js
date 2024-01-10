@@ -101,22 +101,10 @@ app.get('/api/get-quests', (req, res) => {
     quests.getActiveQuest(req, res);
 });
 
-//CesareDev: DEBUG API
-app.get('/api/test', (req, res) => {
-    quests.unregisterQuest('2tUoTnXMnOuGeyFY');
-    res.send("ok");
-});
-
 // Andrea: DEBUG -> Simulate the victory by forcefully set a winner
 app.post('/api/simulate-victory', (req, res) => {
     console.log("Simulate victory request received")
     quests.registerVictory(req, res);
-});
-
-//CesareDev: Finish the quest, pick a winner and assign him the prize as an NFT
-app.get('/api/test1', (req, res) => {
-    quests.registerQuest('2tUoTnXMnOuGeyFY');
-    res.send("ok");
 });
 
 //CesareDev: Image generation remove for now
