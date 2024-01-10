@@ -109,6 +109,7 @@ app.get('/api/test', (req, res) => {
 
 // Andrea: DEBUG -> Simulate the victory by forcefully set a winner
 app.post('/api/simulate-victory', (req, res) => {
+    console.log("Simulate victory request received")
     quests.registerVictory(req, res);
 });
 

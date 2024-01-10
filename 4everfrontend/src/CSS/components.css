@@ -91,4 +91,10 @@
         width: auto;
     }
 
+    .quest-footer{
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+    
+
 }

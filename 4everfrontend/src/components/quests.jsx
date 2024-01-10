@@ -89,7 +89,7 @@ const Quests = () => {
                         position="relative"
                         marginBottom="2rem"
                         onClick={() => {
-                            if (!quest.questEnded) {
+                            if (!quest.questEnded || !(quest.winner !== localStorage.getItem('accounts'))) {
                                 handleModal(quest, index);
                             }
                         }}
@@ -99,14 +99,15 @@ const Quests = () => {
                             <Text
                                 fontFamily="mephistoregular"
                                 fontSize="2rem"
-                                color="red"
+                                color= {quest.winner === localStorage.getItem('accounts') ? "green" : "red"}
                                 position="absolute"
                                 top="50%"
                                 left="50%"
                                 transform="translate(-50%, -50%)"
                                 textShadow="0 0 5px rgba(0, 0, 0, 0.3)"
+                                pointerEvents={"none"}
                             >
-                                Ended
+                                {quest.winner === localStorage.getItem('accounts') ? "Won" : "Ended"}
                             </Text>
                         )}
                     </Box>

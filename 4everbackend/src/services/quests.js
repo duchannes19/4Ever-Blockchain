@@ -259,14 +259,27 @@ class Quests {
                 });
             }
             else if (docs) {
-                const questIdHash = this.web3.utils.soliditySha3(docs.name);
-                const seed = await this.contract.methods.getQuestSeed(questIdHash).call();
-                //CesareDev: the index of the winner is in the range [0, participants.length - 1]
-                //           for randomness we do the module with the seed of the quest
-                const winnerIndex = this.web3.utils.toNumber(
-                    this.web3.utils.toBigInt(seed) % this.web3.utils.toBigInt(docs.participants.length)
-                );
-                const winnerAddress = docs.participants[winnerIndex];
+                // Andrea: If there is already a winner, we don't have to do anything, just reiterate the winner address
+                let winnerAddress;
+                let winnerIndex;
+                if (!docs.winner) {
+                    const questIdHash = this.web3.utils.soliditySha3(docs.name);
+                    const seed = await this.contract.methods.getQuestSeed(questIdHash).call();
+                    //CesareDev: the index of the winner is in the range [0, participants.length - 1]
+                    //           for randomness we do the module with the seed of the quest
+                    winnerIndex = this.web3.utils.toNumber(
+                        this.web3.utils.toBigInt(seed) % this.web3.utils.toBigInt(docs.participants.length)
+                    );
+                    winnerAddress = docs.participants[winnerIndex];
+                }
+                else {
+                    winnerAddress = docs.winner;
+                }
+
+                //Andrea: Execute the transaction to assign the NFT to the winner
+
+
+                //Andrea: Finalize the quest by setting the winner in the database
                 this.database.update({ _id: docs._id }, { $set: { questEnded: true, winner: winnerAddress } }, {}, (err) => {
                     if (err) {
                         this.socket.sendMessage({
@@ -287,35 +300,83 @@ class Quests {
         });
     };
 
-    // Andrea: Forcefully set the winner of a quest
+    // Andrea: Forcefully set the winner of a quest, ending it
     registerVictory(req, res) {
         const { userAddress, questName } = req.body;
 
-        // Check if the user is in the parteciapanst list of the quest and set him as the winner in the winner field
-        this.database.update({ name: questName, participants: userAddress }, { $set: { winner: userAddress } }, {}, (err) => {
+        this.database.findOne({ name: questName }, async (err, docs) => {
             if (err) {
-                res.status(500).send({
+                return res.status(500).send({
                     success: false,
                     message: 'Database error',
                     body: err
                 });
             }
-            else {
-                res.status(200).send({
-                    success: true,
-                    message: 'User ' + userAddress + ' won the quest ' + questName,
+            if (!docs) {
+                return res.status(404).send({
+                    success: false,
+                    message: 'Quest ' + questName + ' not found'
                 });
-                this.database.persistence.compactDatafile();
-                this.socket.sendDatabase(this.database);
             }
+
+            const questId = docs._id;
+
+            // Set the winner in the database
+            this.database.update({ _id: questId }, { $set: { questEnded: true, winner: userAddress } }, {}, (err) => {
+                if (err) {
+                    return res.status(500).send({
+                        success: false,
+                        message: 'Database error',
+                        body: err
+                    });
+                }
+                this.database.persistence.compactDatafile();
+
+                // Handle chain unregistration and NFT winning -> set the winner in the db
+                const filter = { name: 1, participants: 1, _id: 1 };
+                this.database.findOne({ _id: questId }, filter, async (err, docs) => {
+                    if (err) {
+                        return res.status(500).send({
+                            success: false,
+                            message: 'Database error',
+                            body: err
+                        });
+                    }
+
+                    // If there is already a winner, reiterate the winner address
+                    let winnerAddress;
+                    if (!docs.winner) {
+                        const questIdHash = this.web3.utils.soliditySha3(docs.name);
+                        const seed = await this.contract.methods.getQuestSeed(questIdHash).call();
+                        const winnerIndex = this.web3.utils.toNumber(
+                            this.web3.utils.toBigInt(seed) % this.web3.utils.toBigInt(docs.participants.length)
+                        );
+                        winnerAddress = docs.participants[winnerIndex];
+                    } else {
+                        winnerAddress = docs.winner;
+                    }
+
+                    // Execute the transaction to assign the NFT to the winner
+
+                    // Finalize the quest by setting the winner in the database
+                    this.database.update({ _id: docs._id }, { $set: { questEnded: true, winner: winnerAddress } }, {}, (err) => {
+                        if (err) {
+                            return res.status(500).send({
+                                success: false,
+                                message: 'Database error',
+                                body: err
+                            });
+                        }
+                        res.status(200).send({
+                            success: true,
+                            message: 'The winner for ' + docs.name + ' is ' + winnerAddress
+                        });
+                        this.database.persistence.compactDatafile();
+                        this.socket.sendDatabase(this.database);
+                    });
+                });
+            });
         });
-    };
-
-    // Andrea: Tecnically checks if the quest is finished and then pay the NFT to the victor
-    finalizeQuest(req, res) {
-        
-
-        // Andrea: To Do...
     };
 
     //---------------------------------------

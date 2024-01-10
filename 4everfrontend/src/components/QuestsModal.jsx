@@ -122,7 +122,7 @@ export default function QuestsModal({ isOpen, onClose, selectedQuest }) {
                         <motion.div className='merchantmodal' initial='hidden' animate='visible' variants={fadeInVariants} transition={{ duration: 0.5 }}>
                             <Image src={QuestsLogo} alt='merchant icon' className='merchant icon' />
                             <Box bg='#333232' style={{ borderRadius: '10px' }}>
-                                <Box className='merchant items' style={{maxHeight: '80%'}}>
+                                <Box className='merchant items' style={{ maxHeight: '80%' }}>
                                     <Box bg='#333232' style={{ borderRadius: '10px' }}>
                                         <Text fontFamily='mephistoregular' fontSize='2.5rem' color='white' marginBottom='2rem' marginTop='2rem' textAlign='center'>Description</Text>
                                         <hr style={{ margin: 'auto', marginBottom: '1rem', width: '80%' }} />
@@ -132,9 +132,16 @@ export default function QuestsModal({ isOpen, onClose, selectedQuest }) {
                                         <hr style={{ margin: 'auto', marginBottom: '1rem', width: '80%' }} />
                                         <Text fontFamily='mephistoregular' fontSize='2.5rem' color='white' marginBottom='2rem' marginTop='2rem' textAlign='center'>Partecipants: {selectedQuest.quest.participants.length}</Text>
                                         <hr style={{ margin: 'auto', marginBottom: '1rem', width: '80%' }} />
-                                        <Text fontFamily='mephistoregular' fontSize='2.5rem' color='white' marginBottom='2rem' marginTop='2rem' textAlign='center'>Starts: {selectedQuest.quest.startDate}</Text>
-                                        <hr style={{ margin: 'auto', marginBottom: '1rem', width: '80%' }} />
-                                        <Text fontFamily='mephistoregular' fontSize='2.5rem' color='white' marginBottom='2rem' marginTop='2rem' textAlign='center'>Expires: {selectedQuest.quest.expirationDate}</Text>
+                                        {((haswinner === localStorage.getItem('accounts')) && selectedQuest.quest.questEnded) ?
+
+                                            <Text fontFamily='mephistoregular' fontSize='2.5rem' color='white' marginBottom='2rem' marginTop='2rem' textAlign='center'> You won this quest<br />Congratulation!</Text>
+                                            :
+                                            <>
+                                                <Text fontFamily='mephistoregular' fontSize='2.5rem' color='white' marginBottom='2rem' marginTop='2rem' textAlign='center'>Starts: {selectedQuest.quest.startDate}</Text>
+                                                <hr style={{ margin: 'auto', marginBottom: '1rem', width: '80%' }} />
+                                                <Text fontFamily='mephistoregular' fontSize='2.5rem' color='white' marginBottom='2rem' marginTop='2rem' textAlign='center'>Expires: {selectedQuest.quest.expirationDate}</Text>
+                                            </>
+                                        }
                                     </Box>
 
                                 </Box>
@@ -143,8 +150,8 @@ export default function QuestsModal({ isOpen, onClose, selectedQuest }) {
 
                     </ModalBody>
 
-                    <ModalFooter>
-                        {(haswinner === localStorage.getItem('accounts')) && <Button fontFamily={'mephistoregular'} colorScheme='green' mr={3} onClick={handleSubmit} isLoading={isSubmitting}> Claim Reward </Button>}
+                    <ModalFooter className='quest-footer'>
+                        {/*(haswinner === localStorage.getItem('accounts')) && <Button fontFamily={'mephistoregular'} colorScheme='green' mr={3} onClick={handleSubmit} isLoading={isSubmitting}> Claim Reward </Button>*/}
                         <Button fontFamily={'mephistoregular'} colorScheme='purple' mr={3} onClick={handleVictory} isLoading={isSubmitting} isDisabled={!isDisabled || (haswinner === localStorage.getItem('accounts'))}> Simulate Victory </Button>
                         <Button fontFamily={'mephistoregular'} colorScheme='green' mr={3} onClick={handleSubmit} isLoading={isSubmitting} isDisabled={isDisabled}>
                             Partecipate
