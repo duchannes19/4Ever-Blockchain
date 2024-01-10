@@ -46,7 +46,7 @@ export default function QuestsModal({ isOpen, onClose, selectedQuest }) {
             });
             if (response.data.success) {
                 console.log(response.data.message);
-                Notify('success', response.data.message);
+                Notify('success', 'You have joined the quest!');
             }
             else {
                 console.log(response.data.message);
@@ -69,6 +69,30 @@ export default function QuestsModal({ isOpen, onClose, selectedQuest }) {
             });
             if (response.data.success) {
                 console.log(response.data.message);
+                Notify('success', 'You have unjoined the quest!');
+            }
+            else {
+                console.log(response.data.message);
+                Notify('error', response.data.message);
+            }
+        } catch (error) {
+            console.error(error);
+            Notify('error', error.message);
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
+    const handleVictory = async () => {
+        // Simulate a call to the backend that set the winner of the quest
+        setIsSubmitting(true);
+        try {
+            const response = await axios.post('http://localhost:3000/api/simulate-victory', {
+                userAddress: address,
+                questName: selectedQuest.quest.name
+            });
+            if (response.data.success) {
+                console.log(response.data.message);
                 Notify('success', response.data.message);
             }
             else {
@@ -81,7 +105,7 @@ export default function QuestsModal({ isOpen, onClose, selectedQuest }) {
         } finally {
             setIsSubmitting(false);
         }
-    }
+    };
 
     return (
         <>
@@ -121,10 +145,11 @@ export default function QuestsModal({ isOpen, onClose, selectedQuest }) {
 
                     <ModalFooter>
                         {(haswinner === localStorage.getItem('accounts')) && <Button fontFamily={'mephistoregular'} colorScheme='green' mr={3} onClick={handleSubmit} isLoading={isSubmitting}> Claim Reward </Button>}
+                        <Button fontFamily={'mephistoregular'} colorScheme='purple' mr={3} onClick={handleVictory} isLoading={isSubmitting} isDisabled={!isDisabled || (haswinner === localStorage.getItem('accounts'))}> Simulate Victory </Button>
                         <Button fontFamily={'mephistoregular'} colorScheme='green' mr={3} onClick={handleSubmit} isLoading={isSubmitting} isDisabled={isDisabled}>
                             Partecipate
                         </Button>
-                        {isDisabled && <Button fontFamily={'mephistoregular'} colorScheme='red' mr={3} onClick={handleUnjoin} isLoading={isSubmitting} isDisabled={cantUnjoin}> Unjoin </Button>}
+                        {isDisabled && <Button fontFamily={'mephistoregular'} colorScheme='red' mr={3} onClick={handleUnjoin} isLoading={isSubmitting} isDisabled={cantUnjoin || (haswinner === localStorage.getItem('accounts'))}> Unjoin </Button>}
                         <Button fontFamily={'mephistoregular'} colorScheme='gray' mr={3} onClick={onClose}>
                             Close
                         </Button>

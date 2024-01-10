@@ -107,6 +107,12 @@ app.get('/api/test', (req, res) => {
     res.send("ok");
 });
 
+// Andrea: DEBUG -> Simulate the victory by forcefully set a winner
+app.post('/api/simulate-victory', (req, res) => {
+    quests.registerVictory(req, res);
+});
+
+//CesareDev: Finish the quest, pick a winner and assign him the prize as an NFT
 app.get('/api/test1', (req, res) => {
     quests.registerQuest('2tUoTnXMnOuGeyFY');
     res.send("ok");

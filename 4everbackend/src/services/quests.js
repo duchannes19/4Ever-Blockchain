@@ -285,7 +285,38 @@ class Quests {
                 })
             }
         });
-    }
+    };
+
+    // Andrea: Forcefully set the winner of a quest
+    registerVictory(req, res) {
+        const { userAddress, questName } = req.body;
+
+        // Check if the user is in the parteciapanst list of the quest and set him as the winner in the winner field
+        this.database.update({ name: questName, participants: userAddress }, { $set: { winner: userAddress } }, {}, (err) => {
+            if (err) {
+                res.status(500).send({
+                    success: false,
+                    message: 'Database error',
+                    body: err
+                });
+            }
+            else {
+                res.status(200).send({
+                    success: true,
+                    message: 'User ' + userAddress + ' won the quest ' + questName,
+                });
+                this.database.persistence.compactDatafile();
+                this.socket.sendDatabase(this.database);
+            }
+        });
+    };
+
+    // Andrea: Tecnically checks if the quest is finished and then pay the NFT to the victor
+    finalizeQuest(req, res) {
+        
+
+        // Andrea: To Do...
+    };
 
     //---------------------------------------
     // Scheduler
