@@ -33,13 +33,11 @@ function assign(acc) {
                         });
                     } else if (docs) {
                         console.log('====================================');
-                        console.log('Companies Database:');
                         console.log();
-                        console.log({
-                            success: true,
-                            message: 'Companies database ready!',
-                            body: docs
-                        });
+                        console.log('Companies database ready!');
+                        console.log();
+                        console.log(docs.map(doc => doc.name));
+                        console.log();
 
                         // Andrea: Pass the companies to createDatabase function
                         createDatabase(companies);
@@ -85,13 +83,11 @@ function createDatabase(companies) {
                     });
                 } else if (docs) {
                     console.log('====================================');
-                    console.log('Quests Database:');
                     console.log();
-                    console.log({
-                        success: true,
-                        message: 'Quests database ready!',
-                        body: docs
-                    });
+                    console.log('Quests database ready!');
+                    console.log();
+                    console.log(docs.map(doc => doc.name));
+                    console.log();
                 }
             });
         }
