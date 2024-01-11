@@ -2,17 +2,21 @@ import { useEffect } from 'react'
 
 import Web3 from 'web3';
 
-export default async function MetaMaskHelper(setIsConnected, setStep1, setMetaMask) {
+export default async function MetaMaskHelper(setIsConnected, setStep1, setStep2, setMetaMask) {
 
     try {
         let isConnected = false;
-
         // Keep looping until the user connects or cancels
         while (!isConnected) {
             // Modern dapp browsers...
             if (window.ethereum) {
                 try {
-
+                    localStorage.clear();
+                    setIsConnected(false);
+                    setStep1(false);
+                    setStep2(false);
+                    document.body.style.backgroundImage = 'url("/img/mainback.png")';
+                    document.body.style.height = "100vh";
                     // Request account access
                     await window.ethereum.request({ method: 'eth_requestAccounts' });
 

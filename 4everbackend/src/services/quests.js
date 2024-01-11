@@ -343,23 +343,11 @@ class Quests {
                         });
                     }
 
-                    // If there is already a winner, reiterate the winner address
-                    let winnerAddress;
-                    if (!docs.winner) {
-                        const questIdHash = this.web3.utils.soliditySha3(docs.name);
-                        const seed = await this.contract.methods.getQuestSeed(questIdHash).call();
-                        const winnerIndex = this.web3.utils.toNumber(
-                            this.web3.utils.toBigInt(seed) % this.web3.utils.toBigInt(docs.participants.length)
-                        );
-                        winnerAddress = docs.participants[winnerIndex];
-                    } else {
-                        winnerAddress = docs.winner;
-                    }
-
                     // Execute the transaction to assign the NFT to the winner
+                    // To Do
 
                     // Finalize the quest by setting the winner in the database
-                    this.database.update({ _id: docs._id }, { $set: { questEnded: true, winner: winnerAddress } }, {}, (err) => {
+                    this.database.update({ _id: docs._id }, { $set: { questEnded: true } }, {}, (err) => {
                         if (err) {
                             return res.status(500).send({
                                 success: false,
@@ -369,7 +357,7 @@ class Quests {
                         }
                         res.status(200).send({
                             success: true,
-                            message: 'The winner for ' + docs.name + ' is ' + winnerAddress
+                            message: 'The winner for ' + docs.name + ' is ' + userAddress
                         });
                         this.database.persistence.compactDatafile();
                         this.socket.sendDatabase(this.database);
@@ -451,9 +439,6 @@ class Quests {
                     // Andrea: The quest has ended, so we can update it from the active quests and modify the field questEnded in the database
                     this.unregisterQuest(quest._id);
                     this.socket.sendDatabase(this.database);
-
-                    // Andrea: If the quest ends, and there is no winner yet, we have to handle the logic of paying the person who got more close on finishing the quest
-
                 }, {
                     scheduled: false, // Andrea: Don't start immediately
                     timezone: 'Europe/Rome', // Andrea: Set the timezone to Europe/Rome

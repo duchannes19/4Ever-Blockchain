@@ -26,7 +26,7 @@ export default function Start({ isConnected, setIsConnected, step1, setStep1, st
     useEffect(() => {
         const checkMetaMask = async () => {
             if (localStorage.getItem('connected') === 'true') {
-                MetaMaskHelper(setIsConnected, setStep1, setMetaMask);
+                MetaMaskHelper(setIsConnected, setStep1, setStep2, setMetaMask);
             }
         }
 
