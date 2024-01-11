@@ -19,9 +19,9 @@ questsDatabase.remove({}, { multi: true }, (err) => {
         questsDatabase.persistence.compactDatafile();
         const quests =
             [
-                { "name": "Hunt for the Lost Relic", "description": "Embark on a journey to find the ancient relic hidden deep in the Forbidden Forest.", "startDate": "2024-11-01", "expirationDate": "2024-12-31", "participants": [], "usersThreshold": 5, "questRegistered": false, "questEnded": false, "winner": null },
-                { "name": "Save the Princess", "description": "The princess has been kidnapped by the evil wizard. Rescue her from the wizard\'s castle.", "startDate": "2024-10-01", "expirationDate": "2024-10-31", "participants": [], "usersThreshold": 5, "questRegistered": false, "questEnded": false, "winner": null },
-                { "name": "Defeat the Dragon", "description": "A fearsome dragon has been terrorizing the kingdom. Slay the dragon and bring peace to the land.", "startDate": "2024-10-15", "expirationDate": "2024-11-15", "participants": [], "usersThreshold": 5, "questRegistered": false, "questEnded": false, "winner": null }
+                { "name": "Hunt for the Lost Relic", "description": "Embark on a journey to find the ancient relic hidden deep in the Forbidden Forest.", "startDate": "2024-11-01", "expirationDate": "2024-12-31", "participants": [], "usersThreshold": 5, "questRegistered": false, "questEnded": false, "winner": null, "sponsor": "Blizzard Entertainment" },
+                { "name": "Save the Princess", "description": "The princess has been kidnapped by the evil wizard. Rescue her from the wizard\'s castle.", "startDate": "2024-10-01", "expirationDate": "2024-10-31", "participants": [], "usersThreshold": 5, "questRegistered": false, "questEnded": false, "winner": null, "sponsor": "Activision" },
+                { "name": "Defeat the Dragon", "description": "A fearsome dragon has been terrorizing the kingdom. Slay the dragon and bring peace to the land.", "startDate": "2024-10-15", "expirationDate": "2024-11-15", "participants": [], "usersThreshold": 5, "questRegistered": false, "questEnded": false, "winner": null, "sponsor": "Riot Games" }
             ];
         questsDatabase.insert(quests, (err, docs) => {
             if (err) {
