@@ -455,7 +455,7 @@ class Quests {
     // Utils
     //---------------------------------------
 
-    getCompanies(){
+    getCompanies() {
         //Andrea: Fetch the companies addresses from companies database
         const companies = this.companies.find({}, (err, docs) => {
             if (err) {

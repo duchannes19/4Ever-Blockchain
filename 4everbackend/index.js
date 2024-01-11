@@ -32,8 +32,8 @@ const fourEverContract = new web3.eth.Contract(FourEverABI, process.env.MARKETAD
 const market = new Market(web3, fourEverContract);
 
 //Create database
-var database_quests = new Datastore({ filename: path.join(__dirname, '/database/quests.db'), autoload: true });
-var database_companies = new Datastore({ filename: path.join(__dirname, '/database/companies.db'), autoload: true });
+var questsDatabase = new Datastore({ filename: path.join(__dirname, '/database/quests.db'), autoload: true });
+var companiesDatabase = new Datastore({ filename: path.join(__dirname, '/database/companies.db'), autoload: true });
 
 // Test the connection
 web3.eth.getBlockNumber()
@@ -60,7 +60,7 @@ app.use((req, res, next) => {
 });
 
 // Quests interface
-const quests = new Quests(web3, fourEverContract, database_quests, database_companies, socket);
+const quests = new Quests(web3, fourEverContract, questsDatabase, companiesDatabase, socket);
 
 //------------------------------------------
 // Market API
