@@ -16,4 +16,4 @@ smart_contract_notes.txt
 4everbackend/Truffle/build/contracts/FourEver.json
 
 # Ingnorign databases
-4everbackend/database/quests.db
+4everbackend/database/*.db
