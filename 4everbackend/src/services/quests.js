@@ -451,23 +451,6 @@ class Quests {
         }
     }
 
-    //---------------------------------------
-    // Utils
-    //---------------------------------------
-
-    getCompanies() {
-        //Andrea: Fetch the companies addresses from companies database
-        const companies = this.companies.find({}, (err, docs) => {
-            if (err) {
-                console.log(err);
-            }
-            else if (docs) {
-                return docs;
-            }
-        });
-
-        return companies;
-    }
 }
 
 module.exports = { Quests };
