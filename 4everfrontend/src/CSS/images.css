@@ -144,6 +144,14 @@
     transform: translate(-48px, -421px);
 }
 
+.sponsor {
+    margin: auto;
+    margin-top: 0rem;
+    width: 30%;
+    filter: drop-shadow(0 0 0.10em white);
+    pointer-events: none;
+}
+
 @media screen and (max-width: 1500px) {
 
     .figure-image.left {

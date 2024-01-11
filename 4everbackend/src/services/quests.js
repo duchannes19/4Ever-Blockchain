@@ -8,10 +8,11 @@ class Quests {
     // Constructor
     //---------------------------------------
 
-    constructor(web3, contract, database, socket) {
+    constructor(web3, contract, database, companies, socket) {
         this.web3 = web3;
         this.contract = contract;
         this.database = database;
+        this.companies = companies;
         this.socket = socket;
     }
 
@@ -448,6 +449,24 @@ class Quests {
                 cron.getTasks({ timezone: 'Europe/Rome' })['0 23 * * *'].start();
             });
         }
+    }
+
+    //---------------------------------------
+    // Utils
+    //---------------------------------------
+
+    getCompanies(){
+        //Andrea: Fetch the companies addresses from companies database
+        const companies = this.companies.find({}, (err, docs) => {
+            if (err) {
+                console.log(err);
+            }
+            else if (docs) {
+                return docs;
+            }
+        });
+
+        return companies;
     }
 }
 

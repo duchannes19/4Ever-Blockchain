@@ -12,9 +12,6 @@ export default async function MetaMaskHelper(setIsConnected, setStep1, setStep2,
             if (window.ethereum) {
                 try {
                     localStorage.clear();
-                    setIsConnected(false);
-                    setStep1(false);
-                    setStep2(false);
                     document.body.style.backgroundImage = 'url("/img/mainback.png")';
                     document.body.style.height = "100vh";
                     // Request account access

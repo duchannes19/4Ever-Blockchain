@@ -124,6 +124,9 @@ export default function QuestsModal({ isOpen, onClose, selectedQuest }) {
                             <Box bg='#333232' style={{ borderRadius: '10px' }}>
                                 <Box className='merchant items' style={{ maxHeight: '80%' }}>
                                     <Box bg='#333232' style={{ borderRadius: '10px' }}>
+                                        <Text fontFamily='mephistoregular' fontSize='2.5rem' color='white' marginBottom='2rem' marginTop='2rem' textAlign='center'>Issued By</Text>
+                                        <Image src={'/img/'+selectedQuest.quest.sponsor+'.png'} alt='sponsor icon' className='sponsor icon' />
+                                        <hr style={{ margin: 'auto', marginTop:'2rem', marginBottom: '1rem', width: '80%' }} />
                                         <Text fontFamily='mephistoregular' fontSize='2.5rem' color='white' marginBottom='2rem' marginTop='2rem' textAlign='center'>Description</Text>
                                         <hr style={{ margin: 'auto', marginBottom: '1rem', width: '80%' }} />
                                         <Box className='merchant description'>
