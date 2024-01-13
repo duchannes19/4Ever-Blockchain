@@ -46,7 +46,7 @@ export default function QuestsModal({ isOpen, onClose, selectedQuest }) {
             });
             if (response.data.success) {
                 console.log(response.data.message);
-                Notify('success', 'You have joined the quest!');
+                //Notify('success', 'You have joined the quest!');
             }
             else {
                 console.log(response.data.message);
@@ -69,7 +69,7 @@ export default function QuestsModal({ isOpen, onClose, selectedQuest }) {
             });
             if (response.data.success) {
                 console.log(response.data.message);
-                Notify('success', 'You have unjoined the quest!');
+                //Notify('success', 'You have unjoined the quest!');
             }
             else {
                 console.log(response.data.message);
