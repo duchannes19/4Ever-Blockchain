@@ -23,8 +23,6 @@ contract FourEver {
 
     struct NFT {
         address owner;
-        string imageURL;
-        string description;
         Rarity rarity;
     }
 
@@ -44,12 +42,7 @@ contract FourEver {
     //----------------------------------------------
 
     event MemberJoined(address member);
-    event NFTMinted(
-        address owner,
-        uint256 tokenId,
-        string imageURL,
-        string description
-    );
+    event NFTMinted(address owner, uint256 tokenId);
     event QuestEnded(uint256 questId, address winner);
     event QuestRegistration(uint256 questId, address user);
 
@@ -60,14 +53,14 @@ contract FourEver {
     //Market Member
     mapping(address => bool) public isMember;
 
+    //Quest ID -> Quests
+    mapping(uint256 => Quest) public quests;
+
     //NFT ID -> Concrete NFT
     mapping(uint256 => NFT) public NFTs;
 
     //Member -> NFT ID's
     mapping(address => uint256[]) public userNFTs;
-
-    //Quest ID -> Quests
-    mapping(uint256 => Quest) public quests;
 
     //----------------------------------------------
     // Functions
@@ -104,6 +97,7 @@ contract FourEver {
     function endQuest(uint256 questId) public {
         quests[questId].ended = true;
         //CesareDev: Implements quest winner
+        emit QuestEnded(questId, msg.sender);
     }
 
     function isAlreadyRegistered(
@@ -143,10 +137,10 @@ contract FourEver {
                 )
             ) % 5
         );
-        NFTs[tokenId] = NFT(msg.sender, imageURL, description, randomRarity);
+        NFTs[tokenId] = NFT(msg.sender, randomRarity);
         userNFTs[msg.sender].push(tokenId);
 
-        emit NFTMinted(msg.sender, tokenId, imageURL, description);
+        emit NFTMinted(msg.sender, tokenId);
     }
 
     function getNFTsByOwner(
