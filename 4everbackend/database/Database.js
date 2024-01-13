@@ -60,8 +60,8 @@ function createDatabase(companies) {
         } else {
             questsDatabase.persistence.compactDatafile();
             // Andrea: At the moment creates the same quests for each company
-            const quests = companies.map(company => ({
-                "name": "Hunt for the Lost Relic",
+            const quests = companies.map((company, index) => ({
+                "name": "Hunt for the Lost Relic "+index,
                 "description": "Embark on a journey to find the ancient relic hidden deep in the Forbidden Forest.",
                 "startDate": "2024-11-01",
                 "expirationDate": "2024-12-31",

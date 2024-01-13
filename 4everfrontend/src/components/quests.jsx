@@ -26,6 +26,8 @@ const Quests = () => {
                     setSelectedQuest({ quest: matchingQuest, index: selectedQuest.index });
                 }
             }
+
+            Notify('success', data.message);
         },
         onError: (event) => {
             console.error(event);

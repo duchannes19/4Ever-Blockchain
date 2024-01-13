@@ -279,7 +279,6 @@ class Quests {
 
                 //Andrea: Execute the transaction to assign the NFT to the winner
 
-
                 //Andrea: Finalize the quest by setting the winner in the database
                 this.database.update({ _id: docs._id }, { $set: { questEnded: true, winner: winnerAddress } }, {}, (err) => {
                     if (err) {
@@ -331,10 +330,9 @@ class Quests {
                         body: err
                     });
                 }
-                this.database.persistence.compactDatafile();
 
                 // Handle chain unregistration and NFT winning -> set the winner in the db
-                const filter = { name: 1, participants: 1, _id: 1 };
+                const filter = { name: 1, participants: 1, _id: 1, companyaddress: 1 };
                 this.database.findOne({ _id: questId }, filter, async (err, docs) => {
                     if (err) {
                         return res.status(500).send({
@@ -344,10 +342,58 @@ class Quests {
                         });
                     }
 
-                    // Execute the transaction to assign the NFT to the winner
+                    //Andrea: Execute the transaction so each partecipant pays the quote to the company
+                    
+                    //Andrea: quote in ether (For DEBUG purposes)
+                    const quote = this.web3.utils.toWei('1', 'ether');
+                    for (let i = 0; i < docs.participants.length; i++) {
+                        const userBalance = await this.web3.eth.getBalance(docs.participants[i]);
+                        if (userBalance < quote * 2) {
+                            this.socket.sendMessage({
+                                success: false,
+                                message: 'One of the user\'s balance insufficient',
+                            });
+                            return;
+                        }
+                    }
+                    for (let i = 0; i < docs.participants.length; i++) {
+                        //CesareDev: The quest and user registration on chain
+                        try {
+                            const gasPrice = this.web3.utils.toWei('20', 'gwei');
+                            const gasLimit = 6721975;
+                            //CesareDev: soliditySha3 = keccak256 from the web3.js documentation
+                            const questIdHash = this.web3.utils.soliditySha3(docs.name);
+                            //CesareDev: secure random seed
+                            //           16 bytes -> 128 bit to prevent integer overflow in the contract
+                            const seed = this.web3.utils.bytesToHex(randomBytes(16));
+                            const questRegistration = await this.contract.methods.joinQuest(questIdHash, seed).send({
+                                value: quote,
+                                from: docs.participants[i],
+                                to: docs.companyaddress,
+                                gasPrice,
+                                gasLimit
+                            });
+                            //this.socket.sendMessage({
+                            //    success: true,
+                            //    message: 'User ' + docs.participants[i] + ' started the quest ' + docs.name,
+                            //    body: questRegistration
+                            //});
+                            console.log('User ' + docs.participants[i] + ' payed for the quest to ' + docs.companyaddress);
+                        } catch (error) {
+                            console.log(error);
+                            this.socket.sendMessage({
+                                success: false,
+                                message: 'Error',
+                                body: err
+                            });
+                        }
+                    }
+
+                    // Andrea: Mint the NFT
                     // To Do
 
-                    // Finalize the quest by setting the winner in the database
+
+                    // Finalize the quest by ending the quest
                     this.database.update({ _id: docs._id }, { $set: { questEnded: true } }, {}, (err) => {
                         if (err) {
                             return res.status(500).send({

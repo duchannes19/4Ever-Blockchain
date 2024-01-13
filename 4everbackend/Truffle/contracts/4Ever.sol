@@ -37,6 +37,10 @@ contract FourEver {
         bool ended;
         //CesareDev: users addresses -> users' quote
         mapping(address => uint256) participants;
+        //Andrea: winner address
+        address winner;
+        //Andrea: company address
+        address companyaddress;
     }
 
     //----------------------------------------------
@@ -97,6 +101,11 @@ contract FourEver {
         //CesareDev: the check for the already existing user is done on the backend
         if (quests[questId].participants[msg.sender] > 0) revert();
         quests[questId].seed += seed;
+
+        // Send the payment to the company address
+        address payable companyAddress = payable(msg.sender);
+        companyAddress.transfer(msg.value);
+
         quests[questId].participants[msg.sender] = msg.value;
         emit QuestRegistration(questId, msg.sender);
     }
@@ -115,6 +124,33 @@ contract FourEver {
 
     function getQuestSeed(uint256 questId) public view returns (uint256) {
         return quests[questId].seed;
+    }
+
+    // Andrea: Still a prototype function
+    function distributeReward(
+        uint256 questId,
+        address[] memory participants,
+        address winner,
+        string memory imageURL,
+        string memory description
+    ) public {
+        uint256 totalAmount = 0;
+        uint256[] memory amounts = new uint256[](participants.length);
+
+        // Calculate the total amount invested by all participants
+        for (uint256 i = 0; i < participants.length; i++) {
+            totalAmount += quests[questId].participants[participants[i]];
+        }
+
+        // Calculate the total amount for each participant that has been spent and create an NFT with that value
+        for (uint256 i = 0; i < participants.length; i++) {
+            address participant = participants[i];
+            uint256 amountInvested = quests[questId].participants[participant];
+
+            if (participant == winner) {
+                // Andrea: To Do: Create an NFT with the value of the participant's investment
+            }
+        }
     }
 
     //----------------------------------------------
