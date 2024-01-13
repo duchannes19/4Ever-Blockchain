@@ -342,7 +342,7 @@ class Quests {
                     }
 
                     //Andrea: Execute the transaction so each partecipant pays the quote to the company
-                    
+
                     //Andrea: quote in ether (For DEBUG purposes)
                     const quote = this.web3.utils.toWei('1', 'ether');
                     for (let i = 0; i < docs.participants.length; i++) {
@@ -365,10 +365,9 @@ class Quests {
                             //CesareDev: secure random seed
                             //           16 bytes -> 128 bit to prevent integer overflow in the contract
                             const seed = this.web3.utils.bytesToHex(randomBytes(16));
-                            const questRegistration = await this.contract.methods.joinQuest(questIdHash, seed).send({
+                            const questRegistration = await this.contract.methods.joinQuest(docs.companyaddress, questIdHash, seed).send({
                                 value: quote,
                                 from: docs.participants[i],
-                                to: docs.companyaddress,
                                 gasPrice,
                                 gasLimit
                             });
@@ -388,9 +387,7 @@ class Quests {
                         }
                     }
 
-                    // Andrea: Mint the NFT
-                    // To Do
-
+                    // Andrea To Do: Mint the NFT
 
                     // Finalize the quest by ending the quest
                     this.database.update({ _id: docs._id }, { $set: { questEnded: true } }, {}, (err) => {

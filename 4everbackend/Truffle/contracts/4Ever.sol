@@ -90,15 +90,20 @@ contract FourEver {
     // Quest
     //----------------------------------------------
 
-    function joinQuest(uint256 questId, uint128 seed) public payable {
+    function joinQuest(
+        address company,
+        uint256 questId,
+        uint128 seed
+    ) public payable {
         //CesareDev: the check for the already existing user is done on the backend
         if (quests[questId].participants[msg.sender] > 0) revert();
         quests[questId].seed += seed;
 
         // Send the payment to the company address
-        address payable companyAddress = payable(msg.sender);
+        address payable companyAddress = payable(company);
         companyAddress.transfer(msg.value);
 
+        //Register the quote of the participant
         quests[questId].participants[msg.sender] = msg.value;
         emit QuestRegistration(questId, msg.sender);
     }
