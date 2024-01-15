@@ -300,6 +300,7 @@ class Quests {
     };
 
     // Andrea: Forcefully set the winner of a quest, ending it
+    //CesareDev: for demonstration purposes only 
     registerVictory(req, res) {
         const { userAddress, questName } = req.body;
 

@@ -27,6 +27,8 @@ contract FourEver {
     }
 
     struct Quest {
+        //CesareDev: totalAmount of quote to calculate the rarity of the NFT
+        uint256 totalQuote;
         //CesareDev: NFT member that represents the reward
         NFT nft;
         //CesareDev: for random userWinnerSelection
@@ -96,7 +98,7 @@ contract FourEver {
         uint128 seed
     ) public payable {
         //CesareDev: the check for the already existing user is done on the backend
-        if (quests[questId].participants[msg.sender] > 0) revert();
+        require(quests[questId].participants[msg.sender] > 0);
         quests[questId].seed += seed;
 
         // Send the payment to the company address
@@ -105,51 +107,18 @@ contract FourEver {
 
         //Register the quote of the participant
         quests[questId].participants[msg.sender] = msg.value;
+        quests[questId].totalQuote += msg.value;
         emit QuestRegistration(questId, msg.sender);
     }
 
     function endQuest(uint256 questId) public {
         quests[questId].ended = true;
-        //CesareDev: Implements quest winner
+        //CesareDev: Implements quest winner: mint NFT
         emit QuestEnded(questId, msg.sender);
-    }
-
-    function isAlreadyRegistered(
-        uint256 questId,
-        address user
-    ) public view returns (bool) {
-        return quests[questId].participants[user] > 0;
     }
 
     function getQuestSeed(uint256 questId) public view returns (uint256) {
         return quests[questId].seed;
-    }
-
-    // Andrea: Still a prototype function
-    function distributeReward(
-        uint256 questId,
-        address[] memory participants,
-        address winner,
-        string memory imageURL,
-        string memory description
-    ) public {
-        uint256 totalAmount = 0;
-        uint256[] memory amounts = new uint256[](participants.length);
-
-        // Calculate the total amount invested by all participants
-        for (uint256 i = 0; i < participants.length; i++) {
-            totalAmount += quests[questId].participants[participants[i]];
-        }
-
-        // Calculate the total amount for each participant that has been spent and create an NFT with that value
-        for (uint256 i = 0; i < participants.length; i++) {
-            address participant = participants[i];
-            uint256 amountInvested = quests[questId].participants[participant];
-
-            if (participant == winner) {
-                // Andrea: To Do: Create an NFT with the value of the participant's investment
-            }
-        }
     }
 
     //----------------------------------------------
@@ -166,22 +135,6 @@ contract FourEver {
                     abi.encodePacked(block.timestamp, block.basefee, msg.sender)
                 )
             );
-    }
-
-    function mintNFT(string memory imageURL, string memory description) public {
-        uint256 tokenId = generateRandomNFT();
-
-        Rarity randomRarity = Rarity(
-            uint256(
-                keccak256(
-                    abi.encodePacked(block.timestamp, block.basefee, msg.sender)
-                )
-            ) % 5
-        );
-        NFTs[tokenId] = NFT(msg.sender, randomRarity);
-        userNFTs[msg.sender].push(tokenId);
-
-        emit NFTMinted(msg.sender, tokenId);
     }
 
     function getNFTsByOwner(
