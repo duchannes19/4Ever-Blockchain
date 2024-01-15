@@ -137,6 +137,26 @@ contract FourEver {
             );
     }
 
+    // Function to mint NFT
+    function mintNFT(address owner, uint256 questId) public {
+        // company is msg.sender
+
+        // Generate tokenId based on the questId
+        uint256 tokenId = questId;
+
+        // Create a new NFT with the specified owner and rarity (you can adjust rarity logic)
+        NFT memory newNFT = NFT(owner, Rarity.Legendary);
+
+        // Assign the NFT to the tokenId
+        NFTs[tokenId] = newNFT;
+
+        // Add the tokenId to the owner's list of NFTs
+        userNFTs[owner].push(tokenId);
+
+        // Emit the NFTMinted event
+        emit NFTMinted(owner, tokenId);
+    }
+
     function getNFTsByOwner(
         address owner
     ) public view returns (uint256[] memory) {

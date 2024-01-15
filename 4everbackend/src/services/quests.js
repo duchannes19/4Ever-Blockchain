@@ -396,6 +396,28 @@ class Quests {
                     }
 
                     // Andrea To Do: Mint the NFT
+                    try {
+                        const gasPrice = this.web3.utils.toWei('20', 'gwei');
+                        const gasLimit = 6721975;
+                        // Andrea: It should be 
+                        // -> const questId = this.web3.utils.soliditySha3(docs.name);
+                        // -> const value = contract.methods.getQuestTotalQuote(questId).call();
+                        const value = this.web3.utils.toWei('1', 'ether');
+                        console.log(value);
+                        //CesareDev: soliditySha3 = keccak256 from the web3.js documentation
+                        const questIdHash = this.web3.utils.soliditySha3(docs.name + userAddress + docs.companyaddress);
+
+                        await this.contract.methods.mintNFT(userAddress, questIdHash, value).send({
+                            from: docs.companyaddress,
+                            gasPrice,
+                            gasLimit
+                        });
+                        console.log('User ' + userAddress + ' won the quest ' + docs.name);
+
+                    } catch (error) {
+                        console.log(error);
+                    }
+
 
                     // Finalize the quest by ending the quest
                     this.database.update({ _id: docs._id }, { $set: { questEnded: true } }, {}, (err) => {
