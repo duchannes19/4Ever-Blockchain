@@ -1,14 +1,18 @@
 import React from 'react';
 
+import { useState } from 'react';
 import { Avatar, Menu, MenuButton, MenuList, MenuItem, Box, Text } from '@chakra-ui/react';
+
+import MyNFTs from './NFTsModal';
 
 import AvatarImg from '/img/avatar.jpeg';
 
 const User = ({ reset }) => {
 
     const account = localStorage.getItem('accounts');
-    const nfts = localStorage.getItem('nfts');
     const balance = localStorage.getItem('balance');
+
+    const [NFTsModal, setNFTsModal] = useState(false);
 
     return (
         <Box>
@@ -30,6 +34,7 @@ const User = ({ reset }) => {
                         margin={'auto'}
                         marginTop={'1rem'}
                         width={'80%'}
+                        onClick={() => setNFTsModal(true)}
                     >
                         <Text fontWeight="bold">NFTs</Text><br />
                     </MenuItem>
@@ -43,6 +48,7 @@ const User = ({ reset }) => {
                         onClick={reset}><b>Logout</b></MenuItem>
                 </MenuList>
             </Menu>
+            {NFTsModal && <MyNFTs isOpen={NFTsModal} onClose={() => setNFTsModal(false)} />}
         </Box>
     );
 };

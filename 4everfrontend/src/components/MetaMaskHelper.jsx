@@ -1,70 +1,87 @@
-import { useEffect } from 'react'
-
+import { useEffect } from 'react';
 import Web3 from 'web3';
+import { Box } from '@chakra-ui/react';
 
-export default async function MetaMaskHelper(setIsConnected, setStep1, setStep2, setMetaMask) {
+const MetaMaskHelper = ({ setIsConnected, setStep1, setUseMetaMaskHelper, setMetaMask }) => {
+    useEffect(() => {
+        let isMounted = true;
 
-    try {
-        let isConnected = false;
-        // Keep looping until the user connects or cancels
-        while (!isConnected) {
-            // Modern dapp browsers...
-            if (window.ethereum) {
-                try {
-                    localStorage.clear();
-                    document.body.style.backgroundImage = 'url("/img/mainback.png")';
-                    document.body.style.height = "100vh";
-                    // Request account access
-                    await window.ethereum.request({ method: 'eth_requestAccounts' });
+        const connectToMetaMask = async () => {
+            try {
+                let isConnected = false;
 
-                    // Web3 instance now connected to MetaMask
-                    const web3 = new Web3(window.ethereum);
-                    console.log('Connected to MetaMask:', web3);
+                while (!isConnected && isMounted) {
+                    if (window.ethereum) {
+                        try {
+                            await window.ethereum.request({ method: 'eth_requestAccounts' });
+                            const web3 = new Web3(window.ethereum);
 
-                    const accounts = await window.ethereum.request({
-                        method: 'eth_accounts',
-                    });
+                            const accounts = await window.ethereum.request({
+                                method: 'eth_accounts',
+                            });
 
-                    // Get the balance of the connected account
-                    const balance = await web3.eth.getBalance(accounts[0]);
+                            const balance = await web3.eth.getBalance(accounts[0]);
 
-                    // Put content on localstorage
-                    localStorage.setItem('connected', true);
-                    localStorage.setItem('accounts', accounts[0]);
-                    localStorage.setItem('balance', balance);
+                            localStorage.setItem('connected', true);
+                            localStorage.setItem('accounts', accounts[0]);
+                            localStorage.setItem('balance', balance);
 
-                    document.body.style.height = "auto";
+                            document.body.style.height = 'auto';
 
-                    setIsConnected(true);
-                    setStep1(true);
-                    setMetaMask(false);
+                            setIsConnected(true);
+                            setStep1(true);
+                            setMetaMask(false);
 
-                    isConnected = true; // Set isConnected to true to break out of the loop
-                } catch (error) {
-                    console.error('Error connecting to MetaMask:', error.message);
-                    // The user may have closed the popup or rejected the request, continue looping
+                            isConnected = true;
+                        } catch (error) {
+                            console.error('Error connecting to MetaMask:', error.message);
+                            localStorage.clear();
+                            window.location.reload();
+                        }
+                    } else if (window.web3) {
+                        const web3 = new Web3(window.web3.currentProvider);
+                        console.log('Connected to MetaMask (legacy):', web3);
+
+                        isConnected = true;
+                    } else {
+                        alert('Please install MetaMask or use a dapp browser.');
+                        break;
+                    }
+
+                    await new Promise(resolve => setTimeout(resolve, 1000));
                 }
             }
-            // Legacy dapp browsers...
-            else if (window.web3) {
-                // Use Mist/MetaMask's provider
-                const web3 = new Web3(window.web3.currentProvider);
-                console.log('Connected to MetaMask (legacy):', web3);
-
-                // Add additional logic as needed
-                isConnected = true; // Set isConnected to true to break out of the loop
+            catch (error) {
+                localStorage.clear();
+                window.location.reload();
             }
-            // Non-dapp browsers...
-            else {
-                alert('Please install MetaMask or use a dapp browser.');
-                break; // Break out of the loop if MetaMask is not available
+            finally {
+                if (isMounted) {
+                    setMetaMask(false);
+                }
+                setUseMetaMaskHelper(false);
             }
+        };
 
-            // Wait for a short duration before the next iteration
-            await new Promise(resolve => setTimeout(resolve, 1000));
-        }
-    } finally {
-        // Ensure that setMetaMask is called even if the loop is broken
-        setMetaMask(false);
-    }
+        connectToMetaMask();
+
+        return () => {
+            isMounted = false;
+        };
+    }, [setIsConnected, setStep1, setMetaMask]);
+
+    return (
+        <Box
+            position="fixed"
+            top={0}
+            left={0}
+            width="100vw"
+            height="100vh"
+            backgroundColor="rgba(0, 0, 0, 0.5)"
+            backdropFilter="blur(10px)"
+            zIndex={9999}
+        />
+    );
 };
+
+export default MetaMaskHelper;
