@@ -98,7 +98,7 @@ contract FourEver {
         uint128 seed
     ) public payable {
         //CesareDev: the check for the already existing user is done on the backend
-        require(quests[questId].participants[msg.sender] > 0);
+        require(quests[questId].participants[msg.sender] == 0);
         quests[questId].seed += seed;
 
         // Send the payment to the company address

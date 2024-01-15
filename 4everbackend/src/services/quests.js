@@ -261,13 +261,12 @@ class Quests {
             else if (docs) {
                 // Andrea: If there is already a winner, we don't have to do anything, just reiterate the winner address
                 let winnerAddress;
-                let winnerIndex;
+                const questIdHash = this.web3.utils.soliditySha3(docs.name);
                 if (!docs.winner) {
-                    const questIdHash = this.web3.utils.soliditySha3(docs.name);
                     const seed = await this.contract.methods.getQuestSeed(questIdHash).call();
                     //CesareDev: the index of the winner is in the range [0, participants.length - 1]
                     //           for randomness we do the module with the seed of the quest
-                    winnerIndex = this.web3.utils.toNumber(
+                    const winnerIndex = this.web3.utils.toNumber(
                         this.web3.utils.toBigInt(seed) % this.web3.utils.toBigInt(docs.participants.length)
                     );
                     winnerAddress = docs.participants[winnerIndex];
@@ -276,7 +275,14 @@ class Quests {
                     winnerAddress = docs.winner;
                 }
 
-                //Andrea: Execute the transaction to assign the NFT to the winner
+                //CesarDev: End quest and assign NFT
+                const gasPrice = this.web3.utils.toWei('20', 'gwei');
+                const gasLimit = 6721975;
+                const questEnded = await this.contract.methods.endQuest(questIdHash).send({
+                    from: winnerAddress,
+                    gasPrice,
+                    gasLimit
+                });
 
                 //Andrea: Finalize the quest by setting the winner in the database
                 this.database.update({ _id: docs._id }, { $set: { questEnded: true, winner: winnerAddress } }, {}, (err) => {
@@ -290,7 +296,8 @@ class Quests {
                     else {
                         this.socket.sendMessage({
                             success: true,
-                            message: 'The winner for ' + docs.name + ' is ' + winnerAddress
+                            message: 'The winner for ' + docs.name + ' is ' + winnerAddress,
+                            body: questEnded
                         });
                         this.database.persistence.compactDatafile();
                     }
