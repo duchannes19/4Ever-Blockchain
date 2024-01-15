@@ -15,7 +15,7 @@ const Quests = () => {
     const socketUrl = 'ws://localhost:3000';
 
     const { sendJsonMessage, readyState } = useWebSocket(socketUrl, {
-        onMessage: (event) => {
+        onMessage: async (event) => {
             const data = JSON.parse(event.data);
             setQuests(data.quests);
 
@@ -29,7 +29,7 @@ const Quests = () => {
 
             Notify('success', data.message);
         },
-        onError: (event) => {
+        onError: async (event) => {
             console.error(event);
             Notify('error', 'WebSocket connection error');
         },

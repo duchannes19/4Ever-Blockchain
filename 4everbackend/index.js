@@ -12,7 +12,7 @@ const { Socket } = require('./src/services/Socket');
 const { Market } = require('./src/services/Market');
 const { Quests } = require('./src/services/Quests');
 const { Generator } = require('./src/services/Generator');
-var Datastore = require('nedb');
+const { AsyncNedb } = require('nedb-async')
 const FourEverABI = require('./Truffle/build/contracts/FourEver.json').abi;
 
 //CesareDev: Image generation remove for now
@@ -32,8 +32,9 @@ const fourEverContract = new web3.eth.Contract(FourEverABI, process.env.MARKETAD
 const market = new Market(web3, fourEverContract);
 
 //Create database
-var questsDatabase = new Datastore({ filename: path.join(__dirname, '/database/quests.db'), autoload: true });
-var companiesDatabase = new Datastore({ filename: path.join(__dirname, '/database/companies.db'), autoload: true });
+var questsDatabase = new AsyncNedb({ filename: path.join(__dirname, '/database/quests.db'), autoload: true });
+var companiesDatabase = new AsyncNedb({ filename: path.join(__dirname, '/database/companies.db'), autoload: true });
+var nftsDatabase = new AsyncNedb({ filename: path.join(__dirname, '/database/nfts.db'), autoload: true });
 
 // Test the connection
 web3.eth.getBlockNumber()
@@ -60,7 +61,7 @@ app.use((req, res, next) => {
 });
 
 // Quests interface
-const quests = new Quests(web3, fourEverContract, questsDatabase, companiesDatabase, socket);
+const quests = new Quests(web3, fourEverContract, questsDatabase, companiesDatabase, nftsDatabase, socket);
 
 //------------------------------------------
 // Market API
