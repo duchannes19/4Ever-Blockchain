@@ -144,6 +144,8 @@ contract FourEver {
         // Generate tokenId based on the questId
         uint256 tokenId = questId;
 
+        //CesareDev: (TODO) Get the rarity from the total quote of the quest
+
         // Create a new NFT with the specified owner and rarity (you can adjust rarity logic)
         NFT memory newNFT = NFT(owner, Rarity.Legendary);
 
