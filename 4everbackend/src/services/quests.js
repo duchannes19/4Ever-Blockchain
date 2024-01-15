@@ -309,123 +309,122 @@ class Quests {
 
     // Andrea: Forcefully set the winner of a quest, ending it
     //CesareDev: for demonstration purposes only 
-    registerVictory = async (req, res) => {
-        try {
-            const { userAddress, questName } = req.body;
-            const docs = await this.database.asyncFindOne({ name: questName });
+    async registerVictory(req, res) {
+        const { userAddress, questName } = req.body;
 
-            if (!docs) {
-                return res.status(404).send({
+        //Make sure the quest exists
+        const filter = { name: 1, participants: 1, companyaddress: 1, _id: 1 };
+        const quest = await this.database.asyncFindOne({ name: questName }, filter);
+
+        if (!quest) {
+            return res.status(404).send({
+                success: false,
+                message: 'Quest ' + quest.name + ' not found'
+            });
+        }
+
+        // Handle chain unregistration and NFT winning -> set the winner in the db
+        // Andrea: Execute the transaction so each participant pays the quote to the company
+        const quote = this.web3.utils.toWei('1', 'ether');
+
+        for (let i = 0; i < quest.participants.length; i++) {
+            const userBalance = await this.web3.eth.getBalance(quest.participants[i]);
+
+            if (userBalance < quote * 2) {
+                this.socket.sendMessage({
                     success: false,
-                    message: 'Quest ' + questName + ' not found'
+                    message: 'One of the user\'s balance insufficient',
                 });
+                return;
             }
+        }
 
-            const questId = docs._id;
+        //---------------------------------------
+        // Join quest
+        //---------------------------------------        
 
-            // Set the winner in the database
-            await this.database.asyncUpdate({ _id: questId }, { $set: { questEnded: true, winner: userAddress } });
+        //Standard transaction parameters
+        const gasPrice = this.web3.utils.toWei('20', 'gwei');
+        const gasLimit = 6721975;
 
-            // Handle chain unregistration and NFT winning -> set the winner in the db
-            const filter = { name: 1, participants: 1, _id: 1, companyaddress: 1 };
-            const updatedDocs = await this.database.asyncFindOne({ _id: questId }, filter);
-            console.log(updatedDocs);
-            // Andrea: Execute the transaction so each participant pays the quote to the company
-            const quote = this.web3.utils.toWei('1', 'ether');
-
-            for (let i = 0; i < updatedDocs.participants.length; i++) {
-                const userBalance = await this.web3.eth.getBalance(updatedDocs.participants[i]);
-
-                if (userBalance < quote * 2) {
-                    this.socket.sendMessage({
-                        success: false,
-                        message: 'One of the user\'s balance insufficient',
-                    });
-                    return;
-                }
-            }
-
-            for (let i = 0; i < updatedDocs.participants.length; i++) {
-                try {
-                    const gasPrice = this.web3.utils.toWei('20', 'gwei');
-                    const gasLimit = 6721975;
-                    const questIdHash = this.web3.utils.soliditySha3(updatedDocs.name);
-                    const seed = this.web3.utils.bytesToHex(randomBytes(16));
-
-                    await this.contract.methods.joinQuest(
-                        updatedDocs.companyaddress,
-                        questIdHash,
-                        seed
-                    ).send({
-                        value: quote,
-                        from: updatedDocs.participants[i],
-                        gasPrice,
-                        gasLimit
-                    });
-
-                    console.log('User ' + updatedDocs.participants[i] + ' payed for the quest to ' + updatedDocs.companyaddress);
-                } catch (error) {
-                    console.log(error);
-                    this.socket.sendMessage({
-                        success: false,
-                        message: 'Error',
-                        body: error
-                    });
-                }
-            }
-
-            // Andrea To Do: Mint the NFT
-            let rarity;
-            let NFTokenId;
-
+        for (let i = 0; i < quest.participants.length; i++) {
             try {
-                const gasPrice = this.web3.utils.toWei('20', 'gwei');
-                const gasLimit = 6721975;
-                const value = this.web3.utils.toWei('1', 'ether');
-                console.log(value);
-                NFTokenId = this.web3.utils.soliditySha3(updatedDocs.name + userAddress + updatedDocs.companyaddress);
-
-                rarity = await this.contract.methods.mintNFT(userAddress, NFTokenId, value).send({
-                    from: updatedDocs.companyaddress,
+                //Generate the questId from the quest's name
+                const questIdHash = this.web3.utils.soliditySha3(quest.name);
+                //Generate a seed wich it will be used to extract a winner
+                const seed = this.web3.utils.bytesToHex(randomBytes(16));
+                //Join quest for every participant
+                await this.contract.methods.joinQuest(
+                    quest.companyaddress,
+                    questIdHash,
+                    seed
+                ).send({
+                    value: quote,
+                    from: quest.participants[i],
                     gasPrice,
                     gasLimit
                 });
-                console.log('User ' + userAddress + ' won the quest ' + updatedDocs.name);
+
+                console.log('User ' + quest.participants[i] + ' payed for the quest to ' + quest.companyaddress);
             } catch (error) {
                 console.log(error);
+                this.socket.sendMessage({
+                    success: false,
+                    message: 'Error',
+                    body: error
+                });
             }
-
-            // Finalize the quest by ending the quest
-            await this.database.asyncUpdate({ _id: updatedDocs._id }, { $set: { questEnded: true } });
-
-            // Generate the image
-            const generator = new Generator();
-            const finalNFT = await generator.generateNew(userAddress, NFTokenId);
-
-            // Update nfts database
-            await this.nfts.insert({ owner: userAddress, 
-                tokenID: NFTokenId, 
-                image: finalNFT.image, 
-                rarity: rarity.events.NFTMinted.returnValues.rarity,
-                name: finalNFT.name,
-                description: finalNFT.description,
-                type: finalNFT.type,
-            });
-
-            await this.socket.sendDatabase(this.database);
-
-            return res.status(200).send({
-                success: true,
-                message: 'NFT minted',
-            });
-        } catch (error) {
-            console.error(error);
-            return res.status(500).send({
-                success: false,
-                message: 'Internal Server Error',
-                body: error
-            });
         }
+
+        //---------------------------------------
+        // End quest
+        //---------------------------------------
+
+        // Andrea To Do: Mint the NFT
+        let rarity;
+        let NFTokenId;
+
+        try {
+            const value = this.web3.utils.toWei('1', 'ether');
+            console.log(value);
+            NFTokenId = this.web3.utils.soliditySha3(quest.name + userAddress + quest.companyaddress);
+
+            rarity = await this.contract.methods.mintNFT(userAddress, NFTokenId, value).send({
+                from: quest.companyaddress,
+                gasPrice,
+                gasLimit
+            });
+            console.log('User ' + userAddress + ' won the quest ' + quest.name);
+        } catch (error) {
+            console.log(error);
+        }
+
+        // Set the winner in the database
+        await this.database.asyncUpdate({ _id: quest._id }, { $set: { questEnded: true, winner: userAddress } });
+        //Compact the db
+        this.database.persistence.compactDatafile();
+
+        // Generate the image
+        const generator = new Generator();
+        const finalNFT = await generator.generateNew(userAddress, NFTokenId);
+
+        // Update nfts database
+        await this.nfts.insert({
+            owner: userAddress,
+            tokenID: NFTokenId,
+            image: finalNFT.image,
+            rarity: rarity.events.NFTMinted.returnValues.rarity,
+            name: finalNFT.name,
+            description: finalNFT.description,
+            type: finalNFT.type,
+        });
+
+        this.socket.sendDatabase(this.database);
+
+        return res.status(200).send({
+            success: true,
+            message: 'NFT minted',
+        });
     };
 
 

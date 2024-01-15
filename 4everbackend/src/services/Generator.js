@@ -1,6 +1,7 @@
 const fetch = require("node-fetch");
 const fs = require("fs");
-const items = require('../../items/unused.json');
+const path = require("path");
+const prompts = require('../../NFTs/prompts.json');
 
 const apiToken = process.env.API_TOKEN;
 
@@ -27,33 +28,31 @@ class Generator {
         console.log('Generating new item for address:', address);
 
         // Andrea: I'm gonna use a different approach, i'll get a random item from the item json file
-        const randomItem = items[Math.floor(Math.random() * items.length)];
+        let randomItem = prompts[Math.floor(Math.random() * prompts.length)];
 
         console.log('Prompt:\n', randomItem.prompt);
 
-        const { prompt } = randomItem;
-
-        const itemPrompt = `${prompt}, output a single element, only represent an item.`;
-
         // Define the config to generate the image
         const generateInputConfig = {
-            prompt: itemPrompt
+            prompt: `${randomItem.prompt}, output a single element, only represent an item.`
         };
 
         try {
-            console.log('Generating image...')
+            console.log('Generating image...');
+
             // Generate the image
-            const generatedImage = await this.generateImage("@cf/stabilityai/stable-diffusion-xl-base-1.0", generateInputConfig);
+            const generatedImage = await this.generateImage('@cf/stabilityai/stable-diffusion-xl-base-1.0', generateInputConfig);
 
             // Save the image to the server in the folder ./public/images
-            fs.writeFileSync("./NFTs/" + tokenID + ".png", generatedImage);
+            const localPath = '/NFTs/' + tokenID + '.png';
+            fs.writeFileSync(path.join(__dirname, '../..' + localPath), generatedImage);
             console.log('Image saved');
 
             // IGNORE for now -> Andrea: Remove the randomItem from the items json file and add it to the used items json file
 
             // Modify the randomItem removing prompt and adding the image path, and the address as owner
             randomItem.prompt = undefined;
-            randomItem.image = "./NFTs/" + tokenID + ".png";
+            randomItem.image = localPath;
             randomItem.owner = address;
             randomItem.tokenID = tokenID;
 

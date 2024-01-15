@@ -10,7 +10,6 @@ smart_contract_notes.txt
 4everbackend/.env
 
 # Ignoring images
-4everbackend/items/*.png
 4everbackend/NFTs/*.png
 
 # To avoid Conflicts

@@ -27,10 +27,8 @@ contract FourEver {
     }
 
     struct Quest {
-        //CesareDev: totalAmount of quote to calculate the rarity of the NFT
-        uint256 totalQuote;
-        //CesareDev: NFT member that represents the reward
-        NFT nft;
+        //CesareDev: participants number
+        uint256 totalParticipants;
         //CesareDev: for random userWinnerSelection
         uint256 seed;
         //CesareDev: member to check if the quest ended
@@ -107,7 +105,7 @@ contract FourEver {
 
         //Register the quote of the participant
         quests[questId].participants[msg.sender] = msg.value;
-        quests[questId].totalQuote += msg.value;
+        quests[questId].totalParticipants++;
         emit QuestRegistration(questId, msg.sender);
     }
 
@@ -126,18 +124,6 @@ contract FourEver {
     // NFT
     //----------------------------------------------
 
-    // Function to generate a pseudo-random NFT identifier
-    function generateRandomNFT() internal view returns (uint256) {
-        // In a real-world scenario, implement a secure random number generation algorithm
-        // For demonstration purposes, a simple pseudo-random number is used here
-        return
-            uint256(
-                keccak256(
-                    abi.encodePacked(block.timestamp, block.basefee, msg.sender)
-                )
-            );
-    }
-
     // Function to mint NFT
     function mintNFT(address owner, uint256 questId) public returns (Rarity) {
         // company is msg.sender
@@ -145,7 +131,19 @@ contract FourEver {
         // Generate tokenId based on the questId
         uint256 tokenId = questId;
 
-        //CesareDev: (TODO) Get the rarity from the total quote of the quest
+        // Random Rarity
+        Rarity rarity = Rarity(
+            uint256(
+                keccak256(
+                    abi.encodePacked(
+                        block.timestamp,
+                        block.basefee,
+                        msg.sender,
+                        quests[questId].seed
+                    )
+                )
+            ) % 5
+        );
 
         // Create a new NFT with the specified owner and rarity (you can adjust rarity logic)
         NFT memory newNFT = NFT(owner, rarity);
