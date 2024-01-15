@@ -13,28 +13,34 @@ const User = ({ reset }) => {
     return (
         <Box>
             <Menu>
-                <MenuButton as={Avatar} size="md" name={account} src={AvatarImg} style={{cursor: 'pointer'}}/>
+                <MenuButton as={Avatar} size="md" name={account} src={AvatarImg} style={{ cursor: 'pointer' }} />
                 <MenuList>
                     <MenuItem textAlign={'center'} flexDir={'column'} justifyContent={'center'} pointerEvents={'none'} _focus={{ outline: 'none' }}>
                         <Text fontWeight="bold">User</Text>
                         <Text fontSize="sm">{account}</Text>
                     </MenuItem>
-                    <hr style={{width: '80%', margin: 'auto'}}/>
+                    <hr style={{ width: '80%', margin: 'auto' }} />
                     <MenuItem textAlign={'center'} flexDir={'column'} justifyContent={'center'} pointerEvents={'none'} _focus={{ outline: 'none' }}>
-                        <Text fontWeight="bold">Balance</Text><br/>{balance}
+                        <Text fontWeight="bold">Balance</Text><br />{balance}
                     </MenuItem>
-                    <hr style={{width: '80%', margin: 'auto'}}/>
-                    <MenuItem textAlign={'center'} flexDir={'column'} justifyContent={'center'} pointerEvents={'none'} _focus={{ outline: 'none' }}>
-                        <Text fontWeight="bold">NFTs</Text><br/>{nfts}
+                    <hr style={{ width: '80%', margin: 'auto' }} />
+                    <MenuItem textAlign={'center'}
+                        justifyContent={'center'}
+                        background={'lightgray'}
+                        margin={'auto'}
+                        marginTop={'1rem'}
+                        width={'80%'}
+                    >
+                        <Text fontWeight="bold">NFTs</Text><br />
                     </MenuItem>
-                    <hr style={{width: '80%', margin: 'auto'}}/>
-                    <MenuItem textAlign={'center'} 
-                    justifyContent={'center'} 
-                    background={'lightgray'} 
-                    margin={'auto'}
-                    marginTop={'1rem'}
-                    width={'80%'}
-                    onClick={reset}><b>Logout</b></MenuItem>
+                    <hr style={{ width: '80%', margin: 'auto', marginTop: '1rem' }} />
+                    <MenuItem textAlign={'center'}
+                        justifyContent={'center'}
+                        background={'lightgray'}
+                        margin={'auto'}
+                        marginTop={'1rem'}
+                        width={'80%'}
+                        onClick={reset}><b>Logout</b></MenuItem>
                 </MenuList>
             </Menu>
         </Box>

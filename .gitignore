@@ -11,6 +11,7 @@ smart_contract_notes.txt
 
 # Ignoring images
 4everbackend/items/*.png
+4everbackend/NFTs/*.png
 
 # To avoid Conflicts
 4everbackend/Truffle/build/contracts/FourEver.json

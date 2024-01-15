@@ -1,5 +1,6 @@
 const fetch = require("node-fetch");
 const fs = require("fs");
+const items = require('../../items/unused.json');
 
 const apiToken = process.env.API_TOKEN;
 
@@ -22,10 +23,8 @@ class Generator {
         return result;
     }
 
-    async generateNew(address, items, items_used) {
+    async generateNew(address, tokenID) {
         console.log('Generating new item for address:', address);
-
-        const randomseed = Math.floor(Math.random() * 1000000);
 
         // Andrea: I'm gonna use a different approach, i'll get a random item from the item json file
         const randomItem = items[Math.floor(Math.random() * items.length)];
@@ -44,14 +43,19 @@ class Generator {
         try {
             console.log('Generating image...')
             // Generate the image
-            const generatedImage = await generateImage("@cf/stabilityai/stable-diffusion-xl-base-1.0", generateInputConfig);
+            const generatedImage = await this.generateImage("@cf/stabilityai/stable-diffusion-xl-base-1.0", generateInputConfig);
 
             // Save the image to the server in the folder ./public/images
-            fs.writeFileSync("./items/generated_image_" + randomseed + ".png", generatedImage);
+            fs.writeFileSync("./NFTs/" + tokenID + ".png", generatedImage);
             console.log('Image saved');
 
-            // Andrea: Remove the randomItem from the items json file and add it to the used items json file
+            // IGNORE for now -> Andrea: Remove the randomItem from the items json file and add it to the used items json file
 
+            // Modify the randomItem removing prompt and adding the image path, and the address as owner
+            randomItem.prompt = undefined;
+            randomItem.image = "./NFTs/" + tokenID + ".png";
+            randomItem.owner = address;
+            randomItem.tokenID = tokenID;
 
             return randomItem;
         } catch (error) {

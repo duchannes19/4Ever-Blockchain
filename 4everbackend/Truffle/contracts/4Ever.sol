@@ -114,6 +114,7 @@ contract FourEver {
     function endQuest(uint256 questId) public {
         quests[questId].ended = true;
         //CesareDev: Implements quest winner: mint NFT
+
         emit QuestEnded(questId, msg.sender);
     }
 
@@ -138,14 +139,28 @@ contract FourEver {
     }
 
     // Function to mint NFT
-    function mintNFT(address owner, uint256 questId) public {
+    function mintNFT(address owner, uint256 questId) public returns (Rarity) {
         // company is msg.sender
 
         // Generate tokenId based on the questId
         uint256 tokenId = questId;
 
+        // Random Rarity
+        Rarity rarity = Rarity(
+            uint256(
+                keccak256(
+                    abi.encodePacked(
+                        block.timestamp,
+                        block.basefee,
+                        msg.sender,
+                        quests[questId].seed
+                    )
+                )
+            ) % 5
+        );
+
         // Create a new NFT with the specified owner and rarity (you can adjust rarity logic)
-        NFT memory newNFT = NFT(owner, Rarity.Legendary);
+        NFT memory newNFT = NFT(owner, rarity);
 
         // Assign the NFT to the tokenId
         NFTs[tokenId] = newNFT;
@@ -155,6 +170,9 @@ contract FourEver {
 
         // Emit the NFTMinted event
         emit NFTMinted(owner, tokenId);
+
+        // return Rarity
+        return rarity;
     }
 
     function getNFTsByOwner(

@@ -18,7 +18,7 @@ class Socket {
     // Connection
     //---------------------------------------
 
-    connection() {
+    async connection() {
         this.wss.on('connection', (ws) => {
             console.log('Client connected');
             this.clients.add(ws);
@@ -34,7 +34,7 @@ class Socket {
     // Message
     //---------------------------------------
 
-    sendMessage(message) {
+    async sendMessage(message) {
         this.clients.forEach((client) => {
             if (client.readyState === WebSocket.OPEN) {
                 client.send(JSON.stringify(message));
@@ -42,7 +42,7 @@ class Socket {
         });
     }
 
-    sendDatabase(database) {
+    async sendDatabase(database) {
         //CesareDev: if successfully updated the quest send, via websocket,
         //           an event to the clients containing the updated entry
         database.find({}, (err, docs) => {
