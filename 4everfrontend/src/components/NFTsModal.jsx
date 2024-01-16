@@ -92,7 +92,7 @@ const MyNFTs = ({ isOpen, onClose }) => {
     return (
         <Modal isOpen={isOpen} onClose={onClose} size='full'>
             <ModalOverlay />
-            <ModalContent bg={colorMode === 'dark' ? 'gray.800' : 'white'} color={colorMode === 'dark' ? 'white' : 'black'} margin={'1rem'} >
+            <ModalContent bg={colorMode === 'dark' ? 'gray.800' : 'white'} color={colorMode === 'dark' ? 'white' : 'black'} margin={'7rem'} marginTop={'1rem !important'} borderRadius={'10px'} >
                 <ModalHeader textAlign='center' fontFamily={'mephistoregular'} fontSize={'3rem'}>My NFTs</ModalHeader>
                 <hr style={{ margin: 'auto', marginBottom: '2rem', width: '80%' }} />
                 <ModalCloseButton zIndex='99999' />
