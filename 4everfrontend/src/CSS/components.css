@@ -108,6 +108,13 @@
     transition: all 0.5s ease-in-out;
 }
 
+.nft-buttons{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+}
+
 .nft.disabled{
     pointer-events: none;
 }

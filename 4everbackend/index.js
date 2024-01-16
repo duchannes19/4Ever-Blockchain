@@ -12,8 +12,9 @@ const { Web3 } = require('web3');
 const { Socket } = require('./src/services/Socket');
 const { Market } = require('./src/services/Market');
 const { Quests } = require('./src/services/Quests');
-const { Generator } = require('./src/services/Generator');
 const { AsyncNedb } = require('nedb-async')
+const { NFTsHandler } = require('./src/services/NFTsHandler');
+//const { Generator } = require('./src/services/Generator');
 const FourEverABI = require('./Truffle/build/contracts/FourEver.json').abi;
 var dir = path.join(__dirname, '');
 
@@ -65,6 +66,9 @@ app.use((req, res, next) => {
 // Quests interface
 const quests = new Quests(web3, fourEverContract, questsDatabase, companiesDatabase, nftsDatabase, socket);
 
+// NFTs interface
+const nftsHandler = new NFTsHandler(web3, fourEverContract, nftsDatabase);
+
 //------------------------------------------
 // Market API
 //------------------------------------------
@@ -113,34 +117,14 @@ app.post('/api/simulate-victory', (req, res) => {
 
 // Andrea: Get the NFTs of a user
 app.get('/api/get-nfts', async (req, res) => {
-
-    // Andrea: Maybe modify it by first doing checks in the smart contract for nfts consistency
-
+    // Andrea: Pass to the NFTsHandler the request and response
     const address = req.query.address;
+    nftsHandler.getNFTsByOwner(address, res, false);
+});
 
-    console.log("Get NFTs request received for address: " + address);
-
-    try {
-        // Read the nft from the nftsDatabase
-        const nfts = await nftsDatabase.asyncFind({ owner: address });
-        if (nfts.length > 0) {
-            res.status(200).send({
-                success: true,
-                message: 'NFTs found',
-                nfts: nfts,
-            });
-        }
-        else {
-            res.status(200).send({
-                success: false,
-                message: 'No NFTs found',
-            });
-        }
-    } catch (error) {
-        console.log(error);
-        res.sendStatus(500).send( { success: false, message: error.message } );
-    }
-
+app.post('/api/handleNFT', async (req, res) => {
+    // Andrea: Pass to the NFTsHandler the request and response
+    nftsHandler.handleNFT(req, res);
 });
 
 //Andrea: Get the images from the NFTs folder

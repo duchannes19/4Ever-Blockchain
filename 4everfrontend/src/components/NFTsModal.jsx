@@ -67,6 +67,28 @@ const MyNFTs = ({ isOpen, onClose }) => {
         setSelectedNFT({});
     }
 
+    const handleNFTSale = async () => {
+        try {
+            const response = await axios.post('http://localhost:3000/api/handleNFT', {
+                owner: selectedNFT.owner,
+                tokenID: selectedNFT.tokenID,
+            });
+            if (response.data.success) {
+                console.log(response.data.message);
+                setNFTs(response.data.nfts);
+                // Update selectedNFT.isForSale
+                setSelectedNFT({ ...selectedNFT, isForSale: response.data.status });
+                Notify('success', `NFT is now ${response.data.status ? '' : 'not '}on sale!`);
+            } else {
+                console.log(response.data.message);
+                Notify('error', response.data.message);
+            }
+        } catch (error) {
+            console.error(error);
+            Notify('error', error.message);
+        }
+    };
+
     return (
         <Modal isOpen={isOpen} onClose={onClose} size='full'>
             <ModalOverlay />
@@ -79,7 +101,7 @@ const MyNFTs = ({ isOpen, onClose }) => {
 
                     {!NFTs &&
                         <Box display="flex" justifyContent="center" alignItems="center" position='absolute'
-                        top='0' bottom='0' left='0' right='0'
+                            top='0' bottom='0' left='0' right='0'
                         >
                             <Text fontFamily='mephistoregular' fontSize='2rem' color='white' margin='auto' textAlign='center'>No NFTs Found</Text>
                         </Box>
@@ -110,7 +132,13 @@ const MyNFTs = ({ isOpen, onClose }) => {
                                     <hr style={{ margin: 'auto', marginBottom: '1rem', width: '80%' }} />
                                     <Text fontFamily='mephistoregular' fontSize='1.5rem' color='white' marginBottom='2rem' marginTop='2rem' textAlign='center'>Owner: {selectedNFT.owner}</Text>
                                     <hr style={{ margin: 'auto', marginBottom: '1rem', width: '80%' }} />
-                                    <Button fontFamily='mephistoregular' fontSize='1.5rem' color='black' marginBottom='2rem' marginTop='2rem' textAlign='center' onClick={handleBack}>Back</Button>
+                                    <Text fontFamily='mephistoregular' fontSize='1.5rem' color='white' marginBottom='2rem' marginTop='2rem' textAlign='center'>Is Selling: {selectedNFT.isForSale ? 'Yes' : 'No'}</Text>
+                                    <Box className='nft-buttons'>
+                                        <Button fontFamily='mephistoregular' colorScheme='green' marginBottom='2rem' marginTop='2rem' textAlign='center' onClick={handleNFTSale}>
+                                            {selectedNFT.isForSale ? 'Remove from Sale' : 'Sell'}
+                                        </Button>
+                                        <Button fontFamily='mephistoregular' colorScheme='gray' marginBottom='2rem' marginTop='2rem' textAlign='center' onClick={handleBack}>Back</Button>
+                                    </Box>
                                 </Box>
                             </Box>
                         </motion.div>

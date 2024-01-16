@@ -437,6 +437,7 @@ class Quests {
             name: finalNFT.name,
             description: finalNFT.description,
             type: finalNFT.type,
+            isForSale: false,
         });
 
         this.socket.sendDatabase(this.database);
