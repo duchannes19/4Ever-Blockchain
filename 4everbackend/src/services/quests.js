@@ -307,6 +307,24 @@ class Quests {
         });
     };
 
+    rarityCalculator(participants) {
+        // Andrea: Calculate the rarity of the NFT by the number of participants, the more participants, the more rare the NFT
+        // Andrea: We could also calculate the mean of the partecipants of all quests and use it as a threshold to determine the rarity
+        let rarity;
+        if (participants <= 10) {
+            rarity = "Common";
+        } else if (participants <= 50) {
+            rarity = "Uncommon";
+        } else if (participants <= 100) {
+            rarity = "Rare";
+        } else if (participants <= 500) {
+            rarity = "Epic";
+        } else {
+            rarity = "Legendary";
+        }
+        return rarity;
+    };
+
     // Andrea: Forcefully set the winner of a quest, ending it
     //CesareDev: for demonstration purposes only 
     async registerVictory(req, res) {
@@ -380,16 +398,18 @@ class Quests {
         // End quest
         //---------------------------------------
 
-        // Andrea To Do: Mint the NFT
-        let rarity;
+        // Andrea: Mint the NFT
         let NFTokenId;
+
+        // Andrea: Get the rarity of the NFT by the number of participants
+        const rarity = this.rarityCalculator(quest.participants.length);
 
         try {
             const value = this.web3.utils.toWei('1', 'ether');
             console.log(value);
             NFTokenId = this.web3.utils.soliditySha3(quest.name + userAddress + quest.companyaddress);
 
-            rarity = await this.contract.methods.mintNFT(userAddress, NFTokenId, value).send({
+            await this.contract.methods.mintNFT(userAddress, NFTokenId, value).send({
                 from: quest.companyaddress,
                 gasPrice,
                 gasLimit
@@ -413,7 +433,7 @@ class Quests {
             owner: userAddress,
             tokenID: NFTokenId,
             image: finalNFT.image,
-            rarity: rarity.events.NFTMinted.returnValues.rarity,
+            rarity: rarity,
             name: finalNFT.name,
             description: finalNFT.description,
             type: finalNFT.type,

@@ -6,6 +6,7 @@ const express = require('express');
 const cors = require('cors');
 const cron = require('node-cron');
 const path = require('path');
+var fs = require('fs');
 const http = require('http');
 const { Web3 } = require('web3');
 const { Socket } = require('./src/services/Socket');
@@ -14,6 +15,7 @@ const { Quests } = require('./src/services/Quests');
 const { Generator } = require('./src/services/Generator');
 const { AsyncNedb } = require('nedb-async')
 const FourEverABI = require('./Truffle/build/contracts/FourEver.json').abi;
+var dir = path.join(__dirname, '');
 
 //CesareDev: Image generation remove for now
 /*
@@ -107,6 +109,58 @@ app.get('/api/get-quests', (req, res) => {
 app.post('/api/simulate-victory', (req, res) => {
     console.log("Simulate victory request received")
     quests.registerVictory(req, res);
+});
+
+// Andrea: Get the NFTs of a user
+app.get('/api/get-nfts', async (req, res) => {
+
+    // Andrea: Maybe modify it by first doing checks in the smart contract for nfts consistency
+
+    const address = req.query.address;
+
+    console.log("Get NFTs request received for address: " + address);
+
+    try {
+        // Read the nft from the nftsDatabase
+        const nfts = await nftsDatabase.asyncFind({ owner: address });
+        if (nfts.length > 0) {
+            res.status(200).send({
+                success: true,
+                message: 'NFTs found',
+                nfts: nfts,
+            });
+        }
+        else {
+            res.status(200).send({
+                success: false,
+                message: 'No NFTs found',
+            });
+        }
+    } catch (error) {
+        console.log(error);
+        res.sendStatus(500).send( { success: false, message: error.message } );
+    }
+
+});
+
+//Andrea: Get the images from the NFTs folder
+var mime = { png: 'image/png' };
+
+app.get('*', function (req, res) {
+    var file = path.join(dir, req.path.replace(/\/$/, '/index.html'));
+    if (file.indexOf(dir + path.sep) !== 0) {
+        return res.status(403).end('Forbidden');
+    }
+    var type = mime[path.extname(file).slice(1)] || 'text/plain';
+    var s = fs.createReadStream(file);
+    s.on('open', function () {
+        res.set('Content-Type', type);
+        s.pipe(res);
+    });
+    s.on('error', function () {
+        res.set('Content-Type', 'text/plain');
+        res.status(404).end('Not found');
+    });
 });
 
 //CesareDev: Image generation remove for now
