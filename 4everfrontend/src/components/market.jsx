@@ -18,8 +18,10 @@ export default function Market() {
         const getItems = async () => {
             // Andrea: To Do: Actually gets a list of merchants and their items from the backend
             try {
-                const items = await axios.get('http://localhost:3001/getMerchants');
-                setItems(items.data);
+                const items = await axios.get('http://localhost:3000/api/get-merchants');
+                const merchants = JSON.parse(items.data.merchants);
+                console.log(merchants);
+                setItems(merchants);
                 console.log(items);
             }
             catch (error) {
@@ -27,10 +29,10 @@ export default function Market() {
             }
         };
 
-        //getItems();
+        getItems();
 
         // DEBUG, load some merchant from a local json file
-        setItems(DEBUG_MERCHANTS.merchants);
+        //setItems(DEBUG_MERCHANTS.merchants);
     }, []);
 
     const handleModal = (address, items) => {
@@ -59,10 +61,12 @@ export default function Market() {
 
                 {/* Andrea: These are the DEBUG items */}
                 {items.length > 0 && items.map((item, index) => (
-                    <Image key={index} src={Icon} className='quest' marginBottom='2rem' onClick={() => { handleModal(item.address, item.items) }} />
+                    item.items[0] && (
+                        <Image key={index} src={Icon} className='quest' marginBottom='2rem' onClick={() => { handleModal(item.address, item.items) }} />
+                    )
                 ))}
             </Box>
-            {selectedMerchant && <MarketModal selectedMerchant={selectedMerchant} isOpen={isOpen} onClose={onClose}/>}
+            {selectedMerchant && <MarketModal selectedMerchant={selectedMerchant} isOpen={isOpen} onClose={onClose} />}
         </Box>
     )
 };

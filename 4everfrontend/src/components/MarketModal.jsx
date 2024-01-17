@@ -85,12 +85,12 @@ export default function MarketModal({ isOpen, onClose, selectedMerchant }) {
                         {!switchToDescription && (
                             <motion.div className='merchantmodal' initial='hidden' animate='visible' variants={delay ? fadeOutVariants : fadeInVariants} transition={{ duration: 0.5 }}>
                                 <Image src={MerchIcon} alt='merchant icon' className='merchant icon' />
-                                <Box bg='#333232' style={{ borderRadius: '10px' }}>
+                                <Box bg='#333232' style={{ borderRadius: '10px' }} className='merchantitemscontainer'>
                                     <Text fontFamily='mephistoregular' fontSize='2.5rem' color='white' marginBottom='2rem' marginTop='2rem' textAlign='center'>Items</Text>
                                     <hr style={{ margin: 'auto', marginBottom: '1rem', width: '80%' }} />
                                     <Box className='merchant items'>
                                         {selectedMerchant.items.map((item, index) => (
-                                            <Image key={index} src={MerchIcon} className='merchant item' onClick={() => { handleItem(item) }} />
+                                            <Image key={index} src={'http://localhost:3000/' + item.image} className='merchant item' onClick={() => { handleItem(item) }} />
                                         ))}
                                     </Box>
                                 </Box>
@@ -104,7 +104,7 @@ export default function MarketModal({ isOpen, onClose, selectedMerchant }) {
                                     <Button fontFamily={'mephistoregular'} mr={2} onClick={handleBack}>Back</Button>
                                 </Box>
                                 <Box className='merchantmodal'>
-                                    <Image src={MerchIcon} alt='item icon' className='item icon' />
+                                    <Image src={'http://localhost:3000/' + selectedItem.image} alt='item icon' className='item icon' />
                                     <Box bg='#333232' style={{ borderRadius: '10px' }}>
                                         <Text fontFamily='mephistoregular' fontSize='2.5rem' color='white' marginBottom='2rem' marginTop='2rem' textAlign='center'>Description</Text>
                                         <hr style={{ margin: 'auto', marginBottom: '1rem', width: '80%' }} />

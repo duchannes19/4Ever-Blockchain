@@ -31,13 +31,13 @@ const web3 = new Web3(process.env.GANACHE);
 //Contract instance
 const fourEverContract = new web3.eth.Contract(FourEverABI, process.env.MARKETADDR);
 
-//Market interface
-const market = new Market(web3, fourEverContract);
-
 //Create database
 var questsDatabase = new AsyncNedb({ filename: path.join(__dirname, '/database/quests.db'), autoload: true });
 var companiesDatabase = new AsyncNedb({ filename: path.join(__dirname, '/database/companies.db'), autoload: true });
 var nftsDatabase = new AsyncNedb({ filename: path.join(__dirname, '/database/nfts.db'), autoload: true });
+
+//Market interface
+const market = new Market(web3, fourEverContract, nftsDatabase);
 
 // Test the connection
 web3.eth.getBlockNumber()
@@ -78,6 +78,10 @@ app.post('/api/join-marketplace', (req, res) => {
     market.joinMarketplace(req, res);
 });
 
+app.get('/api/get-merchants', async (req, res) => {
+    await market.getMerchants(res);
+});
+
 //------------------------------------------
 // Quest API
 //------------------------------------------
@@ -114,6 +118,10 @@ app.post('/api/simulate-victory', (req, res) => {
     console.log("Simulate victory request received")
     quests.registerVictory(req, res);
 });
+
+//------------------------------------------
+// NFTs API
+//------------------------------------------
 
 // Andrea: Get the NFTs of a user
 app.get('/api/get-nfts', async (req, res) => {

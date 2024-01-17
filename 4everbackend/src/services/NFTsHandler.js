@@ -64,6 +64,7 @@ class NFTsHandler {
                 );
 
                 if (numReplaced) {
+                    this.nfts.persistence.compactDatafile();
                     console.log("NFT updated in the database");
                     console.log(numReplaced);
 

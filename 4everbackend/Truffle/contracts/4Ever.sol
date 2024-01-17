@@ -43,7 +43,10 @@ contract FourEver {
     // Contract memebers
     //----------------------------------------------
 
-    //Market Member
+    //Market Members Addresses
+    address[] public members;
+
+    //Is Market Member
     mapping(address => bool) public isMember;
 
     //Quest ID -> Quests
@@ -65,6 +68,7 @@ contract FourEver {
     function joinMarketplace() public returns (bool) {
         if (!isMember[msg.sender]) {
             isMember[msg.sender] = true;
+            members.push(msg.sender);
             emit MemberJoined(msg.sender);
             return true; // User joined successfully
         }
@@ -73,6 +77,21 @@ contract FourEver {
 
     function isUserMember(address user) public view returns (bool) {
         return isMember[user];
+    }
+
+    //----------------------------------------------
+    // Market
+    //----------------------------------------------
+
+    function getAllUsers() public view returns (address[] memory) {
+        // Andrea: For each member in the members array, check with isUserMember if the user is a member and returns the array of members
+        address[] memory users = new address[](members.length);
+        for (uint256 i = 0; i < members.length; i++) {
+            if (isUserMember(members[i])) {
+                users[i] = members[i];
+            }
+        }
+        return users;
     }
 
     //----------------------------------------------
