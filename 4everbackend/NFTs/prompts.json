@@ -1,287 +1,246 @@
 [
     {
         "name": "Orb of Astral Projection",
-        "rarity": "Rare",
         "type": "Artifact",
         "description": "A crystal orb that allows the user to project their consciousness into the astral plane.",
         "prompt": "A magic orb, astral appearance, detailed, fantasy, 4k"
     },
     {
         "name": "Cloak of Shadows",
-        "rarity": "Uncommon",
         "type": "Clothing",
         "description": "A cloak that grants its wearer the ability to blend seamlessly into shadows and darkness.",
         "prompt": "A magical cloak, shadowy, intricate design, fantasy, 4k"
     },
     {
         "name": "Ethereal Dagger",
-        "rarity": "Rare",
         "type": "Weapon",
         "description": "A translucent dagger that can phase through armor and solid objects.",
         "prompt": "A mystical dagger, ethereal appearance, detailed, fantasy, 4k"
     },
     {
         "name": "Potion of Fortune",
-        "rarity": "Common",
         "type": "Consumable",
         "description": "A potion that brings good luck to the drinker for a short duration.",
         "prompt": "A magical potion, fortunate effects, vibrant colors, fantasy, 4k"
     },
     {
         "name": "Crown of Mind Reading",
-        "rarity": "Legendary",
         "type": "Headgear",
         "description": "A golden crown that allows the wearer to read the thoughts of those around them.",
         "prompt": "A regal crown, mind-reading powers, intricate design, fantasy, 4k"
     },
     {
         "name": "Amulet of Elemental Control",
-        "rarity": "Rare",
         "type": "Jewelry",
         "description": "An amulet that grants the ability to control and manipulate elemental forces.",
         "prompt": "A mystical amulet, elemental control, detailed, fantasy, 4k"
     },
     {
         "name": "Scepter of Time Manipulation",
-        "rarity": "Epic",
         "type": "Artifact",
         "description": "A magical scepter that can manipulate the flow of time within a localized area.",
         "prompt": "A powerful scepter, time manipulation, intricate design, fantasy, 4k"
     },
     {
         "name": "Boots of Levitation",
-        "rarity": "Uncommon",
         "type": "Footwear",
         "description": "Boots that allow the wearer to levitate a few inches above the ground at will.",
         "prompt": "Magical levitating boots, comfortable design, fantasy, 4k"
     },
     {
         "name": "Mirror of Illusions",
-        "rarity": "Rare",
         "type": "Artifact",
         "description": "A mirror that can create realistic illusions, fooling even the keenest observers.",
         "prompt": "A mystical mirror, illusion magic, intricate design, fantasy, 4k"
     },
     {
         "name": "Whispering Bow",
-        "rarity": "Rare",
         "type": "Weapon",
         "description": "A bow that whispers advice to the archer, guiding their shots with uncanny accuracy.",
         "prompt": "A talking bow, whispering guidance, detailed, fantasy, 4k"
     },
     {
         "name": "Ring of Invisibility",
-        "rarity": "Legendary",
         "type": "Jewelry",
         "description": "A ring that renders its wearer completely invisible for a limited duration.",
         "prompt": "A magical ring, invisibility power, intricate design, fantasy, 4k"
     },
     {
         "name": "Gloves of Telekinesis",
-        "rarity": "Rare",
         "type": "Accessories",
         "description": "Gloves that grant the ability to move and manipulate objects with the power of the mind.",
         "prompt": "Telekinetic gloves, intricate design, fantasy, 4k"
     },
     {
         "name": "Horn of Summoning",
-        "rarity": "Uncommon",
         "type": "Instrument",
         "description": "A magical horn that can summon creatures to aid the user in times of need.",
         "prompt": "A summoning horn, mystical appearance, detailed, fantasy, 4k"
     },
     {
         "name": "Book of Elemental Spells",
-        "rarity": "Rare",
         "type": "Artifact",
         "description": "A book containing powerful spells related to the manipulation of elemental forces.",
         "prompt": "An ancient spellbook, elemental magic, intricate design, fantasy, 4k"
     },
     {
         "name": "Quill of Infinite Ink",
-        "rarity": "Epic",
         "type": "Writing Instrument",
         "description": "A quill that never runs out of ink, allowing the user to write endlessly.",
         "prompt": "A magical quill, infinite ink, detailed, fantasy, 4k"
     },
     {
         "name": "Crystal Ball of Clairvoyance",
-        "rarity": "Rare",
         "type": "Divination",
         "description": "A crystal ball that allows the user to see events happening in distant locations.",
         "prompt": "A mystical crystal ball, clairvoyant powers, detailed, fantasy, 4k"
     },
     {
         "name": "Bracelet of Healing",
-        "rarity": "Uncommon",
         "type": "Jewelry",
         "description": "A bracelet that accelerates the natural healing process of the wearer.",
         "prompt": "A healing bracelet, soothing magic, intricate design, fantasy, 4k"
     },
     {
         "name": "Flute of Charm",
-        "rarity": "Rare",
         "type": "Instrument",
         "description": "A flute that, when played, has a charming effect on those who hear its tune.",
         "prompt": "A charming flute, enchanting melody, detailed, fantasy, 4k"
     },
     {
         "name": "Mask of Transformation",
-        "rarity": "Epic",
         "type": "Headgear",
         "description": "A mask that allows the wearer to change their appearance at will.",
         "prompt": "A transformative mask, detailed design, fantasy, 4k"
     },
     {
         "name": "Dagger of Venom",
-        "rarity": "Rare",
         "type": "Weapon",
         "description": "A dagger coated with a potent venom that can paralyze or weaken enemies.",
         "prompt": "A venomous dagger, deadly poison, detailed, fantasy, 4k"
     },
     {
         "name": "Stone of Elemental Resilience",
-        "rarity": "Rare",
         "type": "Artifact",
         "description": "A magical stone that grants resistance to all elemental damage.",
         "prompt": "A resilient stone, elemental protection, intricate design, fantasy, 4k"
     },
     {
         "name": "Chalice of Eternity",
-        "rarity": "Legendary",
         "type": "Container",
         "description": "A chalice that grants its drinker eternal youth and immortality.",
         "prompt": "An eternal chalice, everlasting youth, detailed, fantasy, 4k"
     },
     {
         "name": "Wand of Disintegration",
-        "rarity": "Epic",
         "type": "Artifact",
         "description": "A wand that can disintegrate objects or creatures with a single touch.",
         "prompt": "A disintegrating wand, powerful magic, intricate design, fantasy, 4k"
     },
     {
         "name": "Feather of Featherfall",
-        "rarity": "Uncommon",
         "type": "Accessory",
         "description": "A feather that, when held, slows the descent of the user, allowing for a gentle landing.",
         "prompt": "A feather for safe descent, gentle landing, detailed, fantasy, 4k"
     },
     {
         "name": "Lantern of Revealing",
-        "rarity": "Rare",
         "type": "Light Source",
         "description": "A lantern that reveals invisible and hidden objects in its light.",
         "prompt": "A revealing lantern, dispelling darkness, detailed, fantasy, 4k"
     },
     {
         "name": "Staff of Elemental Mastery",
-        "rarity": "Legendary",
         "type": "Weapon",
         "description": "A staff that allows the wielder to master the control of all elemental forces.",
         "prompt": "A masterful staff, elemental control, intricate design, fantasy, 4k"
     },
     {
         "name": "Goblet of Truth",
-        "rarity": "Rare",
         "type": "Container",
         "description": "A goblet that compels those who drink from it to speak only the truth.",
         "prompt": "A truthful goblet, honesty enchantment, detailed, fantasy, 4k"
     },
     {
         "name": "Sword of Light",
-        "rarity": "Legendary",
         "type": "Weapon",
         "description": "A sword that emits a powerful light, banishing darkness and revealing hidden truths.",
         "prompt": "A radiant sword, light magic, intricate design, fantasy, 4k"
     },
     {
         "name": "Crown of Telepathy",
-        "rarity": "Epic",
         "type": "Headgear",
         "description": "A crown that allows the wearer to communicate telepathically with others.",
         "prompt": "A telepathic crown, mental connection, detailed design, fantasy, 4k"
     },
     {
         "name": "Quiver of Infinite Arrows",
-        "rarity": "Legendary",
         "type": "Container",
         "description": "A quiver that magically produces an infinite supply of arrows for the archer.",
         "prompt": "An infinite quiver, endless arrows, detailed, fantasy, 4k"
     },
     {
         "name": "Gloves of Elemental Grasping",
-        "rarity": "Rare",
         "type": "Accessories",
         "description": "Gloves that grant the ability to grasp and control elemental forces with the hands.",
         "prompt": "Elemental-grasping gloves, intricate design, fantasy, 4k"
     },
     {
         "name": "Crystal Feather of Time Travel",
-        "rarity": "Epic",
         "type": "Artifact",
         "description": "A crystal feather that allows the user to travel through time with a touch.",
         "prompt": "A time-traveling feather, temporal magic, detailed, fantasy, 4k"
     },
     {
         "name": "Mask of the Dreamweaver",
-        "rarity": "Legendary",
         "type": "Headgear",
         "description": "A mask that allows the wearer to enter and manipulate the dreams of others.",
         "prompt": "A dreamweaving mask, dream manipulation, intricate design, fantasy, 4k"
     },
     {
         "name": "Bow of the Celestial Archer",
-        "rarity": "Epic",
         "type": "Weapon",
         "description": "A bow imbued with the power of the celestial realms, enhancing the archer's skill.",
         "prompt": "A celestial bow, divine power, detailed, fantasy, 4k"
     },
     {
         "name": "Scepter of Mind Control",
-        "rarity": "Legendary",
         "type": "Artifact",
         "description": "A scepter that grants its wielder the power to control the minds of others.",
         "prompt": "A mind-controlling scepter, powerful magic, intricate design, fantasy, 4k"
     },
     {
         "name": "Helm of Invisibility",
-        "rarity": "Epic",
         "type": "Headgear",
         "description": "A helmet that renders the wearer invisible, concealing them from sight.",
         "prompt": "An invisible helm, hidden presence, detailed design, fantasy, 4k"
     },
     {
         "name": "Flask of Eternal Flames",
-        "rarity": "Rare",
         "type": "Container",
         "description": "A flask that contains an eternal flame, providing light and warmth without fuel.",
         "prompt": "An eternal flame flask, perpetual fire, detailed, fantasy, 4k"
     },
     {
         "name": "Stone of Luck",
-        "rarity": "Uncommon",
         "type": "Artifact",
         "description": "A small stone that brings good fortune to its possessor in various endeavors.",
         "prompt": "A lucky charm stone, good fortune, detailed, fantasy, 4k"
     },
     {
         "name": "Dagger of Ice",
-        "rarity": "Rare",
         "type": "Weapon",
         "description": "A dagger that freezes its target upon contact, encasing them in ice.",
         "prompt": "An icy dagger, freezing enchantment, detailed, fantasy, 4k"
     },
     {
         "name": "Crystal Crown of Mind Shielding",
-        "rarity": "Legendary",
         "type": "Headgear",
         "description": "A crystal crown that protects the wearer's mind from telepathic intrusion.",
         "prompt": "A mind-shielding crown, telepathic protection, intricate design, fantasy, 4k"
     },
     {
         "name": "Elixir of Everlasting Youth",
-        "rarity": "Legendary",
         "type": "Consumable",
         "description": "An elixir that grants the drinker everlasting youth and halts the aging process.",
         "prompt": "An everlasting elixir, eternal youth, vibrant colors, fantasy, 4k"

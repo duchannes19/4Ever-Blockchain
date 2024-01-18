@@ -14,16 +14,8 @@ const { Market } = require('./src/services/Market');
 const { Quests } = require('./src/services/Quests');
 const { AsyncNedb } = require('nedb-async')
 const { NFTsHandler } = require('./src/services/NFTsHandler');
-//const { Generator } = require('./src/services/Generator');
 const FourEverABI = require('./Truffle/build/contracts/FourEver.json').abi;
 var dir = path.join(__dirname, '');
-
-//CesareDev: Image generation remove for now
-/*
-const items = require('./items/unused.json');
-const items_used = require('./items/used.json');
-const generator = new Generator();
-*/
 
 //Connect to Ganache
 const web3 = new Web3(process.env.GANACHE);
@@ -34,10 +26,9 @@ const fourEverContract = new web3.eth.Contract(FourEverABI, process.env.MARKETAD
 //Create database
 var questsDatabase = new AsyncNedb({ filename: path.join(__dirname, '/database/quests.db'), autoload: true });
 var companiesDatabase = new AsyncNedb({ filename: path.join(__dirname, '/database/companies.db'), autoload: true });
-var nftsDatabase = new AsyncNedb({ filename: path.join(__dirname, '/database/nfts.db'), autoload: true });
 
 //Market interface
-const market = new Market(web3, fourEverContract, nftsDatabase);
+const market = new Market(web3, fourEverContract);
 
 // Test the connection
 web3.eth.getBlockNumber()
@@ -64,10 +55,10 @@ app.use((req, res, next) => {
 });
 
 // Quests interface
-const quests = new Quests(web3, fourEverContract, questsDatabase, companiesDatabase, nftsDatabase, socket);
+const quests = new Quests(web3, fourEverContract, questsDatabase, companiesDatabase, socket);
 
 // NFTs interface
-const nftsHandler = new NFTsHandler(web3, fourEverContract, nftsDatabase);
+const nftsHandler = new NFTsHandler(web3, fourEverContract);
 
 //------------------------------------------
 // Market API
@@ -130,11 +121,6 @@ app.get('/api/get-nfts', async (req, res) => {
     nftsHandler.getNFTsByOwner(address, res, false);
 });
 
-app.post('/api/handleNFT', async (req, res) => {
-    // Andrea: Pass to the NFTsHandler the request and response
-    nftsHandler.handleNFT(req, res);
-});
-
 //Andrea: Get the images from the NFTs folder
 var mime = { png: 'image/png' };
 
@@ -154,32 +140,6 @@ app.get('*', function (req, res) {
         res.status(404).end('Not found');
     });
 });
-
-//CesareDev: Image generation remove for now
-/*
-app.post('/api/create-item', async (req, res) => {
-
-    const { address } = req.body;
-
-    const isValid = market.isJoined(address);
-
-    if (isValid) {
-        try {
-            const newitem = await generator.generateNew(address, items, items_used);
-            res.status(200).json({
-                message: 'Item created',
-                item: newitem.description,
-            });
-        } catch (error) {
-            console.log(error);
-        }
-    } else {
-        res.status(400).json({
-            message: 'You are not joined to the marketplace',
-        });
-    }
-});
-*/
 
 //Andrea: Use Cron to manage quests
 cron.schedule('0 0 * * *', () => {

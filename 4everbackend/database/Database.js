@@ -5,7 +5,6 @@ var Datastore = require('nedb');
 
 var questsDatabase = new Datastore({ filename: path.join(__dirname, './quests.db'), autoload: true });
 var companiesDatabase = new Datastore({ filename: path.join(__dirname, './companies.db'), autoload: true });
-var nftsDatabase = new Datastore({ filename: path.join(__dirname, './nfts.db'), autoload: true });
 
 //CesareDev: Function to assign sponsor and companyaddress to each quest
 function assign(acc) {
@@ -62,7 +61,7 @@ function createDatabase(companies) {
             questsDatabase.persistence.compactDatafile();
             // Andrea: At the moment creates the same quests for each company
             const quests = companies.map((company, index) => ({
-                "name": "Hunt for the Lost Relic "+index,
+                "name": "Hunt for the Lost Relic " + index,
                 "description": "Embark on a journey to find the ancient relic hidden deep in the Forbidden Forest.",
                 "startDate": "2024-11-01",
                 "expirationDate": "2024-12-31",
@@ -94,23 +93,6 @@ function createDatabase(companies) {
         }
     });
 }
-
-//Andrea: Function to create the empty nft database
-nftsDatabase.remove({}, { multi: true }, (err) => {
-    if (err) {
-        console.log({
-            success: false,
-            message: 'Error',
-            body: err
-        });
-    } else {
-        nftsDatabase.persistence.compactDatafile();
-        console.log('====================================');
-        console.log();
-        console.log('NFTs database ready!');
-        console.log();
-    }
-});
 
 const web3 = new Web3(process.env.GANACHE);
 

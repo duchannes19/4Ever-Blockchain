@@ -6,27 +6,52 @@ contract FourEver {
     // Contract begin
     //----------------------------------------------
 
-
     //----------------------------------------------
     // Structures
     //----------------------------------------------
 
+    enum Rarity {
+        Common,
+        Uncommon,
+        Rare,
+        Epic,
+        Legendary
+    }
+
     struct NFT {
+        //Token ID
+        uint256 id;
+        //Owner of the NFT
         address owner;
+        //Assets's Company
+        address company;
+        //URL of the image
+        string url;
+        //Name of the NFT
+        string name;
+        //Rarity of the NFT
+        Rarity rarity;
+    }
+
+    struct User {
+        //Is user member
+        bool isMember;
+        //All user's NFTs
+        NFT[] nfts;
     }
 
     struct Quest {
-        //CesareDev: participants number
+        //Participants number
         uint256 totalParticipants;
-        //CesareDev: for random userWinnerSelection
+        //For random userWinnerSelection
         uint256 seed;
-        //CesareDev: member to check if the quest ended
+        //Member to check if the quest ended
         bool ended;
-        //CesareDev: users addresses -> users' quote
+        //Users addresses -> users' quote
         mapping(address => uint256) participants;
-        //Andrea: winner address
+        //Winner address
         address winner;
-        //Andrea: company address
+        //Company address
         address companyaddress;
     }
 
@@ -43,55 +68,31 @@ contract FourEver {
     // Contract memebers
     //----------------------------------------------
 
-    //Market Members Addresses
-    address[] public members;
+    //Shop
+    NFT[] public availableNFTs;
 
-    //Is Market Member
-    mapping(address => bool) public isMember;
+    //Addres -> Market member
+    mapping(address => User) public member;
 
     //Quest ID -> Quests
     mapping(uint256 => Quest) public quests;
-
-    //NFT ID -> Concrete NFT
-    mapping(uint256 => NFT) public NFTs;
-
-    //Member -> NFT ID's
-    mapping(address => uint256[]) public userNFTs;
 
     //----------------------------------------------
     // Functions
     //----------------------------------------------
 
     //----------------------------------------------
-    // Connection
-    //----------------------------------------------
-    function joinMarketplace() public returns (bool) {
-        if (!isMember[msg.sender]) {
-            isMember[msg.sender] = true;
-            members.push(msg.sender);
-            emit MemberJoined(msg.sender);
-            return true; // User joined successfully
-        }
-        return false; // User is already a member
-    }
-
-    function isUserMember(address user) public view returns (bool) {
-        return isMember[user];
-    }
-
-    //----------------------------------------------
     // Market
     //----------------------------------------------
 
-    function getAllUsers() public view returns (address[] memory) {
-        // Andrea: For each member in the members array, check with isUserMember if the user is a member and returns the array of members
-        address[] memory users = new address[](members.length);
-        for (uint256 i = 0; i < members.length; i++) {
-            if (isUserMember(members[i])) {
-                users[i] = members[i];
-            }
-        }
-        return users;
+    function joinMarketplace() public {
+        require(!member[msg.sender].isMember);
+        member[msg.sender].isMember = true;
+        emit MemberJoined(msg.sender);
+    }
+
+    function isUserMember(address user) public view returns (bool) {
+        return member[user].isMember;
     }
 
     //----------------------------------------------
@@ -114,48 +115,67 @@ contract FourEver {
         //Register the quote of the participant
         quests[questId].participants[msg.sender] = msg.value;
         quests[questId].totalParticipants++;
+
+        //Emit event
         emit QuestRegistration(questId, msg.sender);
     }
 
-    function endQuest(uint256 questId) public {
+    function endQuest(
+        address winner,
+        uint256 questId,
+        uint256 tokenId,
+        string memory url,
+        string memory name
+    ) public {
+        //msg.sender is the company
         quests[questId].ended = true;
-        //CesareDev: Implements quest winner: mint NFT
-
-        emit QuestEnded(questId, msg.sender);
+        //Mint NFT
+        member[winner].nfts.push(
+            NFT(
+                tokenId,
+                winner,
+                msg.sender,
+                url,
+                name,
+                calculateRarity(quests[questId].totalParticipants)
+            )
+        );
+        //Emit events
+        emit QuestEnded(questId, winner);
+        emit NFTMinted(winner, tokenId);
     }
 
     function getQuestSeed(uint256 questId) public view returns (uint256) {
         return quests[questId].seed;
     }
 
+    function getQuestParticipantsNumber(
+        uint256 questId
+    ) public view returns (uint256) {
+        return quests[questId].totalParticipants;
+    }
+
     //----------------------------------------------
     // NFT
     //----------------------------------------------
 
-    // Function to mint NFT
-    function mintNFT(address owner, uint256 questId) public {
-        // company is msg.sender
-
-        // Generate tokenId based on the questId
-        uint256 tokenId = questId;
-
-        // Create a new NFT with the specified owner
-        NFT memory newNFT = NFT(owner);
-
-        // Assign the NFT to the tokenId
-        NFTs[tokenId] = newNFT;
-
-        // Add the tokenId to the owner's list of NFTs
-        userNFTs[owner].push(tokenId);
-
-        // Emit the NFTMinted event
-        emit NFTMinted(owner, tokenId);
+    function getNFTsByOwner(address owner) public view returns (NFT[] memory) {
+        return member[owner].nfts;
     }
 
-    function getNFTsByOwner(
-        address owner
-    ) public view returns (uint256[] memory) {
-        return userNFTs[owner];
+    function calculateRarity(
+        uint256 participants
+    ) internal pure returns (Rarity) {
+        if (participants <= 10) {
+            return Rarity.Common;
+        } else if (participants <= 50) {
+            return Rarity.Uncommon;
+        } else if (participants <= 100) {
+            return Rarity.Rare;
+        } else if (participants <= 500) {
+            return Rarity.Epic;
+        }
+        return Rarity.Legendary;
     }
 
     //----------------------------------------------

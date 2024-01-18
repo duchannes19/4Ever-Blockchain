@@ -1,18 +1,18 @@
 const cron = require('node-cron');
 const { randomBytes } = require('crypto');
-const { Generator } = require('./Generator');
+const path = require('path');
+
 class Quests {
 
     //---------------------------------------
     // Constructor
     //---------------------------------------
 
-    constructor(web3, contract, database, companies, nfts, socket) {
+    constructor(web3, contract, database, companies, socket) {
         this.web3 = web3;
         this.contract = contract;
         this.database = database;
         this.companies = companies;
-        this.nfts = nfts;
         this.socket = socket;
     }
 
@@ -114,8 +114,6 @@ class Quests {
                 });
             }
         });
-
-
     }
 
     unjoinQuest(req, res) {
@@ -249,6 +247,7 @@ class Quests {
         const filter = {
             name: 1,
             participants: 1,
+            companyaddress: 1,
             _id: 1
         };
         this.database.findOne({ _id: questId }, filter, async (err, docs) => {
@@ -260,69 +259,52 @@ class Quests {
                 });
             }
             else if (docs) {
-                // Andrea: If there is already a winner, we don't have to do anything, just reiterate the winner address
-                let winnerAddress;
                 const questIdHash = this.web3.utils.soliditySha3(docs.name);
-                if (!docs.winner) {
-                    const seed = await this.contract.methods.getQuestSeed(questIdHash).call();
-                    //CesareDev: the index of the winner is in the range [0, participants.length - 1]
-                    //           for randomness we do the module with the seed of the quest
-                    const winnerIndex = this.web3.utils.toNumber(
-                        this.web3.utils.toBigInt(seed) % this.web3.utils.toBigInt(docs.participants.length)
-                    );
-                    winnerAddress = docs.participants[winnerIndex];
-                }
-                else {
-                    winnerAddress = docs.winner;
-                }
+                const seed = await this.contract.methods.getQuestSeed(questIdHash).call();
+                //CesareDev: the index of the winner is in the range [0, participants.length - 1]
+                //           for randomness we do the module with the seed of the quest
+                const winnerIndex = this.web3.utils.toNumber(
+                    this.web3.utils.toBigInt(seed) % this.web3.utils.toBigInt(docs.participants.length)
+                );
+                const winnerAddress = docs.participants[winnerIndex];
 
-                //CesarDev: End quest and assign NFT
-                const gasPrice = this.web3.utils.toWei('20', 'gwei');
-                const gasLimit = 6721975;
-                const questEnded = await this.contract.methods.endQuest(questIdHash).send({
-                    from: winnerAddress,
-                    gasPrice,
-                    gasLimit
-                });
+                //End the quest in the chain
+                try {
+                    const tokenIdHex = this.web3.utils.soliditySha3(docs.name + winnerAddress + docs.companyaddress);
+                    const tokenId = this.web3.utils.hexToNumber(tokenIdHex);
+                    //Transaction
+                    await this.contract.methods.endQuest(userAddress, questIdHash, tokenId).send({
+                        from: docs.companyaddress,
+                        gasPrice,
+                        gasLimit
+                    });
+                    console.log('User ' + winnerAddress + ' won the quest ' + docs.name);
+                    // Set the winner in the database
+                    await this.database.asyncUpdate({ _id: docs._id }, { $set: { questEnded: true, winner: winnerAddress } });
+                    //Compact the db
+                    this.database.persistence.compactDatafile();
 
-                //Andrea: Finalize the quest by setting the winner in the database
-                this.database.update({ _id: docs._id }, { $set: { questEnded: true, winner: winnerAddress } }, {}, (err) => {
-                    if (err) {
-                        this.socket.sendMessage({
-                            success: false,
-                            message: 'Database error',
-                            body: err
-                        });
-                    }
-                    else {
-                        this.socket.sendMessage({
-                            success: true,
-                            message: 'The winner for ' + docs.name + ' is ' + winnerAddress,
-                            body: questEnded
-                        });
-                        this.database.persistence.compactDatafile();
-                    }
-                })
+                    // Generate the image
+                    const { Generator } = require('./Generator');
+                    const generator = new Generator();
+                    await generator.generateNew(winnerAddress, tokenId);
+
+                    //Send the updated database via so
+                    this.socket.sendDatabase(this.database);
+                    //Return the success status
+                    return res.status(200).send({
+                        success: true,
+                        message: 'NFT minted',
+                    });
+                } catch (error) {
+                    console.log(error);
+                    return res.status(500).send({
+                        success: false,
+                        message: 'Server error',
+                    });
+                }
             }
         });
-    };
-
-    rarityCalculator(participants) {
-        // Andrea: Calculate the rarity of the NFT by the number of participants, the more participants, the more rare the NFT
-        // Andrea: We could also calculate the mean of the partecipants of all quests and use it as a threshold to determine the rarity
-        let rarity;
-        if (participants <= 10) {
-            rarity = "Common";
-        } else if (participants <= 50) {
-            rarity = "Uncommon";
-        } else if (participants <= 100) {
-            rarity = "Rare";
-        } else if (participants <= 500) {
-            rarity = "Epic";
-        } else {
-            rarity = "Legendary";
-        }
-        return rarity;
     };
 
     // Andrea: Forcefully set the winner of a quest, ending it
@@ -364,19 +346,14 @@ class Quests {
         //Standard transaction parameters
         const gasPrice = this.web3.utils.toWei('20', 'gwei');
         const gasLimit = 6721975;
-
+        const questIdHash = this.web3.utils.soliditySha3(quest.name);
         for (let i = 0; i < quest.participants.length; i++) {
             try {
                 //Generate the questId from the quest's name
-                const questIdHash = this.web3.utils.soliditySha3(quest.name);
                 //Generate a seed wich it will be used to extract a winner
                 const seed = this.web3.utils.bytesToHex(randomBytes(16));
                 //Join quest for every participant
-                await this.contract.methods.joinQuest(
-                    quest.companyaddress,
-                    questIdHash,
-                    seed
-                ).send({
+                await this.contract.methods.joinQuest(quest.companyaddress, questIdHash, seed).send({
                     value: quote,
                     from: quest.participants[i],
                     gasPrice,
@@ -398,54 +375,43 @@ class Quests {
         // End quest
         //---------------------------------------
 
-        // Andrea: Mint the NFT
-        let NFTokenId;
-
-        // Andrea: Get the rarity of the NFT by the number of participants
-        const rarity = this.rarityCalculator(quest.participants.length);
-
         try {
-            const value = this.web3.utils.toWei('1', 'ether');
-            console.log(value);
-            NFTokenId = this.web3.utils.soliditySha3(quest.name + userAddress + quest.companyaddress);
-
-            await this.contract.methods.mintNFT(userAddress, NFTokenId, value).send({
+            const tokenIdHex = this.web3.utils.soliditySha3(quest.name + userAddress + quest.companyaddress);
+            const tokenId = this.web3.utils.hexToNumber(tokenIdHex);
+            // Generate the image
+            //NFT path
+            const nftPath = path.join(__dirname, '../../NFTs/' + tokenId + '.png');
+            //Get the item to generate
+            const { Generator } = require('./Generator');
+            const generator = new Generator();
+            const randomItem = generator.getRandomItem();
+            //Register in the blockchain
+            await this.contract.methods.endQuest(userAddress, questIdHash, tokenId, nftPath, randomItem.name).send({
                 from: quest.companyaddress,
                 gasPrice,
                 gasLimit
             });
+            await generator.generateNew(userAddress, nftPath, randomItem);
             console.log('User ' + userAddress + ' won the quest ' + quest.name);
+            // Set the winner in the database
+            await this.database.asyncUpdate({ _id: quest._id }, { $set: { questEnded: true, winner: userAddress } });
+            //Compact the db
+            this.database.persistence.compactDatafile();
+
+            //Send the updated database via socket
+            this.socket.sendDatabase(this.database);
+            //Return the success status
+            return res.status(200).send({
+                success: true,
+                message: 'NFT minted',
+            });
         } catch (error) {
             console.log(error);
+            return res.status(500).send({
+                success: false,
+                message: 'Server error',
+            });
         }
-
-        // Set the winner in the database
-        await this.database.asyncUpdate({ _id: quest._id }, { $set: { questEnded: true, winner: userAddress } });
-        //Compact the db
-        this.database.persistence.compactDatafile();
-
-        // Generate the image
-        const generator = new Generator();
-        const finalNFT = await generator.generateNew(userAddress, NFTokenId);
-
-        // Update nfts database
-        await this.nfts.insert({
-            owner: userAddress,
-            tokenID: NFTokenId,
-            image: finalNFT.image,
-            rarity: rarity,
-            name: finalNFT.name,
-            description: finalNFT.description,
-            type: finalNFT.type,
-            isForSale: false,
-        });
-
-        this.socket.sendDatabase(this.database);
-
-        return res.status(200).send({
-            success: true,
-            message: 'NFT minted',
-        });
     };
 
 
