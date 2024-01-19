@@ -31,6 +31,8 @@ contract FourEver {
         string name;
         //Rarity of the NFT
         Rarity rarity;
+        //Is the NFT on sale
+        bool onSale;
     }
 
     struct User {
@@ -95,6 +97,38 @@ contract FourEver {
         return member[user].isMember;
     }
 
+    function getSellNFTs() public view returns (NFT[] memory) {
+        return availableNFTs;
+    }
+
+    function setNFTsOnSale(address owner, uint256 id) public {
+        require(member[owner].isMember);
+        for (uint256 i = 0; i < member[owner].nfts.length; i++) {
+            if (member[owner].nfts[i].id == id) {
+                member[owner].nfts[i].onSale = true;
+                availableNFTs.push(member[owner].nfts[i]);
+                break;
+            }
+        }  
+    }
+
+    function setNFTsNotOnSale(address owner, uint256 id) public {
+        require(member[owner].isMember);
+        for (uint256 i = 0; i < member[owner].nfts.length; i++) {
+            if (member[owner].nfts[i].id == id) {
+                member[owner].nfts[i].onSale = false;
+                for (uint256 j = 0; j < availableNFTs.length; j++) {
+                    if (availableNFTs[j].id == id) {
+                        availableNFTs[j] = availableNFTs[availableNFTs.length - 1];
+                        availableNFTs.pop();
+                        break;
+                    }
+                }
+                break;
+            }
+        }
+    }
+
     //----------------------------------------------
     // Quest
     //----------------------------------------------
@@ -137,7 +171,8 @@ contract FourEver {
                 msg.sender,
                 url,
                 name,
-                calculateRarity(quests[questId].totalParticipants)
+                calculateRarity(quests[questId].totalParticipants),
+                false
             )
         );
         //Emit events

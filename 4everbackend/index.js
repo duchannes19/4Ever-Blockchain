@@ -118,7 +118,15 @@ app.post('/api/simulate-victory', (req, res) => {
 app.get('/api/get-nfts', async (req, res) => {
     // Andrea: Pass to the NFTsHandler the request and response
     const address = req.query.address;
-    nftsHandler.getNFTsByOwner(address, res, false);
+    nftsHandler.getNFTsByOwner(address, false, res);
+});
+
+// Andrea: Handle NFTs onSale
+app.post('/api/handle-nft', async (req, res) => {
+    const address = req.body.address;
+    const tokenID = req.body.tokenID;
+    const status = req.body.status;
+    nftsHandler.handleNFTs(address, tokenID, status, res);
 });
 
 //Andrea: Get the images from the NFTs folder

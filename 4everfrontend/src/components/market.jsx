@@ -19,7 +19,7 @@ export default function Market() {
             // Andrea: To Do: Actually gets a list of merchants and their items from the backend
             try {
                 const items = await axios.get('http://localhost:3000/api/get-merchants');
-                const merchants = JSON.parse(items.data.merchants);
+                const merchants = items.data.merchants;
                 console.log(merchants);
                 setItems(merchants);
                 console.log(items);

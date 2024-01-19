@@ -109,9 +109,14 @@ export default function MarketModal({ isOpen, onClose, selectedMerchant }) {
                                         <Text fontFamily='mephistoregular' fontSize='2.5rem' color='white' marginBottom='2rem' marginTop='2rem' textAlign='center'>Description</Text>
                                         <hr style={{ margin: 'auto', marginBottom: '1rem', width: '80%' }} />
                                         <Box className='merchant description'>
-                                            <Text fontFamily='mephistoregular' fontSize='1.5rem' color='white' marginBottom='2rem' marginTop='2rem' textAlign='center'>{selectedItem.description}</Text>
+                                            <Text fontFamily='mephistoregular' fontSize='1.5rem' color='white' marginBottom='2rem' marginTop='2rem' textAlign='center'>Description Field</Text>
                                         </Box>
-                                        <Text fontFamily='mephistoregular' fontSize='2.5rem' color='white' marginBottom='2rem' marginTop='2rem' textAlign='center'>Price: {selectedItem.price}</Text>
+                                        <hr style={{ margin: 'auto', marginBottom: '1rem', width: '80%' }} />
+                                        <Text fontFamily='mephistoregular' fontSize='2.5rem' color='white' marginBottom='2rem' marginTop='2rem' textAlign='center'>Seller</Text>
+                                        <hr style={{ margin: 'auto', marginBottom: '1rem', width: '80%' }} />
+                                        <Text fontFamily='mephistoregular' fontSize='1.5rem' padding='1rem' color='white' marginBottom='2rem' marginTop='2rem' textAlign='center'>
+                                            {selectedItem.owner}
+                                        </Text>
                                     </Box>
                                 </Box>
                             </motion.div>
@@ -120,7 +125,7 @@ export default function MarketModal({ isOpen, onClose, selectedMerchant }) {
                     </ModalBody>
 
                     <ModalFooter>
-                        {switchToDescription && <Button fontFamily={'mephistoregular'} mr={2}>Buy</Button>}
+                        {switchToDescription && <Button fontFamily={'mephistoregular'} colorScheme='green' mr={2}>Propose to Buy</Button>}
                         <Button colorScheme='gray' mr={3} onClick={handleOnClose}>
                             Close
                         </Button>

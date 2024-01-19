@@ -9,6 +9,31 @@ class Market {
         this.contract = contract;
     }
 
+    //---------------------------------------
+    // Utils
+    //---------------------------------------
+
+    convertRarityToString(numericRarity) {
+        switch (numericRarity) {
+            case 0n:
+                return 'Common';
+            case 1n:
+                return 'Uncommon';
+            case 2n:
+                return 'Rare';
+            case 3n:
+                return 'Epic';
+            case 4n:
+                return 'Legendary';
+            default:
+                return 'Unknown Rarity';
+        }
+    };
+
+    //---------------------------------------
+    // Market
+    //---------------------------------------
+
     async joinMarketplace(req, res) {
         const { userAddress } = req.body;
         try {
@@ -64,7 +89,39 @@ class Market {
         }
     };
 
-    //CesareDev: TODO Parse the available NFTs
+    async getMerchants(res) {
+        try {
+            const allNFTs = await this.contract.methods.getSellNFTs().call();
+
+            //Andrea: remap the nfts to create the correct merchants structure
+            
+            const merchants = [];
+            allNFTs.forEach(item => {
+                const address = item.owner;
+                const rarity = this.convertRarityToString(item.rarity);
+                const id = item.id.toString();
+                const url = '/NFTs//' + item.url.split('\\').slice(-1)[0];
+                const nfts = { name: item.name, image: url, rarity: rarity, id: id, owner: address };
+
+                // Check if address already exists in merchants array
+                const existingMerchant = merchants.find(merchant => merchant.address === address);
+                if (existingMerchant) {
+                    existingMerchant.items.push(nfts); // Add nfts to existing merchant
+                } else {
+                    merchants.push({ address, items: [nfts] }); // Create new merchant entry
+                }
+            });
+
+            res.status(200).send(JSON.stringify({
+                success: true,
+                message: 'Merchants retrieved',
+                merchants: merchants,
+            }));
+        } catch (error) {
+            console.log(error);
+            res.status(500).send({ success: false, message: error.message });
+        };
+    };
 
     async isJoined(userAddress) {
         try {

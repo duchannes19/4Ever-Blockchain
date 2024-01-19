@@ -69,9 +69,10 @@ const MyNFTs = ({ isOpen, onClose }) => {
 
     const handleNFTSale = async () => {
         try {
-            const response = await axios.post('http://localhost:3000/api/handleNFT', {
-                owner: selectedNFT.owner,
-                tokenID: selectedNFT.tokenID,
+            const response = await axios.post('http://localhost:3000/api/handle-nft', {
+                address: selectedNFT.owner,
+                tokenID: selectedNFT.id,
+                status: selectedNFT.isForSale
             });
             if (response.data.success) {
                 console.log(response.data.message);
@@ -124,11 +125,7 @@ const MyNFTs = ({ isOpen, onClose }) => {
                                 <Box className='nft description'>
                                     <Text fontFamily='mephistoregular' fontSize='2.5rem' color='white' marginBottom='2rem' marginTop='2rem' textAlign='center'>{selectedNFT.name}</Text>
                                     <hr style={{ margin: 'auto', marginBottom: '1rem', width: '80%' }} />
-                                    <Text fontFamily='mephistoregular' fontSize='1.5rem' color='white' marginBottom='2rem' marginTop='2rem' textAlign='center'>{selectedNFT.description}</Text>
-                                    <hr style={{ margin: 'auto', marginBottom: '1rem', width: '80%' }} />
                                     <Text fontFamily='mephistoregular' fontSize='1.5rem' color='white' marginBottom='2rem' marginTop='2rem' textAlign='center'>Rarity: {selectedNFT.rarity}</Text>
-                                    <hr style={{ margin: 'auto', marginBottom: '1rem', width: '80%' }} />
-                                    <Text fontFamily='mephistoregular' fontSize='1.5rem' color='white' marginBottom='2rem' marginTop='2rem' textAlign='center'>Type: {selectedNFT.type}</Text>
                                     <hr style={{ margin: 'auto', marginBottom: '1rem', width: '80%' }} />
                                     <Text fontFamily='mephistoregular' fontSize='1.5rem' color='white' marginBottom='2rem' marginTop='2rem' textAlign='center'>Owner: {selectedNFT.owner}</Text>
                                     <hr style={{ margin: 'auto', marginBottom: '1rem', width: '80%' }} />
