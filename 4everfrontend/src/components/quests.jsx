@@ -69,7 +69,7 @@ const Quests = () => {
 
     return (
         <Box className='quests-box'>
-            <Text fontFamily='mephistoregular' fontSize='3rem' color='white' paddingTop='1rem'>
+            <Text fontFamily='mephistoregular' fontSize='3rem' color='white' paddingTop='1rem' className='market title'>
                 Welcome to the Board
             </Text>
             <hr style={{ margin: 'auto', marginBottom: '2rem', width: '80%' }} />

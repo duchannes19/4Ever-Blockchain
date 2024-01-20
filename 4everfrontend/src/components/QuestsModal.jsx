@@ -20,6 +20,7 @@ import { useState } from 'react';
 import QuestsLogo from '/img/quest.png';
 
 import Notify from './Notify';
+import QuestVictory from './QuestVictory';
 
 export default function QuestsModal({ isOpen, onClose, selectedQuest }) {
 
@@ -30,6 +31,7 @@ export default function QuestsModal({ isOpen, onClose, selectedQuest }) {
     const haswinner = selectedQuest.quest.winner;
 
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [simulateVictory, setSimulateVictory] = useState(false);
 
     const fadeInVariants = {
         hidden: { opacity: 0, x: -50 },
@@ -85,6 +87,7 @@ export default function QuestsModal({ isOpen, onClose, selectedQuest }) {
 
     const handleVictory = async () => {
         // Simulate a call to the backend that set the winner of the quest
+        setSimulateVictory(true);
         setIsSubmitting(true);
         try {
             const response = await axios.post('http://localhost:3000/api/simulate-victory', {
@@ -104,6 +107,7 @@ export default function QuestsModal({ isOpen, onClose, selectedQuest }) {
             Notify('error', error.message);
         } finally {
             setIsSubmitting(false);
+            setSimulateVictory(false);
         }
     };
 
@@ -166,6 +170,7 @@ export default function QuestsModal({ isOpen, onClose, selectedQuest }) {
                     </ModalFooter>
                 </ModalContent>
 
+                {simulateVictory && <QuestVictory />}
             </Modal>
         </>
     );

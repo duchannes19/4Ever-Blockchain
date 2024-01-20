@@ -24,6 +24,10 @@
     top: 9rem;
 }
 
+.item.descriptions{
+    min-width: 30rem;
+}
+
 .quests-box {
     background: #242424;
     width: 70rem;
@@ -71,7 +75,7 @@
 }
 
 .merchantitemscontainer{
-    min-width: 25rem;
+    min-width: 40rem;
 }
 
 .merchant.description {
@@ -145,7 +149,27 @@
     filter: drop-shadow(0px 0px 5px white);
 }
 
+.nfts-modal{
+    margin: 7rem;
+}
+
 @media screen and (max-width: 768px) {
+
+    .market.title{
+        font-size: 2rem;
+    }
+
+    .merchant.name{
+        font-size: 2rem;
+    }
+
+    .nfts-modal{
+        margin: 0rem;
+    }
+
+    .item.descriptions{
+        min-width: 20rem;
+    }
 
     .merchantmodal {
         flex-direction: column;

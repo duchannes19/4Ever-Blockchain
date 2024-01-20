@@ -76,8 +76,16 @@ export default function MarketModal({ isOpen, onClose, selectedMerchant }) {
                 <ModalOverlay />
 
                 <ModalContent bg={colorMode === 'dark' ? 'gray.800' : 'white'} color={colorMode === 'dark' ? 'white' : 'black'} margin={'1rem'} >
-                    <ModalHeader textAlign={'center'} fontFamily='mephistoregular' fontSize='3rem'>
-                        {switchToDescription ? selectedItem.name : 'Merchant'}
+                    <ModalHeader textAlign={'center'} fontFamily='mephistoregular' fontSize='3rem' className='merchant name'>
+                        {switchToDescription ? selectedItem.name : (
+                            <>
+                                Merchant
+                                <br />
+                                <Text fontFamily='mephistoregular' fontSize='1.5rem' color='white' marginBottom='2rem' marginTop='2rem' textAlign='center'>
+                                    {selectedMerchant.address}
+                                </Text>
+                            </>
+                        )}
                     </ModalHeader>
                     <ModalCloseButton />
                     <hr style={{ margin: 'auto', marginBottom: '1rem', width: '80%' }} />
@@ -105,17 +113,17 @@ export default function MarketModal({ isOpen, onClose, selectedMerchant }) {
                                 </Box>
                                 <Box className='merchantmodal'>
                                     <Image src={'http://localhost:3000/' + selectedItem.image} alt='item icon' className='item icon' />
-                                    <Box bg='#333232' style={{ borderRadius: '10px' }}>
+                                    <Box bg='#333232' style={{ borderRadius: '10px' }} className='item descriptions'>
                                         <Text fontFamily='mephistoregular' fontSize='2.5rem' color='white' marginBottom='2rem' marginTop='2rem' textAlign='center'>Description</Text>
                                         <hr style={{ margin: 'auto', marginBottom: '1rem', width: '80%' }} />
                                         <Box className='merchant description'>
                                             <Text fontFamily='mephistoregular' fontSize='1.5rem' color='white' marginBottom='2rem' marginTop='2rem' textAlign='center'>Description Field</Text>
                                         </Box>
                                         <hr style={{ margin: 'auto', marginBottom: '1rem', width: '80%' }} />
-                                        <Text fontFamily='mephistoregular' fontSize='2.5rem' color='white' marginBottom='2rem' marginTop='2rem' textAlign='center'>Seller</Text>
+                                        <Text fontFamily='mephistoregular' fontSize='2.5rem' color='white' marginBottom='2rem' marginTop='2rem' textAlign='center'>Rarity</Text>
                                         <hr style={{ margin: 'auto', marginBottom: '1rem', width: '80%' }} />
                                         <Text fontFamily='mephistoregular' fontSize='1.5rem' padding='1rem' color='white' marginBottom='2rem' marginTop='2rem' textAlign='center'>
-                                            {selectedItem.owner}
+                                            {selectedItem.rarity}
                                         </Text>
                                     </Box>
                                 </Box>

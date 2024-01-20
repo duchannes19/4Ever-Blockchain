@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
 import { motion } from 'framer-motion';
-import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalCloseButton, Image, Box, Button, Text } from "@chakra-ui/react";
+import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalCloseButton, Image, Box, Button, Text, Alert, AlertIcon } from "@chakra-ui/react";
 
 import Notify from './Notify';
 
@@ -93,7 +93,7 @@ const MyNFTs = ({ isOpen, onClose }) => {
     return (
         <Modal isOpen={isOpen} onClose={onClose} size='full'>
             <ModalOverlay />
-            <ModalContent bg={colorMode === 'dark' ? 'gray.800' : 'white'} color={colorMode === 'dark' ? 'white' : 'black'} margin={'7rem'} marginTop={'1rem !important'} borderRadius={'10px'} >
+            <ModalContent bg={colorMode === 'dark' ? 'gray.800' : 'white'} color={colorMode === 'dark' ? 'white' : 'black'} marginTop={'1rem !important'} borderRadius={'10px'} className='nfts-modal'>
                 <ModalHeader textAlign='center' fontFamily={'mephistoregular'} fontSize={'3rem'}>My NFTs</ModalHeader>
                 <hr style={{ margin: 'auto', marginBottom: '2rem', width: '80%' }} />
                 <ModalCloseButton zIndex='99999' />
@@ -130,6 +130,10 @@ const MyNFTs = ({ isOpen, onClose }) => {
                                     <Text fontFamily='mephistoregular' fontSize='1.5rem' color='white' marginBottom='2rem' marginTop='2rem' textAlign='center'>Owner: {selectedNFT.owner}</Text>
                                     <hr style={{ margin: 'auto', marginBottom: '1rem', width: '80%' }} />
                                     <Text fontFamily='mephistoregular' fontSize='1.5rem' color='white' marginBottom='2rem' marginTop='2rem' textAlign='center'>Is Selling: {selectedNFT.isForSale ? 'Yes' : 'No'}</Text>
+                                    <Alert status='info' justifyContent={'center'} padding={'0'} borderRadius={'10px'}>
+                                        <AlertIcon />
+                                        <Text fontFamily='mephistoregular' fontSize='1rem' color='black' marginBottom='2rem' marginTop='2rem' textAlign='center'>Changing the status will cost you, so be sure about it!</Text>
+                                    </Alert>
                                     <Box className='nft-buttons'>
                                         <Button fontFamily='mephistoregular' colorScheme='green' marginBottom='2rem' marginTop='2rem' textAlign='center' onClick={handleNFTSale}>
                                             {selectedNFT.isForSale ? 'Remove from Sale' : 'Sell'}
