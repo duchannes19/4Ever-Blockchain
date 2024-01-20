@@ -22,13 +22,12 @@ class Generator {
             }
         );
         const result = await response.buffer(); // Use buffer instead of blob
-        console.log('Image generated');
         return result;
     }
 
     async generateNew(address, path, item) {
-        console.log('Generating new item for address: ', address);
-        console.log('Prompt:\n', item.prompt);
+        console.log('[Generator]: Generating new item: For: ' + address);
+        console.log('[Generator]: Prompt: ' + item.prompt);
 
         // Define the config to generate the image
         const generateInputConfig = {
@@ -36,16 +35,14 @@ class Generator {
         };
 
         try {
-            console.log('Generating image...');
-
             // Generate the image
             const generatedImage = await this.generateImage('@cf/stabilityai/stable-diffusion-xl-base-1.0', generateInputConfig);
             fs.writeFileSync(path, generatedImage);
-            console.log('Image saved');
+            console.log('[Generator]: \x1b[32mGeneration complete\x1b[0m');
 
             // IGNORE for now -> Andrea: Remove the randomItem from the items json file and add it to the used items json file
         } catch (error) {
-            console.error("Error:", error);
+            console.error(error);
         }
     }
 }

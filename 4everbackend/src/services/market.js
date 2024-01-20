@@ -39,7 +39,7 @@ class Market {
         try {
             const verifyMembership = await this.contract.methods.isUserMember(userAddress).call();
             if (verifyMembership) {
-                console.log('User is already a member');
+                console.log('[Market]:' + userAddress + ' already a member');
 
                 // Get the user's NFTs
                 let nfts = await this.contract.methods.getNFTsByOwner(userAddress).call();
@@ -64,7 +64,7 @@ class Market {
                 gasPrice,
                 gasLimit,
             });
-            console.log('User' + userAddress + ' join the marketplace');
+            console.log('[Market]: \x1b[32mJoin\x1b[0m user: ' + userAddress);
 
             // Get the user's NFTs
             // Andrea: still don't know if this is the correct way to get an NFT
@@ -74,8 +74,6 @@ class Market {
                 nfts = ['None'];
             }
 
-            console.log('NFTs:', nfts.map(nft => nft.toString()));
-
             res.status(200).send({
                 success: true,
                 transactionHash: transaction.transactionHash,
@@ -84,17 +82,17 @@ class Market {
             });
 
         } catch (error) {
-            console.error('Failed to join the marketplace:', error);
+            console.error(error);
             res.status(500).send('Operation failed');
         }
     };
 
-    async getMerchants(res) {
+    async getMerchants(req, res) {
         try {
             const allNFTs = await this.contract.methods.getSellNFTs().call();
 
             //Andrea: remap the nfts to create the correct merchants structure
-            
+
             const merchants = [];
             allNFTs.forEach(item => {
                 const address = item.owner;
@@ -121,16 +119,6 @@ class Market {
             console.log(error);
             res.status(500).send({ success: false, message: error.message });
         };
-    };
-
-    async isJoined(userAddress) {
-        try {
-            const isMember = await this.contract.methods.isUserMember(userAddress).call();
-            return isMember;
-        } catch (error) {
-            console.error('Failed to check if user is joined:', error);
-            return false;
-        }
     };
 }
 

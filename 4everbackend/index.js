@@ -69,8 +69,8 @@ app.post('/api/join-marketplace', (req, res) => {
     market.joinMarketplace(req, res);
 });
 
-app.get('/api/get-merchants', async (req, res) => {
-    await market.getMerchants(res);
+app.get('/api/get-merchants', (req, res) => {
+    market.getMerchants(req, res);
 });
 
 //------------------------------------------
@@ -82,13 +82,11 @@ app.get('/api/get-merchants', async (req, res) => {
 //           - userAddress
 //           - questName
 app.post('/api/join-quest', (req, res) => {
-    console.log("Join request received");
     quests.joinQuest(req, res);
 });
 
 //Andrea: Added endpoint to unjoin a quest, if the quest has not started yet (for testing or should we keep?)
 app.post('/api/unjoin-quest', (req, res) => {
-    console.log("Unjoin request received");
     quests.unjoinQuest(req, res);
 });
 
@@ -106,7 +104,6 @@ app.get('/api/get-quests', (req, res) => {
 
 // Andrea: DEBUG -> Simulate the victory by forcefully set a winner
 app.post('/api/simulate-victory', (req, res) => {
-    console.log("Simulate victory request received")
     quests.registerVictory(req, res);
 });
 
@@ -115,24 +112,20 @@ app.post('/api/simulate-victory', (req, res) => {
 //------------------------------------------
 
 // Andrea: Get the NFTs of a user
-app.get('/api/get-nfts', async (req, res) => {
+app.get('/api/get-nfts', (req, res) => {
     // Andrea: Pass to the NFTsHandler the request and response
-    const address = req.query.address;
-    nftsHandler.getNFTsByOwner(address, false, res);
+    nftsHandler.getNFTsByOwner(req, res);
 });
 
 // Andrea: Handle NFTs onSale
-app.post('/api/handle-nft', async (req, res) => {
-    const address = req.body.address;
-    const tokenID = req.body.tokenID;
-    const status = req.body.status;
-    nftsHandler.handleNFTs(address, tokenID, status, res);
+app.post('/api/handle-nft', (req, res) => {
+    nftsHandler.handleNFTs(req, res);
 });
 
 //Andrea: Get the images from the NFTs folder
 var mime = { png: 'image/png' };
 
-app.get('*', function (req, res) {
+app.get('*', (req, res) => {
     var file = path.join(dir, req.path.replace(/\/$/, '/index.html'));
     if (file.indexOf(dir + path.sep) !== 0) {
         return res.status(403).end('Forbidden');
@@ -152,7 +145,6 @@ app.get('*', function (req, res) {
 //Andrea: Use Cron to manage quests
 cron.schedule('0 0 * * *', () => {
     //Andrea: This function will be executed every day at midnight
-    console.log('Updating the quests...');
     quests.handleQuestsLifeCycle();
 });
 

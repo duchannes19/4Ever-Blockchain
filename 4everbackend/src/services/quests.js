@@ -63,9 +63,9 @@ class Quests {
     }
 
     joinQuest(req, res) {
-
         //CesareDev: Get useraddress and quest name from the post request's body
         const { userAddress, questName } = req.body;
+        console.log('[Quests]: \x1b[32mJoin request\x1b[0m From: ' + userAddress + ' | Quest: ' + questName);
 
         //CesareDev: Find the quest id in the database
         const filter = {
@@ -119,7 +119,7 @@ class Quests {
     unjoinQuest(req, res) {
         // Andrea: Added function to unjoin a quest, if the quest has not started yet (for testing or should we keep?)
         const { userAddress, questName } = req.body;
-
+        console.log('[Quests]: \x1b[31mUnjoin request\x1b[0m From: ' + userAddress + ' | Quest: ' + questName);
         //Andrea: Checks if the user is in the participants list, and if the quest has not started yet, 
         //then removes the user from the list of participants 
 
@@ -170,6 +170,7 @@ class Quests {
             name: 1,
             participants: 1,
             usersThreshold: 1,
+            copanyaddress: 1,
             _id: 1
         };
         this.database.findOne({ _id: questId }, filter, async (err, docs) => {
@@ -204,12 +205,13 @@ class Quests {
                             //CesareDev: secure random seed
                             //           16 bytes -> 128 bit to prevent integer overflow in the contract
                             const seed = this.web3.utils.bytesToHex(randomBytes(16));
-                            const questRegistration = await this.contract.methods.joinQuest(questIdHash, seed).send({
+                            const questRegistration = await this.contract.methods.joinQuest(docs.companyaddress, questIdHash, seed).send({
                                 value: quote,
                                 from: docs.participants[i],
                                 gasPrice,
                                 gasLimit
                             });
+                            console.log('[Quests]: Joining payment: ' + docs.participants[i] + '->' + docs.companyaddress);
                             this.socket.sendMessage({
                                 success: true,
                                 message: 'User ' + docs.participants[i] + ' joined the quest ' + docs.name,
@@ -278,7 +280,7 @@ class Quests {
                         gasPrice,
                         gasLimit
                     });
-                    console.log('User ' + winnerAddress + ' won the quest ' + docs.name);
+                    console.log('[Quests]: ' + winnerAddress + ' won the quest ' + docs.name);
                     // Set the winner in the database
                     await this.database.asyncUpdate({ _id: docs._id }, { $set: { questEnded: true, winner: winnerAddress } });
                     //Compact the db
@@ -311,7 +313,7 @@ class Quests {
     //CesareDev: for demonstration purposes only 
     async registerVictory(req, res) {
         const { userAddress, questName } = req.body;
-
+        console.log('[Quests]: \x1b[33mSimulate victory request\x1b[0m From: ' + userAddress + ' | Quest: ' + questName);
         //Make sure the quest exists
         const filter = { name: 1, participants: 1, companyaddress: 1, _id: 1 };
         const quest = await this.database.asyncFindOne({ name: questName }, filter);
@@ -360,7 +362,7 @@ class Quests {
                     gasLimit
                 });
 
-                console.log('User ' + quest.participants[i] + ' payed for the quest to ' + quest.companyaddress);
+                console.log('[Quests]: Joining payment: ' + quest.participants[i] + '->' + quest.companyaddress);
             } catch (error) {
                 console.log(error);
                 this.socket.sendMessage({
@@ -392,7 +394,7 @@ class Quests {
                 gasLimit
             });
             await generator.generateNew(userAddress, nftPath, randomItem);
-            console.log('User ' + userAddress + ' won the quest ' + quest.name);
+            console.log('[Quests]:' + userAddress + ' won the quest: ' + quest.name);
             // Set the winner in the database
             await this.database.asyncUpdate({ _id: quest._id }, { $set: { questEnded: true, winner: userAddress } });
             //Compact the db
@@ -421,8 +423,7 @@ class Quests {
 
     handleQuestsLifeCycle() {
         // Andrea: Implement your logic to execute quests here
-        console.log('---------------------------------------');
-        console.log('Managing quests...');
+        console.log('[Quests]: Managing quests...');
 
         // Andrea: Get all the active quests from the database
         this.database.find({}, (err, docs) => {
@@ -452,7 +453,7 @@ class Quests {
             todayStartQuests.forEach((quest) => {
                 cron.schedule('0 8 * * *', () => {
                     // Andrea: This function will be executed once at 8:00 AM of the current day
-                    console.log('Starting quest:', quest.name);
+                    console.log('[Quests]: \x1b[32mStarting quest:\x1b[0m ' + quest.name);
                     // Andrea: The quest has started, so we can update it from the active quests and set the status to true in questRegistered in the database
                     //CesareDev: Here logic handling the start of the quests
                     this.registerQuest(quest._id);
@@ -483,7 +484,7 @@ class Quests {
             todayEndQuests.forEach((quest) => {
                 cron.schedule('0 23 * * *', () => {
                     // Andrea: This function will be executed once at 23:00 PM of the current day
-                    console.log('Ending quest:', quest.name);
+                    console.log('[Quests]: \x1b[31mEnding quest:\x1b[0m', quest.name);
                     // Andrea: The quest has ended, so we can update it from the active quests and modify the field questEnded in the database
                     this.unregisterQuest(quest._id);
                     this.socket.sendDatabase(this.database);

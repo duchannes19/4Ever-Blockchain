@@ -30,7 +30,10 @@ class NFTsHandler {
     // NFTs API
     //---------------------------------------
 
-    async getNFTsByOwner(address, status, res) {
+    async getNFTsByOwner(req, res) {
+        //CesareDev: (TODO) Watch out for the status, i left the default value like in the previosu version
+        const address = req.query.address;
+        const status = false;
         try {
             // Andrea: Check on the smart contract
             const nftsCheck = await this.contract.methods.getNFTsByOwner(address).call();
@@ -52,7 +55,7 @@ class NFTsHandler {
                     isForSale: nft.onSale,
                 }
             });
-            
+
             res.status(200).send(JSON.stringify({
                 success: true,
                 message: 'NFTs retrieved',
@@ -67,7 +70,10 @@ class NFTsHandler {
         };
     };
 
-    async handleNFTs(address, tokenID, status, res) {
+    async handleNFTs(req, res) {
+        const address = req.body.address;
+        const tokenID = req.body.tokenID;
+        const status = req.body.status;
         // Andrea: Convert the tokenID to a bigInt with web3
         tokenID = this.web3.utils.toBigInt(tokenID);
         try {

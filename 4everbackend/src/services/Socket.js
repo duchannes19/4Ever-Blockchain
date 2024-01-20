@@ -20,11 +20,11 @@ class Socket {
 
     connection() {
         this.wss.on('connection', (ws) => {
-            console.log('Client connected');
+            console.log('[Socket]: \x1b[32mClient connected\x1b[0m');
             this.clients.add(ws);
 
             ws.on('close', () => {
-                console.log('Client disconnected');
+                console.log('[Socket]: \x1b[31mClient disconnected\x1b[0m');
                 this.clients.delete(ws);
             });
         });

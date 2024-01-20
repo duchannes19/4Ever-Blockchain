@@ -118,7 +118,7 @@ contract FourEver {
             if (member[owner].nfts[i].id == id) {
                 member[owner].nfts[i].onSale = false;
                 for (uint256 j = 0; j < availableNFTs.length; j++) {
-                    if (availableNFTs[j].id == id) {
+                    if (availableNFTs[j].id == id && availableNFTs.length > 0) {
                         availableNFTs[j] = availableNFTs[availableNFTs.length - 1];
                         availableNFTs.pop();
                         break;
