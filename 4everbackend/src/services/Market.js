@@ -120,6 +120,21 @@ class Market {
             res.status(500).send({ success: false, message: error.message });
         };
     };
+
+    //---------------------------------------
+    // Buying and selling (TODO)
+    //---------------------------------------
+    async buyNFT(req, res) {
+        const { sellerAddress, buyerAddress, tokenId } = req.body;
+    }
+
+    async sellNFT(req, res) {
+        const { userAddress, tokenId } = req.body;
+    }
+
+    async unsellNFT(req, res) {
+        const { userAddress, tokenId } = req.body;
+    }
 }
 
 module.exports = { Market };

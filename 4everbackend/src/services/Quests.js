@@ -272,7 +272,8 @@ class Quests {
 
                 //End the quest in the chain
                 try {
-                    const tokenIdHex = this.web3.utils.soliditySha3(docs.name + winnerAddress + docs.companyaddress);
+                    const today = new Date();
+                    const tokenIdHex = this.web3.utils.soliditySha3(docs.name + winnerAddress + docs.companyaddress + today.toString());
                     const tokenId = this.web3.utils.hexToNumber(tokenIdHex);
                     //Transaction
                     await this.contract.methods.endQuest(userAddress, questIdHash, tokenId).send({
@@ -378,7 +379,8 @@ class Quests {
         //---------------------------------------
 
         try {
-            const tokenIdHex = this.web3.utils.soliditySha3(quest.name + userAddress + quest.companyaddress);
+            const today = new Date();
+            const tokenIdHex = this.web3.utils.soliditySha3(quest.name + userAddress + quest.companyaddress + today.toString());
             const tokenId = this.web3.utils.hexToNumber(tokenIdHex);
             // Generate the image
             //NFT path

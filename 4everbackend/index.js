@@ -122,6 +122,19 @@ app.post('/api/handle-nft', (req, res) => {
     nftsHandler.handleNFTs(req, res);
 });
 
+//CesareDev: Buy a NFT
+app.post('/api/buy-nft', (req, res) => {
+    market.buyNFT(req, res);
+});
+
+app.post('/api/sell-nft', (req, res) => {
+    market.buyNFT(req, res);
+});
+
+app.post('/api/unsell-nft', (req, res) => {
+    market.unsellNFT(req, res);
+});
+
 //Andrea: Get the images from the NFTs folder
 var mime = { png: 'image/png' };
 
