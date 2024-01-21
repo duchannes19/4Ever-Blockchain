@@ -4,9 +4,10 @@ class Market {
     // Constructor
     //---------------------------------------
 
-    constructor(web3, contract) {
+    constructor(web3, contract, socket) {
         this.web3 = web3;
         this.contract = contract;
+        this.socket = socket;
     }
 
     //---------------------------------------
@@ -121,19 +122,104 @@ class Market {
         };
     };
 
+    async getNFTs(req, res) {
+        const address = req.query.address;
+        try {
+            // Andrea: Check on the smart contract
+            const nftsCheck = await this.contract.methods.getNFTs(address).call();
+            //CesareDev: TODO parse the return tuple from the contract
+
+            // Andrea: remap the NFTs to include the wanted properties
+            const nftsData = nftsCheck.map(nft => {
+                // Andrea: remap the URL to get the correct path
+                const url = '/NFTs//' + nft.url.split('\\').slice(-1)[0];
+                const rarity = this.convertRarityToString(nft.rarity);
+
+                return {
+                    id: nft.id.toString(),
+                    name: nft.name,
+                    image: url,
+                    owner: nft.owner,
+                    company: nft.company,
+                    rarity: rarity,
+                    isForSale: nft.onSale,
+                }
+            });
+
+            res.status(200).send(JSON.stringify({
+                success: true,
+                message: 'NFTs retrieved',
+                nfts: nftsData,
+                status: nftsData.onSale ? 'On Sale' : 'Not On Sale',
+            }));
+        } catch (error) {
+            console.log(error);
+            res.status(500).send({
+                success: false,
+                message: error.message
+            });
+        };
+    };
+
     //---------------------------------------
     // Buying and selling (TODO)
     //---------------------------------------
+
     async buyNFT(req, res) {
-        const { sellerAddress, buyerAddress, tokenId } = req.body;
+        const { buyerAddress, tokenId } = req.body;
+        const tokenIdBigInt = this.web3.utils.toBigInt(tokenId);
+        const gasPrice = this.web3.utils.toWei('20', 'gwei');
+        const gasLimit = 6721975;
+        //CesareDev: For now the NFT value is fixed to 2 ether 
+        const NFTvalue = this.web3.utils.toWei('2', 'ether');
+        try {
+            await this.contract.methods.buyNFT(tokenIdBigInt).send({
+                value: NFTvalue,
+                from: buyerAddress,
+                gasPrice,
+                gasLimit
+            });
+            console.log('[Market]: ' + buyerAddress + ' bought ' + tokenId);
+        }
+        catch (err) {
+            console.log(err);
+        }
     }
 
     async sellNFT(req, res) {
         const { userAddress, tokenId } = req.body;
+        const tokenIdBigInt = this.web3.utils.toBigInt(tokenId);
+        const gasPrice = this.web3.utils.toWei('20', 'gwei');
+        const gasLimit = 6721975;
+        try {
+            await this.contract.methods.sellNFT(tokenIdBigInt).send({
+                from: userAddress,
+                gasPrice,
+                gasLimit
+            });
+            console.log('[Market]: ' + userAddress + ' puts up for sale ' + tokenId);
+        }
+        catch (err) {
+            console.log(err);
+        }
     }
 
     async unsellNFT(req, res) {
         const { userAddress, tokenId } = req.body;
+        const tokenIdBigInt = this.web3.utils.toBigInt(tokenId);
+        const gasPrice = this.web3.utils.toWei('20', 'gwei');
+        const gasLimit = 6721975;
+        try {
+            await this.contract.methods.unsellNFT(tokenIdBigInt).send({
+                from: userAddress,
+                gasPrice,
+                gasLimit
+            });
+            console.log('[Market]: ' + userAddress + ' removes for sale ' + tokenId);
+        }
+        catch (err) {
+            console.log(err);
+        }
     }
 }
 

@@ -8,12 +8,12 @@ class Quests {
     // Constructor
     //---------------------------------------
 
-    constructor(web3, contract, database, companies, socket) {
+    constructor(web3, contract, socket, database, companies) {
         this.web3 = web3;
         this.contract = contract;
+        this.socket = socket;
         this.database = database;
         this.companies = companies;
-        this.socket = socket;
     }
 
     //---------------------------------------

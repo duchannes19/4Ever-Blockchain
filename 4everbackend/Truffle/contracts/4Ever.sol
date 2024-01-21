@@ -136,13 +136,13 @@ contract FourEver {
         }
     }
 
-    function buyNFT(uint256 tokenId) public {
+    function buyNFT(uint256 tokenId) public payable {
         require(member[msg.sender].isMember);
-        address oldOwner;
+        address payable oldOwner;
         //Remove the nft from the market
         for (uint256 i = 0; i < availableNFTs.length; i++) {
             if (availableNFTs[i].id == tokenId) {
-                oldOwner = availableNFTs[i].owner;
+                oldOwner = payable(availableNFTs[i].owner);
                 if (availableNFTs.length > 1) {
                     availableNFTs[i] = availableNFTs[availableNFTs.length - 1];
                     availableNFTs.pop();
@@ -182,6 +182,8 @@ contract FourEver {
                 member[oldOwner].nfts.pop();
             }
         }
+        //Do the payment
+        oldOwner.transfer(msg.value);
     }
 
     //----------------------------------------------
@@ -250,7 +252,7 @@ contract FourEver {
     // NFT
     //----------------------------------------------
 
-    function getNFTsByOwner(address owner) public view returns (NFT[] memory) {
+    function getNFTs(address owner) public view returns (NFT[] memory) {
         return member[owner].nfts;
     }
 

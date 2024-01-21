@@ -13,31 +13,12 @@ const { Socket } = require('./src/services/Socket');
 const { Market } = require('./src/services/Market');
 const { Quests } = require('./src/services/Quests');
 const { AsyncNedb } = require('nedb-async')
-const { NFTsHandler } = require('./src/services/NFTsHandler');
 const FourEverABI = require('./Truffle/build/contracts/FourEver.json').abi;
 var dir = path.join(__dirname, '');
-
-//Connect to Ganache
-const web3 = new Web3(process.env.GANACHE);
-
-//Contract instance
-const fourEverContract = new web3.eth.Contract(FourEverABI, process.env.MARKETADDR);
 
 //Create database
 var questsDatabase = new AsyncNedb({ filename: path.join(__dirname, '/database/quests.db'), autoload: true });
 var companiesDatabase = new AsyncNedb({ filename: path.join(__dirname, '/database/companies.db'), autoload: true });
-
-//Market interface
-const market = new Market(web3, fourEverContract);
-
-// Test the connection
-web3.eth.getBlockNumber()
-    .then(blockNumber => {
-        console.log('Connected to Ganache. Current block number:', blockNumber);
-    })
-    .catch(error => {
-        console.error('Error connecting to Ganache:', error);
-    });
 
 //Create express app
 const app = express();
@@ -48,17 +29,32 @@ app.use(cors());
 const server = http.createServer(app);
 const socket = new Socket(server);
 
+//Connect to Ganache
+const web3 = new Web3(process.env.GANACHE);
+
+// Test the connection
+web3.eth.getBlockNumber()
+    .then(blockNumber => {
+        console.log('[Ganache]: Connected to Ganache, block number: ' + blockNumber);
+    })
+    .catch(error => {
+        console.log(error);
+    });
+
 //CesareDev: Middleware to pass web3 to all routes
 app.use((req, res, next) => {
     req.web3 = web3;
     next();
 });
 
-// Quests interface
-const quests = new Quests(web3, fourEverContract, questsDatabase, companiesDatabase, socket);
+//Contract instance
+const fourEverContract = new web3.eth.Contract(FourEverABI, process.env.MARKETADDR);
 
-// NFTs interface
-const nftsHandler = new NFTsHandler(web3, fourEverContract);
+//Market interface
+const market = new Market(web3, fourEverContract, socket);
+
+// Quests interface
+const quests = new Quests(web3, fourEverContract, socket, questsDatabase, companiesDatabase);
 
 //------------------------------------------
 // Market API
@@ -114,12 +110,7 @@ app.post('/api/simulate-victory', (req, res) => {
 // Andrea: Get the NFTs of a user
 app.get('/api/get-nfts', (req, res) => {
     // Andrea: Pass to the NFTsHandler the request and response
-    nftsHandler.getNFTsByOwner(req, res);
-});
-
-// Andrea: Handle NFTs onSale
-app.post('/api/handle-nft', (req, res) => {
-    nftsHandler.handleNFTs(req, res);
+    market.getNFTs(req, res);
 });
 
 //CesareDev: Buy a NFT
