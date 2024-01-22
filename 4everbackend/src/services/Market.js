@@ -151,7 +151,7 @@ class Market {
     };
 
     //---------------------------------------
-    // Buying and selling (TODO)
+    // Buying and selling
     //---------------------------------------
 
     async buyNFT(req, res) {
