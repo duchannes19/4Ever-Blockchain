@@ -51,7 +51,7 @@ app.use((req, res, next) => {
 const fourEverContract = new web3.eth.Contract(FourEverABI, process.env.MARKETADDR);
 
 //Market interface
-const market = new Market(web3, fourEverContract, socket);
+const market = new Market(web3, fourEverContract);
 
 // Quests interface
 const quests = new Quests(web3, fourEverContract, socket, questsDatabase, companiesDatabase);
@@ -67,6 +67,29 @@ app.post('/api/join-marketplace', (req, res) => {
 
 app.get('/api/get-merchants', (req, res) => {
     market.getMerchants(req, res);
+});
+
+//------------------------------------------
+// NFTs API
+//------------------------------------------
+
+// Andrea: Get the NFTs of a user
+app.get('/api/get-nfts', (req, res) => {
+    // Andrea: Pass to the NFTsHandler the request and response
+    market.getNFTs(req, res);
+});
+
+//CesareDev: Buy a NFT
+app.post('/api/buy-nft', (req, res) => {
+    market.buyNFT(req, res);
+});
+
+app.post('/api/sell-nft', (req, res) => {
+    market.buyNFT(req, res);
+});
+
+app.post('/api/unsell-nft', (req, res) => {
+    market.unsellNFT(req, res);
 });
 
 //------------------------------------------
@@ -101,29 +124,6 @@ app.get('/api/get-quests', (req, res) => {
 // Andrea: DEBUG -> Simulate the victory by forcefully set a winner
 app.post('/api/simulate-victory', (req, res) => {
     quests.registerVictory(req, res);
-});
-
-//------------------------------------------
-// NFTs API
-//------------------------------------------
-
-// Andrea: Get the NFTs of a user
-app.get('/api/get-nfts', (req, res) => {
-    // Andrea: Pass to the NFTsHandler the request and response
-    market.getNFTs(req, res);
-});
-
-//CesareDev: Buy a NFT
-app.post('/api/buy-nft', (req, res) => {
-    market.buyNFT(req, res);
-});
-
-app.post('/api/sell-nft', (req, res) => {
-    market.buyNFT(req, res);
-});
-
-app.post('/api/unsell-nft', (req, res) => {
-    market.unsellNFT(req, res);
 });
 
 //Andrea: Get the images from the NFTs folder

@@ -4,10 +4,9 @@ class Market {
     // Constructor
     //---------------------------------------
 
-    constructor(web3, contract, socket) {
+    constructor(web3, contract) {
         this.web3 = web3;
         this.contract = contract;
-        this.socket = socket;
     }
 
     //---------------------------------------
@@ -30,6 +29,56 @@ class Market {
                 return 'Unknown Rarity';
         }
     };
+
+    async calculateMerchants() {
+        const allNFTs = await this.contract.methods.getSellNFTs().call();
+
+        //Andrea: remap the nfts to create the correct merchants structure
+
+        const merchants = [];
+        allNFTs.forEach(item => {
+            const address = item.owner;
+            const rarity = this.convertRarityToString(item.rarity);
+            const id = item.id.toString();
+            const url = '/NFTs//' + item.url.split('\\').slice(-1)[0];
+            const nfts = { name: item.name, image: url, rarity: rarity, id: id, owner: address };
+
+            // Check if address already exists in merchants array
+            const existingMerchant = merchants.find(merchant => merchant.address === address);
+            if (existingMerchant) {
+                existingMerchant.items.push(nfts); // Add nfts to existing merchant
+            } else {
+                merchants.push({ address, items: [nfts] }); // Create new merchant entry
+            }
+        });
+
+        return merchants;
+    }
+
+    async calculateNFTs(address) {
+        // Andrea: Check on the smart contract
+        const nftsCheck = await this.contract.methods.getNFTs(address).call();
+        //CesareDev: TODO parse the return tuple from the contract
+
+        // Andrea: remap the NFTs to include the wanted properties
+        const nftsData = nftsCheck.map(nft => {
+            // Andrea: remap the URL to get the correct path
+            const url = '/NFTs//' + nft.url.split('\\').slice(-1)[0];
+            const rarity = this.convertRarityToString(nft.rarity);
+
+            return {
+                id: nft.id.toString(),
+                name: nft.name,
+                image: url,
+                owner: nft.owner,
+                company: nft.company,
+                rarity: rarity,
+                isForSale: nft.onSale,
+            }
+        });
+
+        return nftsData;
+    }
 
     //---------------------------------------
     // Market
@@ -90,27 +139,7 @@ class Market {
 
     async getMerchants(req, res) {
         try {
-            const allNFTs = await this.contract.methods.getSellNFTs().call();
-
-            //Andrea: remap the nfts to create the correct merchants structure
-
-            const merchants = [];
-            allNFTs.forEach(item => {
-                const address = item.owner;
-                const rarity = this.convertRarityToString(item.rarity);
-                const id = item.id.toString();
-                const url = '/NFTs//' + item.url.split('\\').slice(-1)[0];
-                const nfts = { name: item.name, image: url, rarity: rarity, id: id, owner: address };
-
-                // Check if address already exists in merchants array
-                const existingMerchant = merchants.find(merchant => merchant.address === address);
-                if (existingMerchant) {
-                    existingMerchant.items.push(nfts); // Add nfts to existing merchant
-                } else {
-                    merchants.push({ address, items: [nfts] }); // Create new merchant entry
-                }
-            });
-
+            const merchants = this.calculateMerchants();
             res.status(200).send(JSON.stringify({
                 success: true,
                 message: 'Merchants retrieved',
@@ -125,32 +154,11 @@ class Market {
     async getNFTs(req, res) {
         const address = req.query.address;
         try {
-            // Andrea: Check on the smart contract
-            const nftsCheck = await this.contract.methods.getNFTs(address).call();
-            //CesareDev: TODO parse the return tuple from the contract
-
-            // Andrea: remap the NFTs to include the wanted properties
-            const nftsData = nftsCheck.map(nft => {
-                // Andrea: remap the URL to get the correct path
-                const url = '/NFTs//' + nft.url.split('\\').slice(-1)[0];
-                const rarity = this.convertRarityToString(nft.rarity);
-
-                return {
-                    id: nft.id.toString(),
-                    name: nft.name,
-                    image: url,
-                    owner: nft.owner,
-                    company: nft.company,
-                    rarity: rarity,
-                    isForSale: nft.onSale,
-                }
-            });
-
+            const nftsData = this.calculateNFTs(address);
             res.status(200).send(JSON.stringify({
                 success: true,
                 message: 'NFTs retrieved',
                 nfts: nftsData,
-                status: nftsData.onSale ? 'On Sale' : 'Not On Sale',
             }));
         } catch (error) {
             console.log(error);
@@ -180,9 +188,20 @@ class Market {
                 gasLimit
             });
             console.log('[Market]: ' + buyerAddress + ' bought ' + tokenId);
+            //CesareDev: When buy something we only need to update the merchants
+            const merchants = this.calculateMerchants();
+            res.status(200).send(JSON.stringify({
+                success: true,
+                message: 'Updated merchants',
+                merchants: merchants,
+            }));
         }
         catch (err) {
             console.log(err);
+            res.status(500).send({
+                status: false,
+                error: err.message
+            });
         }
     }
 
@@ -198,9 +217,20 @@ class Market {
                 gasLimit
             });
             console.log('[Market]: ' + userAddress + ' puts up for sale ' + tokenId);
+            //CesareDev: When sell something we only need to update the nfts
+            const nfts = this.calculateNFTs(userAddress);
+            res.status(200).send(JSON.stringify({
+                success: true,
+                message: 'Updated NFTs',
+                nfts: nfts,
+            }));
         }
         catch (err) {
             console.log(err);
+            res.status(500).send({
+                status: false,
+                error: err.message
+            });
         }
     }
 
@@ -216,9 +246,20 @@ class Market {
                 gasLimit
             });
             console.log('[Market]: ' + userAddress + ' removes for sale ' + tokenId);
+            //CesareDev: When unsell something we only need to update the nfts
+            const nfts = this.calculateNFTs(userAddress);
+            res.status(200).send(JSON.stringify({
+                success: true,
+                message: 'Updated NFTs',
+                nfts: nfts,
+            }));
         }
         catch (err) {
             console.log(err);
+            res.status(500).send({
+                status: false,
+                error: err.message
+            });
         }
     }
 }
