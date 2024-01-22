@@ -11,19 +11,26 @@ import {
     Button,
     Image,
     Box,
-    Text
+    Text,
+    Alert,
+    AlertIcon
 } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
 
+import axios from 'axios';
+
+import Notify from './Notify';
 import MerchIcon from '/img/merchant-icon.png';
 
 // Andrea: NB! Items images are placeholders for now, it should be replaced by the URL of the actual NFTs
 
-export default function MarketModal({ isOpen, onClose, selectedMerchant }) {
+export default function MarketModal({ isOpen, onClose, selectedMerchant, setSelectedMerchant, setItems }) {
 
     const [switchToDescription, setSwitch] = useState(false);
     const [delay, setDelay] = useState(false);
     const [selectedItem, setSelectedItem] = useState({});
+    const [isLoading, setIsLoading] = useState(false);
+    const isDisabled = selectedMerchant.address === localStorage.getItem('accounts');
 
     const colorMode = 'dark';
 
@@ -53,7 +60,7 @@ export default function MarketModal({ isOpen, onClose, selectedMerchant }) {
         setTimeout(() => {
             setSwitch(true);
         }, 500);
-    }
+    };
 
     const handleBack = () => {
         setDelay(false);
@@ -61,14 +68,41 @@ export default function MarketModal({ isOpen, onClose, selectedMerchant }) {
             setSwitch(false);
             setSelectedItem({});
         }, 500);
-    }
+    };
 
     const handleOnClose = () => {
         setDelay(false);
         setSwitch(false);
         setSelectedItem({});
         onClose();
-    }
+    };
+
+    const handleBuy = async () => {
+        setIsLoading(true);
+        try {
+            const response = await axios.post('http://localhost:3000/api/buy-nft', {
+                buyerAddress: localStorage.getItem('accounts'),
+                tokenId: selectedItem.id
+            });
+            if (response.data.success) {
+                console.log(response.data.message);
+                Notify('success', 'You have bought the NFT!');
+                setItems(response.data.merchants);
+                // Andrea Update the selected merchant items
+                setSelectedMerchant(response.data.merchants.find(merchant => merchant.address === selectedMerchant.address));
+                handleBack();
+            }
+            else {
+                console.log(response.data.message);
+                Notify('error', response.data.message);
+            }
+        } catch (error) {
+            console.error(error);
+            Notify('error', error.message);
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
     return (
         <>
@@ -127,13 +161,29 @@ export default function MarketModal({ isOpen, onClose, selectedMerchant }) {
                                         </Text>
                                     </Box>
                                 </Box>
+                                <Alert status='warning' justifyContent={'center'} padding={'0'} borderRadius={'10px'} marginTop={'1rem'}>
+                                    <AlertIcon />
+                                    <Text fontFamily='mephistoregular' fontSize='1rem' color='black' marginBottom='2rem' marginTop='2rem' textAlign='center'>The cost is fixed and is 2 ETH.</Text>
+                                </Alert>
                             </motion.div>
                         )}
 
                     </ModalBody>
 
                     <ModalFooter>
-                        {switchToDescription && <Button fontFamily={'mephistoregular'} colorScheme='green' mr={2}>Propose to Buy</Button>}
+                        {switchToDescription && (
+                            <Button
+                                fontFamily={'mephistoregular'}
+                                colorScheme='green'
+                                mr={2}
+                                disabled={isDisabled}
+                                style={{ pointerEvents: isDisabled ? 'none' : 'auto', opacity: isDisabled ? 0.5 : 1 }}
+                                onClick={handleBuy}
+                                isLoading={isLoading}
+                            >
+                                Buy
+                            </Button>
+                        )}
                         <Button colorScheme='gray' mr={3} onClick={handleOnClose}>
                             Close
                         </Button>

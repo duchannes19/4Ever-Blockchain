@@ -91,18 +91,8 @@ class Market {
             if (verifyMembership) {
                 console.log('[Market]:' + userAddress + ' already a member');
 
-                // Get the user's NFTs
-                let nfts = await this.contract.methods.getNFTsByOwner(userAddress).call();
-
-                if (nfts.length === 0) {
-                    nfts = ['None'];
-                }
-
-                console.log('NFTs:', nfts.map(nft => nft.toString()));
-
                 res.status(200).send({
                     success: true,
-                    nfts: nfts.map(nft => nft.toString()),
                     message: 'Welcome Back!'
                 });
                 return;
@@ -116,18 +106,9 @@ class Market {
             });
             console.log('[Market]: \x1b[32mJoin\x1b[0m user: ' + userAddress);
 
-            // Get the user's NFTs
-            // Andrea: still don't know if this is the correct way to get an NFT
-            let nfts = await this.contract.methods.getNFTsByOwner(userAddress).call();
-
-            if (nfts.length === 0) {
-                nfts = ['None'];
-            }
-
             res.status(200).send({
                 success: true,
                 transactionHash: transaction.transactionHash,
-                nfts: nfts.map(nft => nft.toString()),
                 message: 'Joined!'
             });
 
@@ -139,7 +120,7 @@ class Market {
 
     async getMerchants(req, res) {
         try {
-            const merchants = this.calculateMerchants();
+            const merchants = await this.calculateMerchants();
             res.status(200).send(JSON.stringify({
                 success: true,
                 message: 'Merchants retrieved',
@@ -154,7 +135,7 @@ class Market {
     async getNFTs(req, res) {
         const address = req.query.address;
         try {
-            const nftsData = this.calculateNFTs(address);
+            const nftsData = await this.calculateNFTs(address);
             res.status(200).send(JSON.stringify({
                 success: true,
                 message: 'NFTs retrieved',
@@ -189,7 +170,7 @@ class Market {
             });
             console.log('[Market]: ' + buyerAddress + ' bought ' + tokenId);
             //CesareDev: When buy something we only need to update the merchants
-            const merchants = this.calculateMerchants();
+            const merchants = await this.calculateMerchants();
             res.status(200).send(JSON.stringify({
                 success: true,
                 message: 'Updated merchants',
@@ -199,7 +180,7 @@ class Market {
         catch (err) {
             console.log(err);
             res.status(500).send({
-                status: false,
+                success: false,
                 error: err.message
             });
         }
@@ -218,7 +199,7 @@ class Market {
             });
             console.log('[Market]: ' + userAddress + ' puts up for sale ' + tokenId);
             //CesareDev: When sell something we only need to update the nfts
-            const nfts = this.calculateNFTs(userAddress);
+            const nfts = await this.calculateNFTs(userAddress);
             res.status(200).send(JSON.stringify({
                 success: true,
                 message: 'Updated NFTs',
@@ -228,7 +209,7 @@ class Market {
         catch (err) {
             console.log(err);
             res.status(500).send({
-                status: false,
+                success: false,
                 error: err.message
             });
         }
@@ -247,7 +228,7 @@ class Market {
             });
             console.log('[Market]: ' + userAddress + ' removes for sale ' + tokenId);
             //CesareDev: When unsell something we only need to update the nfts
-            const nfts = this.calculateNFTs(userAddress);
+            const nfts = await this.calculateNFTs(userAddress);
             res.status(200).send(JSON.stringify({
                 success: true,
                 message: 'Updated NFTs',
@@ -257,7 +238,7 @@ class Market {
         catch (err) {
             console.log(err);
             res.status(500).send({
-                status: false,
+                success: false,
                 error: err.message
             });
         }

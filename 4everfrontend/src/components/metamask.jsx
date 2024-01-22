@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Box, Text } from '@chakra-ui/react';
+import { toChecksumAddress } from 'web3-utils';
 import Web3 from 'web3';
 
 export default function ConnectToMetaMask({ setMetaMask, setIsConnected, setStep1 }) {
@@ -28,12 +29,14 @@ export default function ConnectToMetaMask({ setMetaMask, setIsConnected, setStep
                                 method: 'eth_accounts',
                             });
 
+                            const checksumAddress = toChecksumAddress(accounts[0]);
+
                             // Get the balance of the connected account
-                            const balance = await web3.eth.getBalance(accounts[0]);
+                            const balance = await web3.eth.getBalance(checksumAddress);
 
                             // Put content on localstorage
                             localStorage.setItem('connected', true);
-                            localStorage.setItem('accounts', accounts[0]);
+                            localStorage.setItem('accounts', checksumAddress);
                             localStorage.setItem('balance', balance);
 
                             document.body.style.height = "auto";

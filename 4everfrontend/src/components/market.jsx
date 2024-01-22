@@ -66,7 +66,7 @@ export default function Market() {
                     )
                 ))}
             </Box>
-            {selectedMerchant && <MarketModal selectedMerchant={selectedMerchant} isOpen={isOpen} onClose={onClose} />}
+            {selectedMerchant && <MarketModal setItems={setItems} selectedMerchant={selectedMerchant} setSelectedMerchant={setSelectedMerchant} isOpen={isOpen} onClose={onClose} />}
         </Box>
     )
 };

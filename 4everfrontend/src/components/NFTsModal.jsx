@@ -69,17 +69,17 @@ const MyNFTs = ({ isOpen, onClose }) => {
 
     const handleNFTSale = async () => {
         try {
-            const response = await axios.post('http://localhost:3000/api/handle-nft', {
-                address: selectedNFT.owner,
-                tokenID: selectedNFT.id,
-                status: selectedNFT.isForSale
+            const url = selectedNFT.isForSale ? 'unsell-nft' : 'sell-nft';
+            const response = await axios.post(`http://localhost:3000/api/${url}`, {
+                userAddress: selectedNFT.owner,
+                tokenId: selectedNFT.id,
             });
             if (response.data.success) {
                 console.log(response.data.message);
                 setNFTs(response.data.nfts);
                 // Update selectedNFT.isForSale
-                setSelectedNFT({ ...selectedNFT, isForSale: response.data.status });
-                Notify('success', `NFT is now ${response.data.status ? '' : 'not '}on sale!`);
+                setSelectedNFT({ ...selectedNFT, isForSale: !selectedNFT.isForSale });
+                Notify('success', `NFT is now ${!selectedNFT.isForSale ? '' : 'not '}on sale!`);
             } else {
                 console.log(response.data.message);
                 Notify('error', response.data.message);

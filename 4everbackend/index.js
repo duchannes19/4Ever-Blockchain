@@ -85,7 +85,7 @@ app.post('/api/buy-nft', (req, res) => {
 });
 
 app.post('/api/sell-nft', (req, res) => {
-    market.buyNFT(req, res);
+    market.sellNFT(req, res);
 });
 
 app.post('/api/unsell-nft', (req, res) => {
