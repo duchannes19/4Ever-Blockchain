@@ -1,5 +1,6 @@
 import React from 'react';
 import axios from 'axios';
+import Web3 from 'web3';
 
 import {
     Modal,
@@ -87,6 +88,7 @@ export default function QuestsModal({ isOpen, onClose, selectedQuest }) {
 
     const handleVictory = async () => {
         // Simulate a call to the backend that set the winner of the quest
+        const web3 = new Web3(window.ethereum);
         setSimulateVictory(true);
         setIsSubmitting(true);
         try {
@@ -97,6 +99,13 @@ export default function QuestsModal({ isOpen, onClose, selectedQuest }) {
             if (response.data.success) {
                 console.log(response.data.message);
                 Notify('success', response.data.message);
+                // Andrea: Update local storage balance in eth
+                setTimeout(async () => {
+                    console.log('Updating balance');
+                    const balance = await web3.eth.getBalance(localStorage.getItem('accounts'));
+                    const balanceInEther = web3.utils.fromWei(balance, 'ether');
+                    localStorage.setItem('balance', balanceInEther);
+                }, 5000);
             }
             else {
                 console.log(response.data.message);
@@ -129,8 +138,8 @@ export default function QuestsModal({ isOpen, onClose, selectedQuest }) {
                                 <Box className='merchant items' style={{ maxHeight: '80%' }}>
                                     <Box bg='#333232' style={{ borderRadius: '10px' }}>
                                         <Text fontFamily='mephistoregular' fontSize='2.5rem' color='white' marginBottom='2rem' marginTop='2rem' textAlign='center'>Issued By</Text>
-                                        <Image src={'/img/'+selectedQuest.quest.sponsor+'.png'} alt='sponsor icon' className='sponsor icon' />
-                                        <hr style={{ margin: 'auto', marginTop:'2rem', marginBottom: '1rem', width: '80%' }} />
+                                        <Image src={'/img/' + selectedQuest.quest.sponsor + '.png'} alt='sponsor icon' className='sponsor icon' />
+                                        <hr style={{ margin: 'auto', marginTop: '2rem', marginBottom: '1rem', width: '80%' }} />
                                         <Text fontFamily='mephistoregular' fontSize='2.5rem' color='white' marginBottom='2rem' marginTop='2rem' textAlign='center'>Description</Text>
                                         <hr style={{ margin: 'auto', marginBottom: '1rem', width: '80%' }} />
                                         <Box className='merchant description'>

@@ -1,7 +1,9 @@
 import React from 'react';
+import Web3 from 'web3';
 
 import { useState, useEffect } from 'react';
 import { Avatar, Menu, MenuButton, MenuList, MenuItem, Box, Text, Image } from '@chakra-ui/react';
+import { FiRefreshCcw } from "react-icons/fi";
 
 import MyNFTs from './NFTsModal';
 
@@ -11,6 +13,7 @@ const User = ({ reset }) => {
 
     const [account, setAccount] = useState(localStorage.getItem('accounts'));
     const [balance, setBalance] = useState(localStorage.getItem('balance'));
+    const [refresh, setRefresh] = useState(false);
     const [NFTsModal, setNFTsModal] = useState(false);
 
     useEffect(() => {
@@ -26,6 +29,17 @@ const User = ({ reset }) => {
         };
     }, []);
 
+    const handleRefresh = async () => {
+        // Andrea: Get the balance of the connected account
+        setRefresh(true);
+        const web3 = new Web3(window.ethereum);
+        const balance = await web3.eth.getBalance(account);
+        setBalance(web3.utils.fromWei(balance, 'ether'));
+        setTimeout(() => {
+            setRefresh(false);
+        }, 1000);
+    };
+
     return (
         <Box>
             <Menu>
@@ -36,10 +50,11 @@ const User = ({ reset }) => {
                         <Text fontSize="sm">{account}</Text>
                     </MenuItem>
                     <hr style={{ width: '80%', margin: 'auto' }} />
-                    <MenuItem textAlign={'center'} flexDir={'column'} justifyContent={'center'} pointerEvents={'none'} _focus={{ outline: 'none' }}>
-                        <Image src="/img/balance_eth.png" alt="ether" className='menu-icon' />
-                        {balance}
-                    </MenuItem>
+                    <Box style={{ display: 'flex', textAlign: 'center', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', marginTop: '0.5rem', marginBottom: '0.5rem' }} _focus={{ outline: 'none' }}>
+                        <Image src="/img/balance_eth.png" alt="ether" className='menu-icon' style={{ pointerEvents: 'none' }} />
+                        <b>{balance}</b>
+                        <FiRefreshCcw className={`refresh_eth ${refresh ? 'clicked' : ''}`} onClick={handleRefresh} />
+                    </Box>
                     <hr style={{ width: '80%', margin: 'auto' }} />
                     <MenuItem textAlign={'center'}
                         justifyContent={'center'}

@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 import { Box, Text } from '@chakra-ui/react';
 import { toChecksumAddress } from 'web3-utils';
+import { TypeAnimation } from 'react-type-animation';
+
 import Web3 from 'web3';
 
-export default function ConnectToMetaMask({ setMetaMask, setIsConnected, setStep1 }) {
-    const [count, setCount] = useState(0);
-    const [awaitingMetaMask, setAwaitingMetaMask] = useState('Awaiting');
+export default function ConnectToMetaMask({ setMetaMask, setIsConnected, setStep1, setMetaMask2, option }) {
 
     useEffect(() => {
         const connectToMetaMask = async () => {
@@ -17,23 +17,8 @@ export default function ConnectToMetaMask({ setMetaMask, setIsConnected, setStep
                     // Andrea: Modern dapp browsers...
                     if (window.ethereum) {
                         try {
-
-                            // Andrea: Check the network is Ganache local
-                            
                             const web3 = new Web3(window.ethereum);
-                            /*
-                            const network = await web3.eth.net.getNetworkType();
-                            console.log('Network:', network);
-                            if (network !== 'private') {
-                                alert('Please connect to the Ganache network!');
-                                localStorage.clear();
-                                setIsConnected(false);
-                                setStep1(false);
-                                setMetaMask(false);
-                                break; // Andrea: Break out of the loop if the network is not Ganache
-                            }
-                            */
-                            
+
                             // Andrea: Request account access
                             await window.ethereum.request({ method: 'eth_requestAccounts' });
 
@@ -60,8 +45,13 @@ export default function ConnectToMetaMask({ setMetaMask, setIsConnected, setStep
                             document.body.style.height = "auto";
 
                             setIsConnected(true);
-                            setStep1(true);
-                            setMetaMask(false);
+                            if (option === 0) {
+                                setMetaMask(false);
+                                setStep1(true);
+                            }
+                            else {
+                                setMetaMask2(false);
+                            }
 
                             isConnected = true; // Andrea: Set isConnected to true to break out of the loop
                         } catch (error) {
@@ -96,24 +86,54 @@ export default function ConnectToMetaMask({ setMetaMask, setIsConnected, setStep
         connectToMetaMask();
     }, []);
 
-    setInterval(() => {
-        if (count < 3) {
-            setCount(count + 1);
-            setAwaitingMetaMask(awaitingMetaMask + '.');
-        } else {
-            setCount(0);
-            setAwaitingMetaMask('Awaiting');
-        }
-    }, 1000);
-
     return (
-        <Box className='metamask'>
+        <Box className='metamask'
+            position="fixed"
+            top={0}
+            left={0}
+            right={0}
+            bottom={0}
+            bg="transparent"
+            backdropFilter="blur(10px)"
+            zIndex={9999}
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+        >
             <Box className='metamask__content'>
-                <Text className='metamask__content__title'>
-                    {awaitingMetaMask}
+                <TypeAnimation
+                    sequence={[
+                        // Same substring at the start will only be typed out once, initially
+                        'Awaiting',
+                        1000, // wait 1s before replacing "Mice" with "Hamsters"
+                        'Awaiting.',
+                        1000,
+                        'Awaiting..',
+                        1000,
+                        'Awaiting...',
+                        1000,
+                        'Awaiting..',
+                        1000,
+                        'Awaiting.',
+                        1000,
+                        'Awaiting'
+                    ]}
+                    wrapper="span"
+                    speed={50}
+                    cursor={false}
+                    repeat={Infinity}
+                    style={{ fontSize: '1.5em', display: 'inline-block', color: 'white', fontFamily: 'mephistoregular' }}
+                />
+                {option === 0 &&
+                    <Text className='metamask__content__subtitle'>
+                        Please make sure you have MetaMask installed.
+                    </Text>
+                }
+                <Text className='metamask__content__subtitle'>
+                    If you have MetaMask installed, please make sure it is unlocked.
                 </Text>
                 <Text className='metamask__content__subtitle'>
-                    Please make sure you have MetaMask installed.
+                    If it looks stuck, please refresh the page.
                 </Text>
             </Box>
         </Box>

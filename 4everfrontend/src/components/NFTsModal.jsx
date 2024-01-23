@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import Web3 from 'web3';
 
 import { motion } from 'framer-motion';
 import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalCloseButton, Image, Box, Button, Text, Alert, AlertIcon } from "@chakra-ui/react";
@@ -68,6 +69,7 @@ const MyNFTs = ({ isOpen, onClose }) => {
     }
 
     const handleNFTSale = async () => {
+        const web3 = new Web3(window.ethereum);
         try {
             const url = selectedNFT.isForSale ? 'unsell-nft' : 'sell-nft';
             const response = await axios.post(`http://localhost:3000/api/${url}`, {
@@ -80,6 +82,13 @@ const MyNFTs = ({ isOpen, onClose }) => {
                 // Andrea: Update selectedNFT.isForSale
                 setSelectedNFT({ ...selectedNFT, isForSale: !selectedNFT.isForSale });
                 Notify('success', `NFT is now ${!selectedNFT.isForSale ? '' : 'not '}on sale!`);
+                // Andrea: Update local storage balance in eth wait 10 seconds for the transaction to be mined
+                setTimeout(async () => {
+                    console.log('Updating balance');
+                    const balance = await web3.eth.getBalance(localStorage.getItem('accounts'));
+                    const balanceInEther = web3.utils.fromWei(balance, 'ether');
+                    localStorage.setItem('balance', balanceInEther);
+                }, 5000);
             } else {
                 console.log(response.data.message);
                 Notify('error', response.data.message);
@@ -125,7 +134,7 @@ const MyNFTs = ({ isOpen, onClose }) => {
                                 <Box className='nft description'>
                                     <Text fontFamily='mephistoregular' fontSize='2.5rem' color='white' marginBottom='2rem' marginTop='2rem' textAlign='center'>{selectedNFT.name}</Text>
                                     <hr style={{ margin: 'auto', marginBottom: '1rem', width: '80%' }} />
-                                    <Text fontFamily='mephistoregular' fontSize='1.5rem' color='white' marginBottom='2rem' marginTop='2rem' textAlign='center'>Description<br/>{selectedNFT.description}</Text>
+                                    <Text fontFamily='mephistoregular' fontSize='1.5rem' color='white' marginBottom='2rem' marginTop='2rem' textAlign='center'>Description<br />{selectedNFT.description}</Text>
                                     <hr style={{ margin: 'auto', marginBottom: '1rem', width: '80%' }} />
                                     <Text fontFamily='mephistoregular' fontSize='1.5rem' color='white' marginBottom='2rem' marginTop='2rem' textAlign='center'>Rarity: {selectedNFT.rarity}</Text>
                                     <hr style={{ margin: 'auto', marginBottom: '1rem', width: '80%' }} />

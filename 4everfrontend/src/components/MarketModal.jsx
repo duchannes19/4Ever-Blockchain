@@ -18,6 +18,7 @@ import {
 import { motion } from 'framer-motion';
 
 import axios from 'axios';
+import Web3 from 'web3';
 
 import Notify from './Notify';
 import MerchIcon from '/img/merchant-icon.png';
@@ -76,6 +77,7 @@ export default function MarketModal({ isOpen, onClose, selectedMerchant, setSele
     };
 
     const handleBuy = async () => {
+        const web3 = new Web3(window.ethereum);
         setIsLoading(true);
         try {
             const response = await axios.post('http://localhost:3000/api/buy-nft', {
@@ -86,9 +88,16 @@ export default function MarketModal({ isOpen, onClose, selectedMerchant, setSele
                 console.log(response.data.message);
                 Notify('success', 'You have bought the NFT!');
                 setItems(response.data.merchants);
-                // Andrea Update the selected merchant items
+                // Andrea: Update the selected merchant items
                 setSelectedMerchant(response.data.merchants.find(merchant => merchant.address === selectedMerchant.address));
                 handleBack();
+                // Andrea: Update local storage balance in eth
+                setTimeout(async () => {
+                    console.log('Updating balance');
+                    const balance = await web3.eth.getBalance(localStorage.getItem('accounts'));
+                    const balanceInEther = web3.utils.fromWei(balance, 'ether');
+                    localStorage.setItem('balance', balanceInEther);
+                }, 5000);
             }
             else {
                 console.log(response.data.message);

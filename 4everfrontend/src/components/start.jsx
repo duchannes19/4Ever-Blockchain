@@ -17,6 +17,7 @@ import QuestsLogo from '/img/questslogo.png';
 
 export default function Start({ isConnected, setIsConnected, step1, setStep1, step2, setStep2 }) {
     const [metamask, setMetaMask] = useState(false);
+    const [metamask2, setMetaMask2] = useState(true); // Andrea: Second Check
     const [market, setMarket] = useState(false);
     const [quests, setQuests] = useState(false);
     const [fadeDelay, setFadeDelay] = useState(false);
@@ -32,7 +33,7 @@ export default function Start({ isConnected, setIsConnected, step1, setStep1, st
         };
         Helper();
     }, []);
-    
+
 
     const fadeInVariants = {
         hidden: { opacity: 0, y: 50 },
@@ -100,7 +101,7 @@ export default function Start({ isConnected, setIsConnected, step1, setStep1, st
                     Connected to MetaMask
                 </motion.div>
             }
-            {metamask && <ConnectToMetaMask setMetaMask={setMetaMask} setIsConnected={setIsConnected} setStep1={setStep1} />}
+            {metamask && <ConnectToMetaMask setMetaMask={setMetaMask} setIsConnected={setIsConnected} setStep1={setStep1} setMetaMask2={setMetaMask2}  option={0}/>}
             {step1 && !step2 && (
                 <>
                     <motion.div
@@ -119,6 +120,7 @@ export default function Start({ isConnected, setIsConnected, step1, setStep1, st
                 </>
             )}
             {(market || quests) && <Button className='backbutton' fontFamily={'mephistoregular'} zIndex={3} onClick={() => handleBack()}>Back</Button>}
+            {step2 && metamask2 && <ConnectToMetaMask setMetaMask={setMetaMask} setIsConnected={setIsConnected} setStep1={setStep1} setMetaMask2={setMetaMask2} option={1}/>}
             {step2 && (
                 <motion.div
                     initial="hidden"
@@ -127,7 +129,6 @@ export default function Start({ isConnected, setIsConnected, step1, setStep1, st
                     transition={{ delay: 1, duration: 0.5 }}
                     className="choice"
                 >
-
                     <Image src={MarketLogo} alt="Market"
                         onClick={() => { handleForth(); setMarket(true); setQuests(false); }}
                         className={`main-logo market ${market ? 'chosen' : ''}${quests ? 'notchosen' : ''} ${fadeDelay ? 'reposition' : ''}`} />
