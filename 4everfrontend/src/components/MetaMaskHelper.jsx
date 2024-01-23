@@ -29,12 +29,14 @@ const MetaMaskHelper = async (setIsConnected, setStep1, setStep2, setMarket, set
 
             // Andrea: Get the balance of the connected account
             const balance = await web3.eth.getBalance(checksumAddress);
+            // Convert balance to Ether
+            const balanceInEther = web3.utils.fromWei(balance, 'ether');
 
             // Andrea: Update local storage or perform actions based on the new account
             localStorage.clear();
             localStorage.setItem('connected', true);
             localStorage.setItem('accounts', checksumAddress);
-            localStorage.setItem('balance', balance);
+            localStorage.setItem('balance', balanceInEther);
 
             document.body.style.backgroundImage = 'url("/img/mainback.png")';
             document.body.style.height = "auto";

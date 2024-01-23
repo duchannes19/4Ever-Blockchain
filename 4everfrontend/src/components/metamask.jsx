@@ -49,10 +49,13 @@ export default function ConnectToMetaMask({ setMetaMask, setIsConnected, setStep
                             // Andrea: Get the balance of the connected account
                             const balance = await web3.eth.getBalance(checksumAddress);
 
+                            // Andrea: Convert balance to Ether
+                            const balanceInEther = web3.utils.fromWei(balance, 'ether');
+
                             // Andrea: Put content on localstorage
                             localStorage.setItem('connected', true);
                             localStorage.setItem('accounts', checksumAddress);
-                            localStorage.setItem('balance', balance);
+                            localStorage.setItem('balance', balanceInEther);
 
                             document.body.style.height = "auto";
 

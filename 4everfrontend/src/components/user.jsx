@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { useState, useEffect } from 'react';
-import { Avatar, Menu, MenuButton, MenuList, MenuItem, Box, Text } from '@chakra-ui/react';
+import { Avatar, Menu, MenuButton, MenuList, MenuItem, Box, Text, Image } from '@chakra-ui/react';
 
 import MyNFTs from './NFTsModal';
 
@@ -32,12 +32,13 @@ const User = ({ reset }) => {
                 <MenuButton as={Avatar} size="md" name={account} src={AvatarImg} style={{ cursor: 'pointer' }} />
                 <MenuList>
                     <MenuItem textAlign={'center'} flexDir={'column'} justifyContent={'center'} pointerEvents={'none'} _focus={{ outline: 'none' }}>
-                        <Text fontWeight="bold">User</Text>
+                        <Image src="/img/user.png" alt="ether" className='menu-icon' />
                         <Text fontSize="sm">{account}</Text>
                     </MenuItem>
                     <hr style={{ width: '80%', margin: 'auto' }} />
                     <MenuItem textAlign={'center'} flexDir={'column'} justifyContent={'center'} pointerEvents={'none'} _focus={{ outline: 'none' }}>
-                        <Text fontWeight="bold">Balance</Text><br />{balance}
+                        <Image src="/img/balance_eth.png" alt="ether" className='menu-icon' />
+                        {balance}
                     </MenuItem>
                     <hr style={{ width: '80%', margin: 'auto' }} />
                     <MenuItem textAlign={'center'}
