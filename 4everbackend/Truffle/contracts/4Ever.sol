@@ -31,6 +31,8 @@ contract FourEver {
         string name;
         //Rarity of the NFT
         Rarity rarity;
+        //Description of the NFT
+        string description; // -> Andrea: This is purely for the frontend display
         //Is the NFT on sale
         bool onSale;
     }
@@ -216,7 +218,8 @@ contract FourEver {
         uint256 questId,
         uint256 tokenId,
         string memory url,
-        string memory name
+        string memory name,
+        string memory description
     ) public {
         //msg.sender is the company
         quests[questId].ended = true;
@@ -230,6 +233,7 @@ contract FourEver {
                 url,
                 name,
                 calculateRarity(quests[questId].totalParticipants),
+                description,
                 false
             )
         );

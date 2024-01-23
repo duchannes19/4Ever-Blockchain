@@ -21,18 +21,18 @@ export default function Start({ isConnected, setIsConnected, step1, setStep1, st
     const [quests, setQuests] = useState(false);
     const [fadeDelay, setFadeDelay] = useState(false);
     const [fadeOutDelay, setFadeOutDelay] = useState(false);
-    const [useMetaMaskHelper, setUseMetaMaskHelper] = useState(false);
 
-    //Add useEffect to check if metamask is connected
     useEffect(() => {
-        const checkMetaMask = async () => {
-            if (isConnected) {
-                setUseMetaMaskHelper(true);
+        const Helper = async () => {
+            try {
+                await MetaMaskHelper(setIsConnected, setStep1, setStep2, setMarket, setQuests, setMetaMask);
+            } catch (error) {
+                console.error(error);
             }
-        }
-
-        checkMetaMask();
+        };
+        Helper();
     }, []);
+    
 
     const fadeInVariants = {
         hidden: { opacity: 0, y: 50 },
@@ -90,7 +90,6 @@ export default function Start({ isConnected, setIsConnected, step1, setStep1, st
                     <HelpModal />
                 </motion.div>
             }
-            {isConnected && useMetaMaskHelper && <MetaMaskHelper setIsConnected={setIsConnected} setStep1={setStep1} setUseMetaMaskHelper={setUseMetaMaskHelper} setMetaMask={setMetaMask} />}
             {isConnected && !step2 &&
                 <motion.div
                     initial="hidden"

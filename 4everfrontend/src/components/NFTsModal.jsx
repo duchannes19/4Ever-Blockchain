@@ -77,7 +77,7 @@ const MyNFTs = ({ isOpen, onClose }) => {
             if (response.data.success) {
                 console.log(response.data.message);
                 setNFTs(response.data.nfts);
-                // Update selectedNFT.isForSale
+                // Andrea: Update selectedNFT.isForSale
                 setSelectedNFT({ ...selectedNFT, isForSale: !selectedNFT.isForSale });
                 Notify('success', `NFT is now ${!selectedNFT.isForSale ? '' : 'not '}on sale!`);
             } else {
@@ -124,6 +124,8 @@ const MyNFTs = ({ isOpen, onClose }) => {
                             <Box bg='#333232' style={{ borderRadius: '10px' }}>
                                 <Box className='nft description'>
                                     <Text fontFamily='mephistoregular' fontSize='2.5rem' color='white' marginBottom='2rem' marginTop='2rem' textAlign='center'>{selectedNFT.name}</Text>
+                                    <hr style={{ margin: 'auto', marginBottom: '1rem', width: '80%' }} />
+                                    <Text fontFamily='mephistoregular' fontSize='1.5rem' color='white' marginBottom='2rem' marginTop='2rem' textAlign='center'>Description<br/>{selectedNFT.description}</Text>
                                     <hr style={{ margin: 'auto', marginBottom: '1rem', width: '80%' }} />
                                     <Text fontFamily='mephistoregular' fontSize='1.5rem' color='white' marginBottom='2rem' marginTop='2rem' textAlign='center'>Rarity: {selectedNFT.rarity}</Text>
                                     <hr style={{ margin: 'auto', marginBottom: '1rem', width: '80%' }} />

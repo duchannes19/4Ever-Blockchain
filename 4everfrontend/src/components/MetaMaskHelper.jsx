@@ -1,93 +1,62 @@
-import { useEffect } from 'react';
-import { Box } from '@chakra-ui/react';
 import { toChecksumAddress } from 'web3-utils';
 import Web3 from 'web3';
 
+const MetaMaskHelper = async (setIsConnected, setStep1, setStep2, setMarket, setQuests, setMetaMask) => {
 
-const MetaMaskHelper = ({ setIsConnected, setStep1, setUseMetaMaskHelper, setMetaMask }) => {
-    useEffect(() => {
-        let isMounted = true;
-
-        const connectToMetaMask = async () => {
-            try {
-                let isConnected = false;
-
-                while (!isConnected && isMounted) {
-                    if (window.ethereum) {
-                        try {
-                            await window.ethereum.request({ method: 'eth_requestAccounts' });
-                            const web3 = new Web3(window.ethereum);
-
-                            const accounts = await window.ethereum.request({
-                                method: 'eth_accounts',
-                            });
-
-                            const checksumAddress = toChecksumAddress(accounts[0]);
-
-                            // Get the balance of the connected account
-                            const balance = await web3.eth.getBalance(checksumAddress);
-
-                            // Put content on localstorage
-                            localStorage.setItem('connected', true);
-                            localStorage.setItem('accounts', checksumAddress);
-                            localStorage.setItem('balance', balance);
-
-                            document.body.style.height = 'auto';
-
-                            setIsConnected(true);
-                            setStep1(true);
-                            setMetaMask(false);
-
-                            isConnected = true;
-                        } catch (error) {
-                            console.error('Error connecting to MetaMask:', error.message);
-                            localStorage.clear();
-                            window.location.reload();
-                        }
-                    } else if (window.web3) {
-                        const web3 = new Web3(window.web3.currentProvider);
-                        console.log('Connected to MetaMask (legacy):', web3);
-
-                        isConnected = true;
-                    } else {
-                        alert('Please install MetaMask or use a dapp browser.');
-                        break;
-                    }
-
-                    await new Promise(resolve => setTimeout(resolve, 1000));
-                }
-            }
-            catch (error) {
+    // Andrea: Set up event listener for account changes
+    window.ethereum.on('accountsChanged', async (accounts) => {
+        try {
+            // Andrea: Check the network is Ganache local
+            const web3 = new Web3(window.ethereum);
+            const network = await web3.eth.net.getNetworkType();
+            console.log('Network:', network);
+            if (network !== 'private') {
+                alert('Please connect to the Ganache network!');
                 localStorage.clear();
-                window.location.reload();
+                setIsConnected(false);
+                setStep1(false);
+                setStep2(false);
+                setMarket(false);
+                setQuests(false);
+                setMetaMask(false);
+                return;
             }
-            finally {
-                if (isMounted) {
-                    setMetaMask(false);
-                }
-                setUseMetaMaskHelper(false);
-            }
-        };
+            
+            console.log('Checking Accounts...')
+            const checksumAddress = toChecksumAddress(accounts[0]);
 
-        connectToMetaMask();
+            // Andrea: Get the balance of the connected account
+            const balance = await web3.eth.getBalance(checksumAddress);
 
-        return () => {
-            isMounted = false;
-        };
-    }, [setIsConnected, setStep1, setMetaMask]);
+            // Andrea: Update local storage or perform actions based on the new account
+            localStorage.clear();
+            localStorage.setItem('connected', true);
+            localStorage.setItem('accounts', checksumAddress);
+            localStorage.setItem('balance', balance);
 
-    return (
-        <Box
-            position="fixed"
-            top={0}
-            left={0}
-            width="100vw"
-            height="100vh"
-            backgroundColor="rgba(0, 0, 0, 0.5)"
-            backdropFilter="blur(10px)"
-            zIndex={9999}
-        />
-    );
+            document.body.style.backgroundImage = 'url("/img/mainback.png")';
+            document.body.style.height = "auto";
+
+            setStep2(false);
+            setMarket(false);
+            setQuests(false);
+
+            setStep1(true);
+            setIsConnected(true);
+
+            console.log('Account changed:', accounts[0]);
+        } catch (error) {
+            console.log('Test');
+            localStorage.clear();
+            setIsConnected(false);
+            setStep1(false);
+            setStep2(false);
+            setMarket(false);
+            setQuests(false);
+            setMetaMask(false);
+            console.error(error);
+        }
+    });
 };
 
 export default MetaMaskHelper;

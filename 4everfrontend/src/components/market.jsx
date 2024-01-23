@@ -7,7 +7,7 @@ import { Box, Text, Image, useDisclosure } from "@chakra-ui/react";
 import MarketModal from './MarketModal';
 import Icon from '/img/merchant-icon.png';
 
-import DEBUG_MERCHANTS from '../DEBUG/merchants(DEBUG).json';
+//import DEBUG_MERCHANTS from '../DEBUG/merchants(DEBUG).json';
 
 export default function Market() {
     const [items, setItems] = useState([]);
@@ -58,8 +58,6 @@ export default function Market() {
                 gap='1rem'
                 marginBottom='2rem'
             >
-
-                {/* Andrea: These are the DEBUG items */}
                 {items.length > 0 && items.map((item, index) => (
                     item.items[0] && (
                         <Image key={index} src={Icon} className='quest' marginBottom='2rem' onClick={() => { handleModal(item.address, item.items) }} />

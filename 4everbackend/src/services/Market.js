@@ -74,6 +74,7 @@ class Market {
                 company: nft.company,
                 rarity: rarity,
                 isForSale: nft.onSale,
+                description: nft.description,
             }
         });
 

@@ -275,12 +275,7 @@ class Quests {
                     const today = new Date();
                     const tokenIdHex = this.web3.utils.soliditySha3(docs.name + winnerAddress + docs.companyaddress + today.toString());
                     const tokenId = this.web3.utils.hexToNumber(tokenIdHex);
-                    //Transaction
-                    await this.contract.methods.endQuest(userAddress, questIdHash, tokenId).send({
-                        from: docs.companyaddress,
-                        gasPrice,
-                        gasLimit
-                    });
+                    
                     console.log('[Quests]: ' + winnerAddress + ' won the quest ' + docs.name);
                     // Set the winner in the database
                     await this.database.asyncUpdate({ _id: docs._id }, { $set: { questEnded: true, winner: winnerAddress } });
@@ -290,7 +285,15 @@ class Quests {
                     // Generate the image
                     const { Generator } = require('./Generator');
                     const generator = new Generator();
-                    await generator.generateNew(winnerAddress, tokenId);
+                    const randomItem = await generator.generateNew(winnerAddress, tokenId);
+                    const nftPath = path.join(__dirname, '../../NFTs/' + tokenId + '.png');
+
+                    //Transaction
+                    await this.contract.methods.endQuest(userAddress, questIdHash, tokenId, nftPath, randomItem.name, randomItem.description).send({
+                        from: docs.companyaddress,
+                        gasPrice,
+                        gasLimit
+                    });
 
                     //Send the updated database via so
                     this.socket.sendDatabase(this.database);
@@ -390,7 +393,7 @@ class Quests {
             const generator = new Generator();
             const randomItem = generator.getRandomItem();
             //Register in the blockchain
-            await this.contract.methods.endQuest(userAddress, questIdHash, tokenId, nftPath, randomItem.name).send({
+            await this.contract.methods.endQuest(userAddress, questIdHash, tokenId, nftPath, randomItem.name, randomItem.description).send({
                 from: quest.companyaddress,
                 gasPrice,
                 gasLimit

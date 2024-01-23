@@ -1,7 +1,6 @@
 import React from 'react';
-import axios from 'axios';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Avatar, Menu, MenuButton, MenuList, MenuItem, Box, Text } from '@chakra-ui/react';
 
 import MyNFTs from './NFTsModal';
@@ -10,10 +9,22 @@ import AvatarImg from '/img/avatar.jpeg';
 
 const User = ({ reset }) => {
 
-    const account = localStorage.getItem('accounts');
-    const balance = localStorage.getItem('balance');
-
+    const [account, setAccount] = useState(localStorage.getItem('accounts'));
+    const [balance, setBalance] = useState(localStorage.getItem('balance'));
     const [NFTsModal, setNFTsModal] = useState(false);
+
+    useEffect(() => {
+        const handleStorageChange = () => {
+            setAccount(localStorage.getItem('accounts'));
+            setBalance(localStorage.getItem('balance'));
+        };
+
+        window.addEventListener('storage', handleStorageChange);
+
+        return () => {
+            window.removeEventListener('storage', handleStorageChange);
+        };
+    }, []);
 
     return (
         <Box>

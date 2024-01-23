@@ -22,8 +22,6 @@ import axios from 'axios';
 import Notify from './Notify';
 import MerchIcon from '/img/merchant-icon.png';
 
-// Andrea: NB! Items images are placeholders for now, it should be replaced by the URL of the actual NFTs
-
 export default function MarketModal({ isOpen, onClose, selectedMerchant, setSelectedMerchant, setItems }) {
 
     const [switchToDescription, setSwitch] = useState(false);
@@ -151,7 +149,7 @@ export default function MarketModal({ isOpen, onClose, selectedMerchant, setSele
                                         <Text fontFamily='mephistoregular' fontSize='2.5rem' color='white' marginBottom='2rem' marginTop='2rem' textAlign='center'>Description</Text>
                                         <hr style={{ margin: 'auto', marginBottom: '1rem', width: '80%' }} />
                                         <Box className='merchant description'>
-                                            <Text fontFamily='mephistoregular' fontSize='1.5rem' color='white' marginBottom='2rem' marginTop='2rem' textAlign='center'>Description Field</Text>
+                                            <Text fontFamily='mephistoregular' fontSize='1.5rem' color='white' marginBottom='2rem' marginTop='2rem' textAlign='center'>{selectedItem.description}</Text>
                                         </Box>
                                         <hr style={{ margin: 'auto', marginBottom: '1rem', width: '80%' }} />
                                         <Text fontFamily='mephistoregular' fontSize='2.5rem' color='white' marginBottom='2rem' marginTop='2rem' textAlign='center'>Rarity</Text>
