@@ -8,6 +8,7 @@ const MetaMaskHelper = async (setIsConnected, setStep1, setStep2, setMarket, set
         try {
             // Andrea: Check the network is Ganache local
             const web3 = new Web3(window.ethereum);
+            /*
             const network = await web3.eth.net.getNetworkType();
             console.log('Network:', network);
             if (network !== 'private') {
@@ -21,6 +22,7 @@ const MetaMaskHelper = async (setIsConnected, setStep1, setStep2, setMarket, set
                 setMetaMask(false);
                 return;
             }
+            */
             
             console.log('Checking Accounts...')
             const checksumAddress = toChecksumAddress(accounts[0]);

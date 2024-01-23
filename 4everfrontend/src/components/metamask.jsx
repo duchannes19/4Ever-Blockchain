@@ -19,7 +19,9 @@ export default function ConnectToMetaMask({ setMetaMask, setIsConnected, setStep
                         try {
 
                             // Andrea: Check the network is Ganache local
+                            
                             const web3 = new Web3(window.ethereum);
+                            /*
                             const network = await web3.eth.net.getNetworkType();
                             console.log('Network:', network);
                             if (network !== 'private') {
@@ -30,6 +32,7 @@ export default function ConnectToMetaMask({ setMetaMask, setIsConnected, setStep
                                 setMetaMask(false);
                                 break; // Andrea: Break out of the loop if the network is not Ganache
                             }
+                            */
                             
                             // Andrea: Request account access
                             await window.ethereum.request({ method: 'eth_requestAccounts' });
