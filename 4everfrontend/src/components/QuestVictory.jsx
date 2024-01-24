@@ -19,9 +19,8 @@ const QuestVictory = () => {
         >
             <TypeAnimation
                 sequence={[
-                    // Same substring at the start will only be typed out once, initially
                     'Easily storming through the castle',
-                    1000, // wait 1s before replacing "Mice" with "Hamsters"
+                    1000, 
                     'Defeating the guards',
                     1000,
                     'The dragon is no match for you',

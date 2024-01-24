@@ -4,6 +4,7 @@ import Web3 from 'web3';
 
 import { motion } from 'framer-motion';
 import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalCloseButton, Image, Box, Button, Text, Alert, AlertIcon } from "@chakra-ui/react";
+import { SpinnerCircular } from 'spinners-react';
 
 import Notify from './Notify';
 
@@ -12,13 +13,15 @@ const MyNFTs = ({ isOpen, onClose }) => {
     const account = localStorage.getItem('accounts');
     const colorMode = 'dark';
 
-    const [NFTs, setNFTs] = useState(null);
+    const [NFTs, setNFTs] = useState([]);
     const [showNFT, setShowNFT] = useState(false);
     const [selectedNFT, setSelectedNFT] = useState({});
+    const [isLoading, setIsLoading] = useState(false);
 
     // Andrea: To do: Add axios call to get user's NFTs from the backend
     useEffect(() => {
         if (account) {
+            setIsLoading(true);
             const getNFTs = async () => {
                 try {
                     const response = await axios.get(`http://localhost:3000/api/get-nfts/?address=${account}`);
@@ -32,7 +35,9 @@ const MyNFTs = ({ isOpen, onClose }) => {
                 } catch (error) {
                     console.error(error);
                     Notify('error', 'Failed to load NFTs');
-                }
+                } finally {
+                    setIsLoading(false);
+                };
             };
             getNFTs();
         }
@@ -107,23 +112,26 @@ const MyNFTs = ({ isOpen, onClose }) => {
                 <hr style={{ margin: 'auto', marginBottom: '2rem', width: '80%' }} />
                 <ModalCloseButton zIndex='99999' />
                 <ModalBody>
-                    {/* Andrea: To do: Add NFTs here */}
 
-                    {!NFTs &&
-                        <Box display="flex" justifyContent="center" alignItems="center" position='absolute'
-                            top='0' bottom='0' left='0' right='0'
-                        >
-                            <Text fontFamily='mephistoregular' fontSize='2rem' color='white' margin='auto' textAlign='center'>No NFTs Found</Text>
+                    {isLoading &&
+                        <Box display="flex" justifyContent="center" alignItems="center" position='absolute' top='0' bottom='0' left='0' right='0'>
+                            <SpinnerCircular enabled={isLoading} />
                         </Box>
                     }
 
                     <motion.div textAlign='center' mb='1rem' className='nfts-container' variants={showNFT ? fadeOutVariants : fadeInVariants} initial='hidden' animate='visible' exit='hidden'>
-                        {NFTs && NFTs.map((nft, index) => {
+                        {NFTs.length > 0 && !isLoading && NFTs.map((nft, index) => {
                             return (
                                 <Image key={index} src={'http://localhost:3000/' + nft.image} alt={nft.name} className='nft' onClick={() => { handleNFT(nft) }} />
                             );
                         })}
                     </motion.div>
+
+                    {NFTs.length === 0 && !isLoading &&
+                        <Box display="flex" justifyContent="center" alignItems="center" position='absolute' top='0' bottom='0' left='0' right='0'>
+                            <Text fontFamily='mephistoregular' fontSize='2rem' color='white' margin='auto' textAlign='center'>No NFTs Found</Text>
+                        </Box>
+                    }
 
                     {/* Andrea: To do: Add NFT description here */}
                     {/* Use the same approach as in MarketModal.jsx */}

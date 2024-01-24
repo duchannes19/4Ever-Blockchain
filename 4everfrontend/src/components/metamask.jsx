@@ -103,9 +103,8 @@ export default function ConnectToMetaMask({ setMetaMask, setIsConnected, setStep
             <Box className='metamask__content'>
                 <TypeAnimation
                     sequence={[
-                        // Same substring at the start will only be typed out once, initially
                         'Awaiting',
-                        1000, // wait 1s before replacing "Mice" with "Hamsters"
+                        1000, 
                         'Awaiting.',
                         1000,
                         'Awaiting..',

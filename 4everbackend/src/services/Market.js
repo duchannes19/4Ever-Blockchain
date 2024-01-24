@@ -41,7 +41,7 @@ class Market {
             const rarity = this.convertRarityToString(item.rarity);
             const id = item.id.toString();
             const url = '/NFTs//' + item.url.split('\\').slice(-1)[0];
-            const nfts = { name: item.name, image: url, rarity: rarity, id: id, owner: address };
+            const nfts = { name: item.name, image: url, rarity: rarity, id: id, owner: address, description: item.description};
 
             // Check if address already exists in merchants array
             const existingMerchant = merchants.find(merchant => merchant.address === address);
