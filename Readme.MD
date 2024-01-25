@@ -42,6 +42,10 @@ Make sure you have the following installed:
     ```bash
     npm run truffle
     ```
+    
+    ```bash
+    npm run database
+    ```
 
 - To configure Metamask to use Ganache network:
 
