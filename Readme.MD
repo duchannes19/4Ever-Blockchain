@@ -6,124 +6,7 @@
 
 ## Introduction
 
-4Ever is an MMORPG-inspired decentralized application (DApp) that leverages blockchain technology to manage the in-game economy, asset ownership, and decentralized governance. The project aims to provide a secure and transparent environment for players to trade in-game assets, maintain ownership through NFTs (Non-Fungible Tokens), and participate in the governance of certain aspects of the game.
-
-# Considerations
-
-## Main Objective (For Now)
-
-The main objective of this application (at the moment) is to be utilized in an hypothetical next generation of online MMORPGs.
-
-## To Do (To be Updated)
-
-Instead of directly creating traditional Non-Fungible Tokens (NFTs), the contract simulates a function that assigns in-game quests (common in MMORPGs). Upon quest completion, players receive a unique item (NFT) as a reward. These items differ from one another, potentially categorized by rarity (common, uncommon, rare, epic, legendary), each having a fixed price based on its rarity. Players can then sell or exchange items of similar price range. Consider the addition of a whistleblowing mechanism (Professor mentioned it, don't know if it is really necessary).
-
-- **NFT Structure:** The structure for now includes an image (url), description, owner information and rarity category. It could also be added a 3d model since it is a game, however we lack the automatic generation of 3d models 😅. For now we use Cloudflare AI with Stable Diffusion for the images, the items themselves are picked from a JSON file (see code for more).
-
-- **Quest System:** The quest system could consist in the random generation of a quest players has to complete in a certain time, each player pays something to partecipate, if no one completes the quest everyone loses the money, if somebody manages to complete the quest before the other it gets rewarded with an NFT that is the unique item with a value of all the combined partecipation quota. The quests could be divided based on the rarity of the item received, so to do a quest that rewards you with a Common item costs less than partecipate in one where you get an Epic.
-
-## Advantages
-
-- **No Duplicates:** Each item received as a quest reward is unique, eliminating the possibility of duplicates in the game.
-- **No Scams:** The blockchain-based ownership verification ensures a secure and scam-resistant environment.
-- **Complete Ownership:** Players have full ownership of their in-game assets, fostering a sense of true ownership.
-
-## Limitations
-
-- **MetaMask Dependency:** The application relies on MetaMask for user interaction, limiting accessibility to users with a MetaMask wallet.
-- **Game Development Limitation:** The application does not cover the development of the actual MMORPG game. Integration with an existing game or the development of a game itself is necessary for full functionality.
-
-## Develop rule (TEMP)
-
-<ins>Non-mandatory but appreciated rules for keeping code clean and well-organized, facilitating readability and teamwork.</ins>😄😄😄😄😄😄😄😄😄
-
-### Naming convention
-
-- **Semicolon**: 
-
-    ```js
-    let i = 0;
-    ```
-
-- **Component File and Component itself**: `UpperToLower.jsx`
-    
-    ```js
-    function MyComponent(...) {
-
-    }
-    ```
-
-- **Variable, Props and Function**: `lowerToUpper`
-
-    ```js
-    let accountBalance = getAccountBalance();
-    ```
-
-    ```html
-    <MyComponent propOne={...} propTwo={...} />
-    ```
-
-### Adding new component
-
-- `Component.jsx`
-    ```js
-    export default function Component(...) {
-        ...
-        return (
-            ...
-        );
-    }
-    ```
-- When importing
-
-    ```js
-    import Component from "path/Component";
-
-    export default function OtherComponent(...) {
-
-        return (
-            ...
-            <Component />
-            ...
-        );
-
-    }
-    ```
-    
-### Adding images, fonts or static resources
-
-- Put the resources in `4everfrontend/public` folder
-- Import them like this:
-
-    ```js
-    import logo from "/img/logo.png";
-    ```
-
-### Importing order
-
-```js
-import { Component, func, ... } from "react" or "external modules";
-import { Component, func, ... } from "chakraui" or "external modules";
-//Empty line
-import Component1 from "./user_defined_component";
-import Component2 from "./user_defined_component";
-//Empty line
-import resource from "local resources (png, css, ...)";
-```
-
-### Commenting
-
-If you are working on something unfinished it would be appreciated if you added a comment somewhere in the code like:
-
-```js
-//TODO: Username
-```
-
-or
-
-```js
-//Username: feature description
-```
+4Ever is an MMORPG-inspired decentralized application (DApp) that leverages blockchain technology to manage the in-game economy, specifically asset ownership. The project aims to provide a secure and transparent environment for players to trade in-game assets and maintain ownership through NFTs (Non-Fungible Tokens), introducing also a simulated reward system through quests.
 
 ## Setup
 
@@ -153,12 +36,31 @@ Make sure you have the following installed:
 
 - First of all open Ganache and add a new workspace
     - In the Truffle Prject add the `truffle-config.js` file located `4everbackend/Truffle/truffle-config.js`
-- Launche the workspace
+- Launch the workspace
 - In the root folder of the repo `4Ever-Blockchain` run
 
     ```bash
     npm run truffle
     ```
+
+- To configure Metamask to use Ganache network:
+
+1. Open Metamask extension in your browser.
+2. Click on the Metamask extension icon to open the wallet.
+3. Click on the network dropdown (usually displaying "Main Ethereum Network" or "Rinkeby Test Network") and select "Custom RPC".
+4. In the "New Network" section, enter the following details:
+   - Network Name: Ganache (or any name you prefer)
+   - New RPC URL: http://localhost:7545 (or the RPC server URL provided by your Ganache instance)
+   - Chain ID: 1337 (or the chain ID provided by your Ganache instance)
+   - Currency Symbol: ETH (or any symbol you prefer)
+5. Click "Save" to add Ganache as a network in Metamask.
+6. Now, to add a user using their private key:
+   - Open Ganache and copy the private key of the desired account.
+   - In Metamask, click on the account icon at the top right corner and select "Import Account".
+   - Paste the private key in the "Private Key" field.
+   - Optionally, enter a password to encrypt the imported account.
+   - Click "Import" to add the user account to Metamask.
+7. You should now see the imported account in Metamask, and you can select it to interact with the Ganache network.
 
 - From the root folder `4Ever-Blockchain` run (Separated terminal):
 
@@ -173,4 +75,5 @@ Make sure you have the following installed:
 - Connnect to Metamask with one of the account in the ganache blockchain (Tutorial in the slides)
 - Press the `Connect` buttonin the middle of the page
 - Press `Join` button
-- ... Coming soon
+- **Explore the Market**: Discover and trade in-game assets with other players in the decentralized marketplace.
+- **Embark on Quests**: Engage in (simulated) quests to earn your NFTs.
