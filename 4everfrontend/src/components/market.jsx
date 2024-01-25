@@ -60,7 +60,30 @@ export default function Market() {
             >
                 {items.length > 0 && items.map((item, index) => (
                     item.items[0] && (
-                        <Image key={index} src={Icon} className='quest' marginBottom='2rem' onClick={() => { handleModal(item.address, item.items) }} />
+                        <Box position='relative'>
+                            <Image
+                                key={index}
+                                src={Icon}
+                                className='merchant-icon'
+                                marginBottom='2rem'
+                                onClick={() => { handleModal(item.address, item.items) }}
+                                style={{ filter: `drop-shadow(0px 4px 4px black)`, backgroundColor: '#191410'}}
+                            />                            
+                            <Text
+                                fontFamily="mephistoregular"
+                                fontSize={item.address === localStorage.getItem('accounts') ? '2rem' : '1.1rem'}
+                                color={'white'}
+                                position="absolute"
+                                top="50%"
+                                left="50%"
+                                style={{ whiteSpace: 'wrap' }}
+                                transform="translate(-50%, -50%)"
+                                filter={'drop-shadow(0px 4px 4px black)'}
+                                pointerEvents={"none"}
+                            >
+                                {item.address === localStorage.getItem('accounts') ? 'You' : item.address.slice(2, 20)+'..'}
+                            </Text>
+                        </Box>
                     )
                 ))}
             </Box>

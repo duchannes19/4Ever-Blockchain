@@ -120,7 +120,7 @@ export default function MarketModal({ isOpen, onClose, selectedMerchant, setSele
                     <ModalHeader textAlign={'center'} fontFamily='mephistoregular' fontSize='3rem' className='merchant name'>
                         {switchToDescription ? selectedItem.name : (
                             <>
-                                Merchant
+                                {selectedMerchant.address === localStorage.getItem('accounts') ? 'Your Shop' : 'Merchant'}
                                 <br />
                                 <Text fontFamily='mephistoregular' fontSize='1.5rem' color='white' marginBottom='2rem' marginTop='2rem' textAlign='center'>
                                     {selectedMerchant.address}

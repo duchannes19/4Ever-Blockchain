@@ -106,7 +106,7 @@ const Quests = () => {
                                 top="50%"
                                 left="50%"
                                 transform="translate(-50%, -50%)"
-                                textShadow="0 0 5px rgba(0, 0, 0, 0.3)"
+                                filter={'drop-shadow(0px 4px 4px black)'}
                                 pointerEvents={"none"}
                             >
                                 {quest.winner === localStorage.getItem('accounts') ? "Won" : "Ended"}
