@@ -1,6 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.19;
 
+/// @title 4Ever
+/// @author Cesare Corsi, Andrea Massigna
+/// @notice Marketplace and quests handler
+/// @custom:notes The contract may be inefficient regard gas costs
 contract FourEver {
     //----------------------------------------------
     // Contract begin
@@ -31,8 +35,8 @@ contract FourEver {
         string name;
         //Rarity of the NFT
         Rarity rarity;
-        //Description of the NFT
-        string description; // -> Andrea: This is purely for the frontend display
+        //Description of the NFT: This is purely for the frontend display
+        string description;
         //Is the NFT on sale
         bool onSale;
     }
@@ -63,9 +67,23 @@ contract FourEver {
     // Events
     //----------------------------------------------
 
+    /// @notice Event emitted when a user join the marketplace
+    /// @param member Address of the new member
     event MemberJoined(address member);
+
+    /// @notice Event emitted when a NFT is minted
+    /// @param owner Address of th owner of the minted NFT
+    /// @param tokenId Id of the minted NFT
     event NFTMinted(address owner, uint256 tokenId);
+
+    /// @notice Event emitted when a quest is ended
+    /// @param questId The id of the ended quest
+    /// @param winner Address of the winner
     event QuestEnded(uint256 questId, address winner);
+
+    /// @notice Event emitted when a quest is ended
+    /// @param questId The id of the starting quest
+    /// @param user Address of the participant
     event QuestRegistration(uint256 questId, address user);
 
     //----------------------------------------------
@@ -92,37 +110,47 @@ contract FourEver {
     // Market
     //----------------------------------------------
 
+    /// @notice Allows to a user to join the marketplace
     function joinMarketplace() public {
         require(!member[msg.sender].isMember);
         member[msg.sender].isMember = true;
         emit MemberJoined(msg.sender);
     }
 
+    /// @notice Check if a user is already a member
+    /// @param user The address of a user
+    /// @return True if the user is already a member, false otherwise
     function isUserMember(address user) public view returns (bool) {
         return member[user].isMember;
     }
 
+    /// @notice Function to get all the NFT on sale
+    /// @return Array of all the NFT on sale
     function getSellNFTs() public view returns (NFT[] memory) {
         return availableNFTs;
     }
 
+    /// @notice Put a NFT for sale adding it in the market
+    /// @param tokenId The id of the NFT
     function sellNFT(uint256 tokenId) public {
         require(
             member[msg.sender].isMember &&
                 member[msg.sender].nfts.length > tokenIndexing[tokenId] &&
-                member[msg.sender].nfts[tokenIndexing[tokenId]].owner ==
-                msg.sender
+                member[msg.sender].nfts[tokenIndexing[tokenId]].owner == msg.sender &&
+                !member[msg.sender].nfts[tokenIndexing[tokenId]].onSale
         );
         member[msg.sender].nfts[tokenIndexing[tokenId]].onSale = true;
         availableNFTs.push(member[msg.sender].nfts[tokenIndexing[tokenId]]);
     }
 
+    /// @notice Remove a NFT for sale removing it from the market
+    /// @param tokenId The id of the NFT
     function unsellNFT(uint256 tokenId) public {
         require(
             member[msg.sender].isMember &&
                 member[msg.sender].nfts.length > tokenIndexing[tokenId] &&
-                member[msg.sender].nfts[tokenIndexing[tokenId]].owner ==
-                msg.sender
+                member[msg.sender].nfts[tokenIndexing[tokenId]].owner == msg.sender &&
+                member[msg.sender].nfts[tokenIndexing[tokenId]].onSale
         );
         member[msg.sender].nfts[tokenIndexing[tokenId]].onSale = false;
         for (uint256 i = 0; i < availableNFTs.length; i++) {
@@ -138,6 +166,8 @@ contract FourEver {
         }
     }
 
+    /// @notice Allows an user to buy a NFT in the market
+    /// @param tokenId The id of the NFT
     function buyNFT(uint256 tokenId) public payable {
         require(member[msg.sender].isMember);
         address payable oldOwner;
@@ -151,6 +181,7 @@ contract FourEver {
                 } else {
                     availableNFTs.pop();
                 }
+                break;
             }
         }
         if (oldOwner > address(0)) {
@@ -192,6 +223,10 @@ contract FourEver {
     // Quest
     //----------------------------------------------
 
+    /// @notice Allows an user to join a quest
+    /// @param company The address of the company that has published the quest
+    /// @param questId The id of the quest
+    /// @param seed The seed used for extracting the winner
     function joinQuest(
         address company,
         uint256 questId,
@@ -213,6 +248,14 @@ contract FourEver {
         emit QuestRegistration(questId, msg.sender);
     }
 
+    /// @notice Ends a specific quest, extracts a winner and assign a NFT.
+    /// @param winner The address of the quest's winner
+    /// @param questId The id of the quest
+    /// @param tokenId The id of the NFT
+    /// @param url The url of the asset related to the NFT
+    /// @param name The name of the asset
+    /// @param description The descritpion of the asset
+    /// @dev The description is ussed only in the frontend and its not mandatory
     function endQuest(
         address winner,
         uint256 questId,
@@ -242,10 +285,16 @@ contract FourEver {
         emit NFTMinted(winner, tokenId);
     }
 
+    /// @notice Function used to get the quest seed for extracting a winner
+    /// @param questId The id of the quest
+    /// @return uint256 The quest seed
     function getQuestSeed(uint256 questId) public view returns (uint256) {
         return quests[questId].seed;
     }
 
+    /// @notice Function used to get the number of the participants in a quest 
+    /// @param questId The id of the quest
+    /// @return uint256 The number of the participants
     function getQuestParticipantsNumber(
         uint256 questId
     ) public view returns (uint256) {
@@ -256,10 +305,16 @@ contract FourEver {
     // NFT
     //----------------------------------------------
 
+    /// @notice Function used to get all the NFTs owned by a member
+    /// @param owner The owner of the NFTs
+    /// @return Array of all the NFTs owner by a member
     function getNFTs(address owner) public view returns (NFT[] memory) {
         return member[owner].nfts;
     }
 
+    /// @notice Function used to calculate the rariry of the NFT based on the number of participants in a quest
+    /// @param participants Number of participants in a quest
+    /// @return Rarity The rarity of the NFT
     function calculateRarity(
         uint256 participants
     ) internal pure returns (Rarity) {
