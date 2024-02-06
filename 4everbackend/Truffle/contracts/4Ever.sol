@@ -2,7 +2,7 @@
 pragma solidity ^0.8.19;
 
 /// @title 4Ever
-/// @author Cesare Corsi, Andrea Massigna
+/// @author Cesare Corsi, Andrea Massignan
 /// @notice Marketplace and quests handler
 /// @custom:notes The contract may be inefficient regard gas costs
 contract FourEver {
